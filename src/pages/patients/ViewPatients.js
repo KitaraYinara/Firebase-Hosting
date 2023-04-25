@@ -1,15 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../../firebase";
-import {
-  collection,
-  getDocs,
-  addDoc,
-  updateDoc,
-  doc,
-  deleteDoc,
-} from "firebase/firestore";
+import { collection, getDocs, addDoc } from "firebase/firestore";
 import Navigation from "../../components/Navigation/Navigation";
-
+import PatientTable from "../../components/PatientTable";
 const ViewPatients = () => {
   const [newName, setNewName] = useState("");
   const [newAge, setNewAge] = useState(0);
@@ -23,15 +16,6 @@ const ViewPatients = () => {
       gender: newGender,
     });
   };
-  const incrementAge = async (id, age) => {
-    const newFields = { age: age + 1 };
-    const userDoc = doc(db, "users", id);
-    await updateDoc(userDoc, newFields);
-  };
-  const deletePatient = async (id) => {
-    const patientsDoc = doc(db, "patients", id);
-    await deleteDoc(patientsDoc);
-  };
   useEffect(() => {
     const getPatients = async () => {
       const data = await getDocs(patientsCollectionRef);
@@ -42,48 +26,35 @@ const ViewPatients = () => {
   return (
     <>
       <Navigation />
-      <div className="container">
+      <div>
         <h1 className="main-title">View Patients</h1>
-        <input
-          placeholder="Name"
-          onChange={(e) => {
-            setNewName(e.target.value);
-          }}
-        ></input>
-        <input
-          type="number"
-          placeholder="Age"
-          onChange={(e) => {
-            setNewAge(e.target.value);
-          }}
-        ></input>
-        <input
-          placeholder="Gender"
-          onChange={(e) => {
-            setNewGender(e.target.value);
-          }}
-        ></input>
-        <button onClick={createPatient}>Create Patient</button>
+        <div class="container">
+          <input
+            placeholder="Name"
+            onChange={(e) => {
+              setNewName(e.target.value);
+            }}
+          ></input>
+          <input
+            type="number"
+            placeholder="Age"
+            onChange={(e) => {
+              setNewAge(e.target.value);
+            }}
+          ></input>
+          <input
+            placeholder="Gender"
+            onChange={(e) => {
+              setNewGender(e.target.value);
+            }}
+          ></input>
+          <button onClick={createPatient}>Create Patient</button>
+        </div>
+        <br></br>
         {patients.map((patient) => {
           return (
             <div>
-              <h1>Name: {patient.name}</h1>
-              <h1>Age: {patient.age}</h1>
-              <h1>Gender: {patient.gender}</h1>
-              <button
-                onClick={() => {
-                  incrementAge(patient.id, patient.age);
-                }}
-              >
-                Increment age
-              </button>
-              <button
-                onClick={() => {
-                  deletePatient(patient.id);
-                }}
-              >
-                Delete Patient
-              </button>
+              <PatientTable patient={patient}></PatientTable>
             </div>
           );
         })}
