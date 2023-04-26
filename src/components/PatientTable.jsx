@@ -1,27 +1,29 @@
 import React from "react";
 import { db } from "../firebase";
-import { updateDoc, doc, deleteDoc } from "firebase/firestore";
+import { doc, deleteDoc } from "firebase/firestore";
 const PatientTable = ({ patient }) => {
   const deletePatient = async (id) => {
     const patientsDoc = doc(db, "patients", id);
     await deleteDoc(patientsDoc);
   };
   return (
-    <div style={{ textAlign: "center", border: "1px solid" }}>
+    <div style={{ textAlign: "center" }}>
       <table width="100%">
-        <tr>
+        <tr textAlign="center">
           <th>Name</th>
           <th>Age</th>
           <th>Gender</th>
-          <th>Increment age</th>
+          <th>Edit</th>
           <th>Delete</th>
         </tr>
-        <tr>
+        <tr textAlign="center">
           <td>{patient.name}</td>
           <td>{patient.age}</td>
           <td>{patient.gender}</td>
           <td>
-            <button>Edit Patient</button>
+            <a href="/updatepatient">
+              <button>Update Patient</button>
+            </a>
           </td>
           <td>
             <button

@@ -9,7 +9,8 @@ const ViewPatients = () => {
   const [newGender, setNewGender] = useState("");
   const [patients, setPatients] = useState([]);
   const patientsCollectionRef = collection(db, "patients");
-  const createPatient = async () => {
+  const createPatient = async (e) => {
+    e.preventDefault();
     await addDoc(patientsCollectionRef, {
       name: newName,
       age: Number(newAge),
