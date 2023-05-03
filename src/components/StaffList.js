@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button } from "react-bootstrap";
 import StaffDataService from "../services/staff.services";
+import './StaffsList.css';
 
 const StaffsList = ({ getStaffId }) => {
   const [staffs, setStaffs] = useState([]);
