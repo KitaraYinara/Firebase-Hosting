@@ -16,6 +16,7 @@ const Navigation = () => {
             <Nav.Link href="/signup">Sign up</Nav.Link>
             <Nav.Link href="/patient">Patients</Nav.Link>
             <Nav.Link href ="/staff">Staffs</Nav.Link>
+            <Nav.Link href ="/appointment">Appointments</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
