@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Patient from "./pages/patients/Patient";
+import Staff from "./pages/staffs/Staff";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
