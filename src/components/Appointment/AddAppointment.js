@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Form, Alert, InputGroup, Button, ButtonGroup } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import AppointmentDataService from "../services/appointment.services";
+import AppointmentDataService from "../../services/appointment.services";
 
 const AddAppointment = ({ id, setAppointmentId }) => {
   const [name, setName] = useState("");
@@ -19,10 +19,12 @@ const AddAppointment = ({ id, setAppointmentId }) => {
       return;
     }
     if (isNaN(date.getTime())) {
-        setMessage({ error: true, msg: "Invalid date!" });
-        return;
-      }
-    const dateString = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+      setMessage({ error: true, msg: "Invalid date!" });
+      return;
+    }
+    const dateString = `${date.getDate()}/${
+      date.getMonth() + 1
+    }/${date.getFullYear()}`;
     const newAppointment = {
       name,
       date: dateString,
@@ -38,14 +40,17 @@ const AddAppointment = ({ id, setAppointmentId }) => {
         setMessage({ error: false, msg: "Updated successfully!" });
       } else {
         await AppointmentDataService.addAppointments(newAppointment);
-        setMessage({ error: false, msg: "New Appointment added successfully!" });
+        setMessage({
+          error: false,
+          msg: "New Appointment added successfully!",
+        });
       }
     } catch (err) {
       setMessage({ error: true, msg: err.message });
     }
 
     setName("");
-    setDate(new Date ());
+    setDate(new Date());
     setTime("0900");
     setNote("");
   };
@@ -78,8 +83,17 @@ const AddAppointment = ({ id, setAppointmentId }) => {
   let currentTime = new Date(startTime);
   while (currentTime <= endTime) {
     timeOptions.push(
-      <option key={currentTime.toISOString()} value={currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}>
-        {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+      <option
+        key={currentTime.toISOString()}
+        value={currentTime.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })}
+      >
+        {currentTime.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })}
       </option>
     );
     currentTime.setMinutes(currentTime.getMinutes() + 30);
@@ -118,23 +132,23 @@ const AddAppointment = ({ id, setAppointmentId }) => {
                 onChange={(date) => setDate(date)}
                 dateFormat="dd/MM/yyyy"
                 className="form-control"
-                type  = "text"
+                type="text"
               />
             </InputGroup>
           </Form.Group>
           <Form.Group className="mb-3" controlId="formAppointmentTime">
             <InputGroup>
-                <InputGroup.Text id="formAppointmentTime">Time</InputGroup.Text>
-                <Form.Select
+              <InputGroup.Text id="formAppointmentTime">Time</InputGroup.Text>
+              <Form.Select
                 value={time}
                 onChange={(e) => setTime(e.target.value)}
                 aria-label="Select appointment time"
-                >
+              >
                 {timeOptions}
-                </Form.Select>
+              </Form.Select>
             </InputGroup>
-            </Form.Group>
-          
+          </Form.Group>
+
           <Form.Group className="mb-3" controlId="formAppointmentNote">
             <InputGroup>
               <InputGroup.Text id="formAppointmentNote">Notes</InputGroup.Text>

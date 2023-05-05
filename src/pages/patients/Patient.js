@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import AddPatient from "../../components/AddPatient";
-import PatientsList from "../../components/PatientList";
+import AddPatient from "../../components/Patient/AddPatient";
+import PatientsList from "../../components/Patient/PatientList";
 import Navigation from "../../components/Navigation/Navigation";
 
 const Patient = () => {

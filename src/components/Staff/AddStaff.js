@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Form, Alert, InputGroup, Button, ButtonGroup } from "react-bootstrap";
-import StaffDataService from "../services/staff.services";
+import StaffDataService from "../../services/staff.services";
 
 const AddStaff = ({ id, setStaffId }) => {
   const [name, setName] = useState("");
@@ -8,12 +8,11 @@ const AddStaff = ({ id, setStaffId }) => {
   const [phonenum, setPhonenum] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState({ error: false, msg: "" });
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
-    if (name === "" || gender ==="" || phonenum === "" || email === "") {
+    if (name === "" || gender === "" || phonenum === "" || email === "") {
       setMessage({ error: true, msg: "All fields are mandatory!" });
       return;
     }
@@ -51,9 +50,8 @@ const AddStaff = ({ id, setStaffId }) => {
       console.log("the record is :", docSnap.data());
       setName(docSnap.data().name);
       setPhonenum(docSnap.data().phonenum);
-      setEmail(docSnap.data().email)
+      setEmail(docSnap.data().email);
       setGender(docSnap.data().gender);
-
     } catch (err) {
       setMessage({ error: true, msg: err.message });
     }
@@ -93,7 +91,9 @@ const AddStaff = ({ id, setStaffId }) => {
 
           <Form.Group className="mb-3" controlId="formStaffPhonenum">
             <InputGroup>
-              <InputGroup.Text id="formStaffPhonenum">Phone Number</InputGroup.Text>
+              <InputGroup.Text id="formStaffPhonenum">
+                Phone Number
+              </InputGroup.Text>
               <Form.Control
                 type="number"
                 placeholder="Staff Phone Number"

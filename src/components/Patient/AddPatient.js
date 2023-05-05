@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Form, Alert, InputGroup, Button, ButtonGroup } from "react-bootstrap";
-import PatientDataService from "../services/patient.services";
+import PatientDataService from "../../services/patient.services";
 
 const AddPatient = ({ id, setPatientId }) => {
   const [name, setName] = useState("");

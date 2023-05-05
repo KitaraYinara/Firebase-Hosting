@@ -1,57 +1,58 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button } from "react-bootstrap";
-import AppointmentDataService from "../services/appointment.services";
+import StaffDataService from "../../services/staff.services";
+import "./StaffsList.css";
 
-const AppointmentsList = ({ getAppointmentId }) => {
-  const [appointments, setAppointments] = useState([]);
+const StaffsList = ({ getStaffId }) => {
+  const [staffs, setStaffs] = useState([]);
   useEffect(() => {
-    getAppointments();
+    getStaffs();
   }, []);
 
-  const getAppointments = async () => {
-    const data = await AppointmentDataService.getAllAppointments();
+  const getStaffs = async () => {
+    const data = await StaffDataService.getAllStaffs();
     console.log(data.docs);
-    setAppointments(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    setStaffs(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
   };
 
   const deleteHandler = async (id) => {
-    await AppointmentDataService.deleteAppointment(id);
-    getAppointments();
+    await StaffDataService.deleteStaff(id);
+    getStaffs();
   };
   return (
     <>
       <div className="mb-2">
-        <Button variant="dark edit" onClick={getAppointments}>
+        <Button variant="dark edit" onClick={getStaffs}>
           Refresh List
         </Button>
       </div>
 
-      {/* <pre>{JSON.stringify(appointments, undefined, 2)}</pre>} */}
+      {/* <pre>{JSON.stringify(staffs, undefined, 2)}</pre>} */}
       <Table striped bordered hover size="sm">
         <thead>
           <tr>
             <th>#</th>
-            <th>Patient's Name</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Notes</th>
+            <th>Staff Name</th>
+            <th>Phone Number</th>
+            <th>Email</th>
+            <th>Gender</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {appointments.map((doc, index) => {
+          {staffs.map((doc, index) => {
             return (
               <tr key={doc.id}>
                 <td>{index + 1}</td>
                 <td>{doc.name}</td>
-                <td>{new Date(doc.date).toLocaleDateString()}</td>
-                <td>{doc.time}</td>
-                <td>{doc.note}</td>
+                <td>{doc.phonenum}</td>
+                <td>{doc.email}</td>
+                <td>{doc.gender}</td>
                 <td>
                   <Button
                     variant="secondary"
                     className="edit"
-                    onClick={(e) => getAppointmentId(doc.id)}
+                    onClick={(e) => getStaffId(doc.id)}
                   >
                     Edit
                   </Button>
@@ -72,4 +73,4 @@ const AppointmentsList = ({ getAppointmentId }) => {
   );
 };
 
-export default AppointmentsList;
+export default StaffsList;

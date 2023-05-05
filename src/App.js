@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Patient from "./pages/patients/Patient";
 import Staff from "./pages/staffs/Staff";
+import Appointment from "./pages/appointments/Appointment";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {

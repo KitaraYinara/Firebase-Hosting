@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import AddAppointment from "../../components/AddAppointment";
-import AppointmentsList from "../../components/AppointmentList";
+import AddAppointment from "../../components/Appointment/AddAppointment";
+import AppointmentsList from "../../components/Appointment/AppointmentList";
 import Navigation from "../../components/Navigation/Navigation";
 
 const Appointment = () => {
@@ -17,7 +17,10 @@ const Appointment = () => {
       <Container style={{ width: "400px" }}>
         <Row>
           <Col>
-            <AddAppointment id={appointmentId} setAppointmentId={setAppointmentId} />
+            <AddAppointment
+              id={appointmentId}
+              setAppointmentId={setAppointmentId}
+            />
           </Col>
         </Row>
       </Container>
