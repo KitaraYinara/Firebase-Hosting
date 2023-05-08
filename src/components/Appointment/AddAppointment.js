@@ -126,7 +126,7 @@ const AddAppointment = ({ id, setAppointmentId }) => {
 
           <Form.Group className="mb-3" controlId="formAppointmentDate">
             <InputGroup>
-              <InputGroup.Text id="formAppointmentAge">Date</InputGroup.Text>
+              <InputGroup.Text id="formAppointmentDate">Date</InputGroup.Text>
               <DatePicker
                 selected={date}
                 onChange={(date) => setDate(date)}
