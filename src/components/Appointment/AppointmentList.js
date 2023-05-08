@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button } from "react-bootstrap";
+import { Link } from 'react-router-dom';
 import AppointmentDataService from "../../services/appointment.services";
 
 const AppointmentsList = ({ getAppointmentId }) => {
