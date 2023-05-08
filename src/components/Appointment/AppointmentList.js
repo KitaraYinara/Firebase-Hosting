@@ -62,6 +62,9 @@ const AppointmentsList = ({ getAppointmentId }) => {
                   >
                     Delete
                   </Button>
+                  <Button variant="primary" as={Link} to="/writereport">
+                    Create Report
+                  </Button> 
                 </td>
               </tr>
             );
