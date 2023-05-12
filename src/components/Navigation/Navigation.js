@@ -2,6 +2,7 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import Authentication from "./Authentication";
 
 const Navigation = () => {
   return (
@@ -12,13 +13,7 @@ const Navigation = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="/">Home</Nav.Link>
-            <Nav.Link href="/login">Login</Nav.Link>
-            <Nav.Link href="/signup">Sign up</Nav.Link>
-            <Nav.Link href="/patient">Patients</Nav.Link>
-            <Nav.Link href ="/staff">Staffs</Nav.Link>
-            <Nav.Link href ="/appointment">Appointments</Nav.Link>
-            <Nav.Link href ="/report">Reports</Nav.Link>
-            <Nav.Link href ="/writereport">Submit New Report</Nav.Link>
+            <Authentication />
           </Nav>
         </Navbar.Collapse>
       </Container>

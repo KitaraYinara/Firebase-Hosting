@@ -1,16 +1,22 @@
-import { useState, useEffect } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { db1 } from './firebase';
-
-
+import { useState, useEffect } from "react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from "recharts";
+import { db1 } from "./firebase";
 
 function Chart() {
   const [data, setData] = useState([]);
- 
+
   useEffect(() => {
-    db1.ref('/').on('value', snapshot => {
+    db1.ref("/").on("value", (snapshot) => {
       const rawData = snapshot.val();
-      const formattedData = Object.keys(rawData).map(key => ({
+      const formattedData = Object.keys(rawData).map((key) => ({
         //timestamp: key,
         bpm: rawData.bpm,
         spo2: rawData.spo2,
@@ -37,4 +43,4 @@ function Chart() {
   );
 }
 
-export default Chart;
+export default Chart;

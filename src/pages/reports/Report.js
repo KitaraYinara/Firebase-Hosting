@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 //import AddReport from "../../components/AddReport";
-import ReportsList from "../../components/ReportList";
+import ReportsList from "../../components/Report/ReportList";
 import Navigation from "../../components/Navigation/Navigation";
 
 const Report = () => {

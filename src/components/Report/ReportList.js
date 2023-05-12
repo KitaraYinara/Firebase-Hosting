@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button } from "react-bootstrap";
-import ReportDataService from "../services/report.services";
+import ReportDataService from "../../services/report.services";
 
 const ReportsList = ({ getReportId }) => {
   const [reports, setReports] = useState([]);

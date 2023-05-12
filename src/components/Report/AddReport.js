@@ -1,17 +1,17 @@
-import React, { useState, useEffect,useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Form, Alert, InputGroup, Button, ButtonGroup } from "react-bootstrap";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import ReportDataService from "../services/report.services";
+import ReportDataService from "../../services/report.services";
 
 const AddReport = ({ id, setReportId }) => {
-    const [name, setName] = useState("");
-    const [date, setDate] = useState(new Date());
-    const [reportDiag, setReportDiag] = useState("");
-    const [reportNote, setReportNote] = useState("");
-    const [message, setMessage] = useState({ error: false, msg: "" });
-    const [showImage, setShowImage] = useState(false);
+  const [name, setName] = useState("");
+  const [date, setDate] = useState(new Date());
+  const [reportDiag, setReportDiag] = useState("");
+  const [reportNote, setReportNote] = useState("");
+  const [message, setMessage] = useState({ error: false, msg: "" });
+  const [showImage, setShowImage] = useState(false);
 
   const handleClick = () => {
     setShowImage(true);
@@ -20,19 +20,21 @@ const AddReport = ({ id, setReportId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
-    if ( name === "" || date === "" || reportDiag === "" || reportNote === "") {
+    if (name === "" || date === "" || reportDiag === "" || reportNote === "") {
       setMessage({ error: true, msg: "All fields are mandatory!" });
       return;
     }
-    const dateString = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+    const dateString = `${date.getDate()}/${
+      date.getMonth() + 1
+    }/${date.getFullYear()}`;
     const newReport = {
-    name,
-    date: dateString,  
-    reportDiag,
-    reportNote,
+      name,
+      date: dateString,
+      reportDiag,
+      reportNote,
     };
     console.log(newReport);
-    
+
     try {
       if (id !== undefined && id !== "") {
         await ReportDataService.updateReport(id, newReport);
@@ -45,10 +47,10 @@ const AddReport = ({ id, setReportId }) => {
     } catch (err) {
       setMessage({ error: true, msg: err.message });
     }
-    setName("")
+    setName("");
     setReportDiag("");
     setReportNote("");
-    setDate(new Date ());
+    setDate(new Date());
   };
   const editHandler = async () => {
     setMessage("");
@@ -78,8 +80,17 @@ const AddReport = ({ id, setReportId }) => {
   let currentTime = new Date(startTime);
   while (currentTime <= endTime) {
     timeOptions.push(
-      <option key={currentTime.toISOString()} value={currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}>
-        {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+      <option
+        key={currentTime.toISOString()}
+        value={currentTime.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })}
+      >
+        {currentTime.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })}
       </option>
     );
     currentTime.setMinutes(currentTime.getMinutes() + 30);
@@ -98,8 +109,7 @@ const AddReport = ({ id, setReportId }) => {
         )}
 
         <Form onSubmit={handleSubmit}>
-
-        <Form.Group className="mb-3" controlId="formName">
+          <Form.Group className="mb-3" controlId="formName">
             <InputGroup>
               <InputGroup.Text id="formName">Name</InputGroup.Text>
               <Form.Control
@@ -118,60 +128,73 @@ const AddReport = ({ id, setReportId }) => {
                 onChange={(date) => setDate(date)}
                 dateFormat="dd/MM/yyyy"
                 className="form-control"
-                type  = "text"
+                type="text"
               />
             </InputGroup>
           </Form.Group>
 
+          <html>BPM:</html>
 
-          <html>BPM:</html> 
-          
-          <html>Oxygen:</html> 
-
-          
-          <Button
-          variant="secondary"
-          className="edit"
-          onClick={() => {
-            const confirmStart = window.confirm("Are you sure you want to start the test?");
-            if (confirmStart) {
-              console.log("Test started");
-            }
-          }}
-          >
-          Start</Button>
-
+          <html>Oxygen:</html>
 
           <Button
-          variant="danger"
-          className="end"
-          onClick={() => {
-            const confirmStart = window.confirm("Are you sure you want to end the test?");
-            if (confirmStart) {
-              console.log("Test end");
-            }
-          }}
+            variant="secondary"
+            className="edit"
+            onClick={() => {
+              const confirmStart = window.confirm(
+                "Are you sure you want to start the test?"
+              );
+              if (confirmStart) {
+                console.log("Test started");
+              }
+            }}
           >
-          End</Button>
+            Start
+          </Button>
 
-            <Form.Group className="mb-3" controlId="formReportDiag">
+          <Button
+            variant="danger"
+            className="end"
+            onClick={() => {
+              const confirmStart = window.confirm(
+                "Are you sure you want to end the test?"
+              );
+              if (confirmStart) {
+                console.log("Test end");
+              }
+            }}
+          >
+            End
+          </Button>
+
+          <Form.Group className="mb-3" controlId="formReportDiag">
             <InputGroup>
-                <InputGroup.Text id="formRepotrDiag">Sleep Apnea Result</InputGroup.Text>
-                <Form.Select
+              <InputGroup.Text id="formRepotrDiag">
+                Sleep Apnea Result
+              </InputGroup.Text>
+              <Form.Select
                 value={reportDiag}
                 onChange={(e) => setReportDiag(e.target.value)}
                 style={{ height: "50px", width: "300px" }}
                 aria-label="Select sleep apnea result grading"
-                >
+              >
                 <option value="Select One">Selection</option>
-                <option value="Normal">Normal (AHI less than 5 per hour)</option>
-                <option value="Mild">Mild (AHI between 5 and 15 per hour)</option>
-                <option value="Moderate">Moderate (AHI between 15 and 30 per hour)</option>
-                <option value="Severe">Severe (AHI greater than 30 per hour)</option>
-                </Form.Select>
+                <option value="Normal">
+                  Normal (AHI less than 5 per hour)
+                </option>
+                <option value="Mild">
+                  Mild (AHI between 5 and 15 per hour)
+                </option>
+                <option value="Moderate">
+                  Moderate (AHI between 15 and 30 per hour)
+                </option>
+                <option value="Severe">
+                  Severe (AHI greater than 30 per hour)
+                </option>
+              </Form.Select>
             </InputGroup>
-            </Form.Group>
-            
+          </Form.Group>
+
           <Form.Group className="mb-3" controlId="formReportNote">
             <InputGroup>
               <InputGroup.Text id="formReportNote">Notes</InputGroup.Text>
@@ -185,7 +208,7 @@ const AddReport = ({ id, setReportId }) => {
           </Form.Group>
           <form onSubmit={handleSubmit}></form>
           <div className="d-grid gap-2">
-            <Button variant="primary" type="Submit" >
+            <Button variant="primary" type="Submit">
               Submit
             </Button>
           </div>

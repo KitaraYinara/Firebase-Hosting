@@ -5,8 +5,9 @@ import Signup from "./pages/auth/Signup";
 import Patient from "./pages/patients/Patient";
 import Staff from "./pages/staffs/Staff";
 import Appointment from "./pages/appointments/Appointment";
+import Chart from "./chart";
 import Report from "./pages/reports/Report";
-import WriteReport from "./pages/reports/WriteReport"
+import WriteReport from "./pages/reports/WriteReport";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
       <Route path="/patient" element={<Patient />} />
       <Route path="/staff" element={<Staff />} />
       <Route path="/appointment" element={<Appointment />} />
+      <Route path="/chart" element={<Chart />} />
       <Route path="/report" element={<Report />} />
       <Route path="/writereport" element={<WriteReport />} />
     </Routes>
