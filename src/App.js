@@ -4,7 +4,7 @@ import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
 import Patient from "./pages/patients/Patient";
 import Staff from "./pages/staffs/Staff";
-import Appointment from "./pages/appointments/Appointment";
+import Test from "./pages/tests/Test";
 import Chart from "./chart";
 import Report from "./pages/reports/Report";
 import WriteReport from "./pages/reports/WriteReport";
@@ -18,7 +18,7 @@ function App() {
       <Route path="/signup" element={<Signup />} />
       <Route path="/patient" element={<Patient />} />
       <Route path="/staff" element={<Staff />} />
-      <Route path="/appointment" element={<Appointment />} />
+      <Route path="/test" element={<Test />} />
       <Route path="/chart" element={<Chart />} />
       <Route path="/report" element={<Report />} />
       <Route path="/writereport" element={<WriteReport />} />

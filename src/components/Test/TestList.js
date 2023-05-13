@@ -1,33 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button } from "react-bootstrap";
-import { Link } from 'react-router-dom';
-import AppointmentDataService from "../../services/appointment.services";
+import { Link } from "react-router-dom";
+import TestDataService from "../../services/test.services";
 
-const AppointmentsList = ({ getAppointmentId }) => {
-  const [appointments, setAppointments] = useState([]);
+const TestsList = ({ getTestId }) => {
+  const [tests, setTests] = useState([]);
   useEffect(() => {
-    getAppointments();
+    getTests();
   }, []);
 
-  const getAppointments = async () => {
-    const data = await AppointmentDataService.getAllAppointments();
+  const getTests = async () => {
+    const data = await TestDataService.getAllTests();
     console.log(data.docs);
-    setAppointments(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    setTests(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
   };
 
   const deleteHandler = async (id) => {
-    await AppointmentDataService.deleteAppointment(id);
-    getAppointments();
+    await TestDataService.deleteTest(id);
+    getTests();
   };
   return (
     <>
       <div className="mb-2">
-        <Button variant="dark edit" onClick={getAppointments}>
+        <Button variant="dark edit" onClick={getTests}>
           Refresh List
         </Button>
       </div>
 
-      {/* <pre>{JSON.stringify(appointments, undefined, 2)}</pre>} */}
+      {/* <pre>{JSON.stringify(tests, undefined, 2)}</pre>} */}
       <Table striped bordered hover size="sm">
         <thead>
           <tr>
@@ -40,7 +40,7 @@ const AppointmentsList = ({ getAppointmentId }) => {
           </tr>
         </thead>
         <tbody>
-          {appointments.map((doc, index) => {
+          {tests.map((doc, index) => {
             return (
               <tr key={doc.id}>
                 <td>{index + 1}</td>
@@ -52,7 +52,7 @@ const AppointmentsList = ({ getAppointmentId }) => {
                   <Button
                     variant="secondary"
                     className="edit"
-                    onClick={(e) => getAppointmentId(doc.id)}
+                    onClick={(e) => getTestId(doc.id)}
                   >
                     Edit
                   </Button>
@@ -65,7 +65,7 @@ const AppointmentsList = ({ getAppointmentId }) => {
                   </Button>
                   <Button variant="primary" as={Link} to="/writereport">
                     Create Report
-                  </Button> 
+                  </Button>
                 </td>
               </tr>
             );
@@ -76,4 +76,4 @@ const AppointmentsList = ({ getAppointmentId }) => {
   );
 };
 
-export default AppointmentsList;
+export default TestsList;

@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Form, Alert, InputGroup, Button, ButtonGroup } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import AppointmentDataService from "../../services/appointment.services";
+import TestDataService from "../../services/test.services";
 
-const AddAppointment = ({ id, setAppointmentId }) => {
+const AddTest = ({ id, setTestId }) => {
   const [name, setName] = useState("");
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState("0900");
@@ -25,24 +25,24 @@ const AddAppointment = ({ id, setAppointmentId }) => {
     const dateString = `${date.getDate()}/${
       date.getMonth() + 1
     }/${date.getFullYear()}`;
-    const newAppointment = {
+    const newTest = {
       name,
       date: dateString,
       time,
       note,
     };
-    console.log(newAppointment);
+    console.log(newTest);
 
     try {
       if (id !== undefined && id !== "") {
-        await AppointmentDataService.updateAppointment(id, newAppointment);
-        setAppointmentId("");
+        await TestDataService.updateTest(id, newTest);
+        setTestId("");
         setMessage({ error: false, msg: "Updated successfully!" });
       } else {
-        await AppointmentDataService.addAppointments(newAppointment);
+        await TestDataService.addTests(newTest);
         setMessage({
           error: false,
-          msg: "New Appointment added successfully!",
+          msg: "New Test added successfully!",
         });
       }
     } catch (err) {
@@ -58,7 +58,7 @@ const AddAppointment = ({ id, setAppointmentId }) => {
   const editHandler = async () => {
     setMessage("");
     try {
-      const docSnap = await AppointmentDataService.getAppointment(id);
+      const docSnap = await TestDataService.getTest(id);
       console.log("the record is :", docSnap.data());
       setName(docSnap.data().name);
       setDate(new Date(docSnap.data().date));
@@ -112,9 +112,9 @@ const AddAppointment = ({ id, setAppointmentId }) => {
         )}
 
         <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3" controlId="formAppointmentName">
+          <Form.Group className="mb-3" controlId="formTestName">
             <InputGroup>
-              <InputGroup.Text id="formAppointmentName">Name</InputGroup.Text>
+              <InputGroup.Text id="formTestName">Name</InputGroup.Text>
               <Form.Control
                 type="text"
                 placeholder="Patient's Name"
@@ -124,9 +124,9 @@ const AddAppointment = ({ id, setAppointmentId }) => {
             </InputGroup>
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formAppointmentDate">
+          <Form.Group className="mb-3" controlId="formTestDate">
             <InputGroup>
-              <InputGroup.Text id="formAppointmentDate">Date</InputGroup.Text>
+              <InputGroup.Text id="formTestDate">Date</InputGroup.Text>
               <DatePicker
                 selected={date}
                 onChange={(date) => setDate(date)}
@@ -136,22 +136,22 @@ const AddAppointment = ({ id, setAppointmentId }) => {
               />
             </InputGroup>
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formAppointmentTime">
+          <Form.Group className="mb-3" controlId="formTestTime">
             <InputGroup>
-              <InputGroup.Text id="formAppointmentTime">Time</InputGroup.Text>
+              <InputGroup.Text id="formTestTime">Time</InputGroup.Text>
               <Form.Select
                 value={time}
                 onChange={(e) => setTime(e.target.value)}
-                aria-label="Select appointment time"
+                aria-label="Select test time"
               >
                 {timeOptions}
               </Form.Select>
             </InputGroup>
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formAppointmentNote">
+          <Form.Group className="mb-3" controlId="formTestNote">
             <InputGroup>
-              <InputGroup.Text id="formAppointmentNote">Notes</InputGroup.Text>
+              <InputGroup.Text id="formTestNote">Notes</InputGroup.Text>
               <Form.Control
                 type="text"
                 placeholder="Notes"
@@ -171,4 +171,4 @@ const AddAppointment = ({ id, setAppointmentId }) => {
   );
 };
 
-export default AddAppointment;
+export default AddTest;
