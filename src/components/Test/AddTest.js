@@ -9,6 +9,7 @@ const AddTest = ({ id, setTestId }) => {
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState("0900");
   const [note, setNote] = useState("");
+  const [patientId, setPatientId] = useState("");
   const [message, setMessage] = useState({ error: false, msg: "" });
 
   const handleSubmit = async (e) => {
@@ -30,6 +31,7 @@ const AddTest = ({ id, setTestId }) => {
       date: dateString,
       time,
       note,
+      patientId,
     };
     console.log(newTest);
 
@@ -53,6 +55,7 @@ const AddTest = ({ id, setTestId }) => {
     setDate(new Date());
     setTime("0900");
     setNote("");
+    setPatientId("");
   };
 
   const editHandler = async () => {
@@ -64,6 +67,7 @@ const AddTest = ({ id, setTestId }) => {
       setDate(new Date(docSnap.data().date));
       setTime(docSnap.data().time);
       setNote(docSnap.data().note);
+      setPatientId(docSnap.data.patientId);
     } catch (err) {
       setMessage({ error: true, msg: err.message });
     }

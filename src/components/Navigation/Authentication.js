@@ -39,10 +39,9 @@ const Authentication = () => {
           <Nav.Link href="/" onClick={userSignOut}>
             Sign Out
           </Nav.Link>
-          <Nav.Link href="/patient">Patients</Nav.Link>
-          <Nav.Link href="/staff">Staffs</Nav.Link>
-          <Nav.Link href="/test">Test</Nav.Link>
-          <Nav.Link href="/report">Reports</Nav.Link>
+          <Nav.Link href="/patient">Patient</Nav.Link>
+          <Nav.Link href="/staff">Staff</Nav.Link>
+          <Nav.Link href="/report">Report</Nav.Link>
           <Nav.Link href="/writereport">Submit New Report</Nav.Link>
         </>
       )}

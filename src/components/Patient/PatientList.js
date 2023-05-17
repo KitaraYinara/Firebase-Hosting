@@ -60,6 +60,9 @@ const PatientsList = ({ getPatientId }) => {
                   >
                     Delete
                   </Button>
+                  <Button variant="primary" className="view" href="/test">
+                    View all tests
+                  </Button>
                 </td>
               </tr>
             );
