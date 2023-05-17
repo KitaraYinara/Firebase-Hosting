@@ -8,38 +8,77 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import { db1 } from "./firebase";
+import { subscribeToSensorData } from "./firebase";
 
 function Chart() {
-  const [data, setData] = useState([]);
+  const [sensorData, setSensorData] = useState([]);
+  const [showAllData, setShowAllData] = useState(false);
+  const [startIndex, setStartIndex] = useState(0);
+  const [visibleData, setVisibleData] = useState([]);
 
   useEffect(() => {
-    db1.ref("/").on("value", (snapshot) => {
-      const rawData = snapshot.val();
-      const formattedData = Object.keys(rawData).map((key) => ({
-        //timestamp: key,
-        bpm: rawData.bpm,
-        spo2: rawData.spo2,
-      }));
-      console.log(rawData);
-      console.log(rawData.bpm);
-      //console.log(formattedData);
-      setData(formattedData);
-      //addData(formattedData);
-      console.log("================================>");
+    subscribeToSensorData((data) => {
+      setSensorData(data);
     });
   }, []);
 
+  useEffect(() => {
+    if (showAllData) {
+      setVisibleData(sensorData);
+    } else {
+      const endIndex = startIndex + 10;
+      setVisibleData(sensorData.slice(startIndex, endIndex));
+    }
+  }, [sensorData, showAllData, startIndex]);
+
+  const handleShowAllData = () => {
+    setShowAllData(true);
+    setStartIndex(0);
+  };
+
+  const handlePrevData = () => {
+    if (!showAllData && startIndex > 0) {
+      setStartIndex(startIndex - 10);
+    }
+  };
+
+  const handleNextData = () => {
+    if (!showAllData && startIndex + 10 < sensorData.length) {
+      setStartIndex(startIndex + 10);
+    }
+  };
+
   return (
-    <LineChart width={800} height={600} data={data}>
-      <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="timestamp" />
-      <YAxis />
-      <Tooltip />
-      <Legend />
-      <Line type="monotone" dataKey="bpm" stroke="#8884d8" />
-      <Line type="monotone" dataKey="spo2" stroke="#82ca9d" />
-    </LineChart>
+    <div>
+      <div>
+        {!showAllData && (
+          <button onClick={handleShowAllData}>Show All Data</button>
+        )}
+      </div>
+      <LineChart width={800} height={600} data={visibleData}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="timestamp" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Line type="monotone" dataKey="bpm" stroke="#8884d8" />
+        <Line type="monotone" dataKey="spO2" stroke="#82ca9d" />
+        <Line type="monotone" dataKey="motion" stroke="#ffc658" />
+      </LineChart>
+      {!showAllData && (
+        <div>
+          <button onClick={handlePrevData} disabled={startIndex === 0}>
+            Prev
+          </button>
+          <button
+            onClick={handleNextData}
+            disabled={startIndex + 10 >= sensorData.length}
+          >
+            Next
+          </button>
+        </div>
+      )}
+    </div>
   );
 }
 

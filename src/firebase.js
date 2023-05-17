@@ -1,8 +1,7 @@
 import firebase from 'firebase/compat/app';
-import 'firebase/compat/database';
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore } from "@firebase/firestore";
+import { getFirestore, collection, onSnapshot } from "@firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -18,7 +17,20 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-export { app, auth };
-export const db = getFirestore(app);
-export const db1 = firebase.initializeApp(firebaseConfig, "second_db").database();
+export { app, auth, db};
+export function subscribeToSensorData(callback) {
+  const sensorsRef = collection(db, "sensors");
+  onSnapshot(sensorsRef, (querySnapshot) => {
+    const sensorData = querySnapshot.docs.map((doc) => ({
+      timestamp: doc.data().timestamp,
+      bpm: doc.data().bpm,
+      spO2: doc.data().spO2,
+      motion: doc.data().motion,
+    }));
+    callback(sensorData);
+  });
+}
+
+
