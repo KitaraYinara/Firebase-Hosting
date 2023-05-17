@@ -55,7 +55,7 @@ function Chart() {
           <button onClick={handleShowAllData}>Show All Data</button>
         )}
       </div>
-      <LineChart width={800} height={600} data={visibleData}>
+      <LineChart width={1900} height={800} data={visibleData}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="timestamp" />
         <YAxis />
