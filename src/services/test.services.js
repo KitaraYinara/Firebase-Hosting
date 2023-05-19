@@ -9,7 +9,9 @@ import {
   doc,
 } from "firebase/firestore";
 
-const testCollectionRef = collection(db, "tests");
+var patientId = sessionStorage.getItem("patientId");
+
+const testCollectionRef = collection(db, `patients/${patientId}/tests`);
 
 class TestDataService {
   addTests = (newTest) => {
@@ -17,7 +19,7 @@ class TestDataService {
   };
 
   updateTest = (id, updatedTest) => {
-    const testDoc = doc(db, "tests", id);
+    const testDoc = doc(db, `patients/${patientId}/tests`, id);
     const date = updatedTest.date.toISOString().split("T")[0];
     return updateDoc(testDoc, { ...updatedTest, date });
   };

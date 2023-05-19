@@ -7,6 +7,11 @@ const PatientsList = ({ getPatientId }) => {
   useEffect(() => {
     getPatients();
   }, []);
+  const setPatientId = (patientId) => {
+    console.log(patientId);
+    sessionStorage.setItem("patientId", patientId);
+    window.location.href = "/test";
+  };
 
   const getPatients = async () => {
     const data = await PatientDataService.getAllPatients();
@@ -60,7 +65,12 @@ const PatientsList = ({ getPatientId }) => {
                   >
                     Delete
                   </Button>
-                  <Button variant="primary" className="view" href="/test">
+                  <Button
+                    variant="primary"
+                    className="view"
+                    value={doc.id}
+                    onClick={(e) => setPatientId(e.target.value)}
+                  >
                     View all tests
                   </Button>
                 </td>
