@@ -15,28 +15,14 @@ const TestsList = ({ getTestId }) => {
     setTests(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
   };
 
-  const deleteHandler = async (id) => {
-    await TestDataService.deleteTest(id);
-    getTests();
-  };
   return (
     <>
-      <div className="mb-2">
-        <Button variant="dark edit" onClick={getTests}>
-          Refresh List
-        </Button>
-      </div>
-
       {/* <pre>{JSON.stringify(tests, undefined, 2)}</pre>} */}
       <Table striped bordered hover size="sm">
         <thead>
           <tr>
             <th>#</th>
-            <th>Patient's Name</th>
             <th>Date</th>
-            <th>Time</th>
-            <th>Notes</th>
-            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -44,25 +30,8 @@ const TestsList = ({ getTestId }) => {
             return (
               <tr key={doc.id}>
                 <td>{index + 1}</td>
-                <td>{doc.name}</td>
                 <td>{new Date(doc.date).toLocaleDateString()}</td>
-                <td>{doc.time}</td>
-                <td>{doc.note}</td>
                 <td>
-                  <Button
-                    variant="secondary"
-                    className="edit"
-                    onClick={(e) => getTestId(doc.id)}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    variant="danger"
-                    className="delete"
-                    onClick={(e) => deleteHandler(doc.id)}
-                  >
-                    Delete
-                  </Button>
                   <Button variant="primary" as={Link} to="/writereport">
                     Create Report
                   </Button>

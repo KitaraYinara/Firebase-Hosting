@@ -14,13 +14,13 @@ const Test = () => {
   return (
     <>
       <Navigation></Navigation>
-      <Container style={{ width: "400px" }}>
+      {/* <Container style={{ width: "400px" }}>
         <Row>
           <Col>
             <AddTest id={testId} setTestId={setTestId} />
           </Col>
         </Row>
-      </Container>
+      </Container> */}
       <Container>
         <Row>
           <Col>
