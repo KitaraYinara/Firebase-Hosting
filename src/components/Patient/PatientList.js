@@ -1,16 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button } from "react-bootstrap";
 import PatientDataService from "../../services/patient.services";
-
+import { query, onSnapshot } from "firebase/firestore";
 const PatientsList = ({ getPatientId }) => {
   const [patients, setPatients] = useState([]);
   useEffect(() => {
-    getPatients();
+    const fetchPatients = async () => {
+      getPatients();
+      const patientsQuery = query(getPatients());
+
+      const unsubscribe = onSnapshot(patientsQuery, (snapshot) => {
+        const patientList = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setPatients(patientList);
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    };
+    fetchPatients();
   }, []);
-  const setPatientId = (patientId) => {
+  const routeToTest = (patientId) => {
     console.log(patientId);
-    sessionStorage.setItem("patientId", patientId);
-    window.location.href = "/test";
+    window.location.href = `/patients/${patientId}/tests`;
   };
 
   const getPatients = async () => {
@@ -31,11 +46,9 @@ const PatientsList = ({ getPatientId }) => {
         </Button>
       </div>
 
-      {/* <pre>{JSON.stringify(patients, undefined, 2)}</pre>} */}
       <Table striped bordered hover size="sm">
         <thead>
           <tr>
-            <th>#</th>
             <th>Patient Name</th>
             <th>Patient Age</th>
             <th>Gender</th>
@@ -43,40 +56,38 @@ const PatientsList = ({ getPatientId }) => {
           </tr>
         </thead>
         <tbody>
-          {patients.map((doc, index) => {
-            return (
-              <tr key={doc.id}>
-                <td>{index + 1}</td>
-                <td>{doc.name}</td>
-                <td>{doc.age}</td>
-                <td>{doc.gender}</td>
-                <td>
-                  <Button
-                    variant="secondary"
-                    className="edit"
-                    onClick={(e) => getPatientId(doc.id)}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    variant="danger"
-                    className="delete"
-                    onClick={(e) => deleteHandler(doc.id)}
-                  >
-                    Delete
-                  </Button>
-                  <Button
-                    variant="primary"
-                    className="view"
-                    value={doc.id}
-                    onClick={(e) => setPatientId(e.target.value)}
-                  >
-                    View all tests
-                  </Button>
-                </td>
-              </tr>
-            );
-          })}
+          {patients.map((patient) => (
+            <tr key={patient.id}>
+              <td>{patient.name}</td>
+              <td>{patient.age}</td>
+              <td>{patient.gender}</td>
+              <td>
+                <Button
+                  variant="secondary"
+                  className="edit"
+                  onClick={(e) => getPatientId(patient.id)}
+                >
+                  Edit
+                </Button>
+                <Button
+                  variant="danger"
+                  className="delete"
+                  onClick={(e) => deleteHandler(patient.id)}
+                >
+                  Delete
+                </Button>
+                <Button
+                  variant="primary"
+                  className="view"
+                  onClick={(e) => routeToTest(patient.id)}
+                >
+                  Show Tests
+                </Button>
+
+                {/* <Link to={`/patients/${patient.id}/tests`}>Show Tests</Link> */}
+              </td>
+            </tr>
+          ))}
         </tbody>
       </Table>
     </>

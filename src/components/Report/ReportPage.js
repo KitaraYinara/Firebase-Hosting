@@ -1,7 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { db } from './firebase';
-import { collection, doc, getDoc, query, where, onSnapshot } from 'firebase/firestore';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { db } from "../../firebase";
+import {
+  collection,
+  doc,
+  getDoc,
+  query,
+  where,
+  onSnapshot,
+} from "firebase/firestore";
 import {
   LineChart,
   Line,
@@ -10,20 +17,27 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-} from 'recharts';
+} from "recharts";
 
 function ReportPage() {
   const { patientId, testId } = useParams();
   const [sensorData, setSensorData] = useState([]);
-  const [patientName, setPatientName] = useState('');
+  const [patientName, setPatientName] = useState("");
 
   useEffect(() => {
     const fetchSensorData = () => {
-      const sensorsCollectionRef = collection(db, 'patients', patientId, 'tests', testId, 'sensors');
+      const sensorsCollectionRef = collection(
+        db,
+        "patients",
+        patientId,
+        "tests",
+        testId,
+        "sensors"
+      );
       const sensorsQuery = query(sensorsCollectionRef);
 
-      const unsubscribe = onSnapshot(sensorsQuery, snapshot => {
-        const sensorDataList = snapshot.docs.map(doc => ({
+      const unsubscribe = onSnapshot(sensorsQuery, (snapshot) => {
+        const sensorDataList = snapshot.docs.map((doc) => ({
           timestamp: doc.data().timestamp.toDate().toLocaleString(),
           bpm: doc.data().bpm,
           spO2: doc.data().spO2,
@@ -33,12 +47,12 @@ function ReportPage() {
       });
 
       return () => {
-        unsubscribe(); 
+        unsubscribe();
       };
     };
 
     const fetchPatientName = async () => {
-      const patientDocRef = doc(db, 'patients', patientId);
+      const patientDocRef = doc(db, "patients", patientId);
       const patientDoc = await getDoc(patientDocRef);
 
       if (patientDoc.exists()) {
@@ -53,7 +67,9 @@ function ReportPage() {
 
   return (
     <div>
-      <h1>Report for Patient: {patientName}, Test ID: {testId}</h1>
+      <h1>
+        Report for Patient: {patientName}, Test ID: {testId}
+      </h1>
       {sensorData.length === 0 ? (
         <p>Loading sensor data...</p>
       ) : (

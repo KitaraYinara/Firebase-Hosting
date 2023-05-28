@@ -41,8 +41,6 @@ const Authentication = () => {
           </Nav.Link>
           <Nav.Link href="/patient">Patient</Nav.Link>
           <Nav.Link href="/staff">Staff</Nav.Link>
-          <Nav.Link href="/report">Report</Nav.Link>
-          <Nav.Link href="/writereport">Submit New Report</Nav.Link>
         </>
       )}
     </>
