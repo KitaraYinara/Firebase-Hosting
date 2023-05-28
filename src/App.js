@@ -9,6 +9,7 @@ import Chart from "./chart";
 import Report from "./pages/reports/Report";
 import WriteReport from "./pages/reports/WriteReport";
 import "bootstrap/dist/css/bootstrap.min.css";
+import './PatientsLists.css';
 
 function App() {
   return (
