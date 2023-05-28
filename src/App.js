@@ -8,6 +8,9 @@ import Test from "./pages/tests/Test";
 import Chart from "./chart";
 import Report from "./pages/reports/Report";
 import WriteReport from "./pages/reports/WriteReport";
+import PatientsLists from "./PatientsLists";
+import PatientTestPage from "./PatientTestPage";
+import ReportPage from "./ReportPage";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
@@ -22,6 +25,9 @@ function App() {
       <Route path="/chart" element={<Chart />} />
       <Route path="/report" element={<Report />} />
       <Route path="/writereport" element={<WriteReport />} />
+      <Route path="/patients" element={<PatientsLists />} />
+      <Route path="/patients/:patientId/tests" element={<PatientTestPage />} />
+      <Route path="/report/:patientId/:testId" element={<ReportPage />} /> 
     </Routes>
   );
 }
