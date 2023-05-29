@@ -1,0 +1,121 @@
+label {
+  color: goldenrod;
+}
+.form {
+  height: 50px;
+  width: 500px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  font-size: 15px;
+  border-radius: 15px;
+  border-width: 1px;
+  border-color: goldenrod;
+}
+
+.Submit {
+  overflow: hidden;
+  margin-right: 5px;
+  border-color: cornflowerblue;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 5px;
+  background-color: cornflowerblue;
+  color: rgb(255, 255, 255);
+  padding: 15px 40px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.5s, color 0.5s;
+}
+
+.refresh {
+  overflow: hidden;
+  padding: 5px;
+  margin-top: 30px;
+  margin-left: 20px;
+  background-color: magenta;
+  color: rgb(255, 255, 255);
+  border-color: darkmagenta;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 5px;
+  padding: 15px 40px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.5s, color 0.5s;
+}
+.delete {
+  margin-right: 5px;
+  background-color: #fb667a;
+  color: rgb(255, 255, 255);
+  border-color: #fb667a;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 5px;
+  padding: 15px 40px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.5s, color 0.5s;
+}
+.edit {
+  margin-right: 5px;
+  background-color: goldenrod;
+  color: rgb(255, 255, 255);
+  border-color: goldenrod;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 5px;
+  padding: 15px 40px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.5s, color 0.5s;
+}
+.view {
+  margin-right: 5px;
+  border-color: cornflowerblue;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 5px;
+  background-color: cornflowerblue;
+  color: rgb(255, 255, 255);
+  padding: 15px 40px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.5s, color 0.5s;
+}
+
+.Submit:hover {
+  background-color: #ffffff;
+  color: cornflowerblue;
+  transition: background-color 0.5s, color 0.5s;
+}
+
+.refresh:hover {
+  background-color: #ffffff;
+  color: darkmagenta;
+  transition: background-color 0.5s, color 0.5s;
+}
+.delete:hover {
+  background-color: #ffffff;
+  color: #fb667a;
+  transition: background-color 0.5s, color 0.5s;
+}
+.edit:hover {
+  background-color: #ffffff;
+  color: goldenrod;
+  transition: background-color 0.5s, color 0.5s;
+}
+.view:hover {
+  background-color: #ffffff;
+  color: cornflowerblue;
+  transition: background-color 0.5s, color 0.5s;
+}

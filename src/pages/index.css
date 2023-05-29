@@ -8,7 +8,9 @@
   padding: 0 2rem;
   margin: 0 auto;
 }
-
+h1 {
+  color: aliceblue;
+}
 .wrapper {
   max-width: 28rem;
   width: 100%;

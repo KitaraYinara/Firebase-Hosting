@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Form, Alert, InputGroup, Button, ButtonGroup } from "react-bootstrap";
+import { Form, Alert, InputGroup, Button } from "react-bootstrap";
 import PatientDataService from "../../services/patient.services";
-
+import "./Patient.css";
 const AddPatient = ({ id, setPatientId }) => {
   const [name, setName] = useState("");
   const [age, setAge] = useState();
@@ -71,48 +71,78 @@ const AddPatient = ({ id, setPatientId }) => {
             {message?.msg}
           </Alert>
         )}
-
-        <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3" controlId="formPatientName">
-            <InputGroup>
-              <InputGroup.Text id="formPatientName">Name</InputGroup.Text>
-              <Form.Control
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3" controlId="formPatientName">
+            <fieldset>
+              <label id="formPatientName">Name: </label>
+              <input
+                className="input-field"
                 type="text"
                 placeholder="Patient Name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
-            </InputGroup>
-          </Form.Group>
+            </fieldset>
+          </div>
 
-          <Form.Group className="mb-3" controlId="formPatientAge">
-            <InputGroup>
-              <InputGroup.Text id="formPatientAge">Age</InputGroup.Text>
-              <Form.Control
+          <div className="mb-3" controlId="formPatientAge">
+            <fieldset>
+              <label id="formPatientAge">Age: </label>
+              <input
+                className="input-field"
                 type="number"
                 placeholder="Patient Age"
                 value={age}
                 onChange={(e) => setAge(e.target.value)}
               />
-            </InputGroup>
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="formPatientGender">
-            <InputGroup>
-              <InputGroup.Text id="formPatientGender">Gender</InputGroup.Text>
-              <Form.Control
+            </fieldset>
+          </div>
+          <div className="mb-3" controlId="formPatientGender">
+            <fieldset>
+              <label id="formPatientGender">Gender: </label>
+              <input
+                className="input-field"
                 type="text"
                 placeholder="Patient Gender"
                 value={gender}
                 onChange={(e) => setGender(e.target.value)}
               />
-            </InputGroup>
-          </Form.Group>
-          <div className="d-grid gap-2">
-            <Button variant="primary" type="Submit">
-              Add/ Update
-            </Button>
+            </fieldset>
           </div>
-        </Form>
+          <div className="d-grid gap-2">
+            <button type="Submit" className="Submit">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="currentColor"
+                class="bi bi-plus-lg"
+                viewBox="0 0 22 18"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"
+                />
+              </svg>
+              Add &emsp;|&emsp;
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="currentColor"
+                class="bi bi-pencil-square"
+                viewBox="0 0 22 18"
+              >
+                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                <path
+                  fill-rule="evenodd"
+                  d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+                />
+              </svg>
+              Update
+            </button>
+          </div>
+        </form>
       </div>
     </>
   );

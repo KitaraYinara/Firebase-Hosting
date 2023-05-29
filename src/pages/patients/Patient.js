@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import AddPatient from "../../components/Patient/AddPatient";
 import PatientsList from "../../components/Patient/PatientList";
 import Navigation from "../../components/Navigation/Navigation";
@@ -14,20 +14,20 @@ const Patient = () => {
   return (
     <>
       <Navigation></Navigation>
-      <Container style={{ width: "400px" }}>
+      <div>
         <Row>
           <Col>
             <AddPatient id={patientId} setPatientId={setPatientId} />
           </Col>
         </Row>
-      </Container>
-      <Container>
+      </div>
+      <div>
         <Row>
           <Col>
             <PatientsList getPatientId={getPatientIdHandler} />
           </Col>
         </Row>
-      </Container>
+      </div>
     </>
   );
 };

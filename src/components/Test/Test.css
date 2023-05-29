@@ -2,5 +2,75 @@ h1 {
   padding-top: 1%;
   padding-bottom: 1%;
   text-align: center;
-  /* font-weight: bold; */
+  font-weight: bold;
+  line-height: 1em;
+  color: goldenrod;
+  font-size: 3em;
+}
+
+table {
+  /* display: inline-block; */
+  padding: 5px;
+  width: 300px;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 1em;
+  max-width: 2000px;
+  min-width: 1800px;
+  overflow: hidden;
+  border-radius: 5px;
+}
+thead th {
+  background-color: goldenrod;
+  text-align: center;
+  font-weight: bold;
+}
+
+th,
+td {
+  padding: 10px 15px;
+  text-align: center;
+}
+td {
+  font-size: 20px;
+}
+tbody td {
+  color: aliceblue;
+}
+tbody tr:nth-of-type(odd) {
+  background-color: #4e5e7d;
+}
+
+tbody tr:nth-of-type(even) {
+  background-color: #39445c;
+}
+
+td:first-child {
+  color: goldenrod;
+}
+
+.back {
+  overflow: hidden;
+  padding: 5px;
+  margin-top: 30px;
+  margin-left: 20px;
+  background-color: magenta;
+  color: rgb(255, 255, 255);
+  border-color: darkmagenta;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 5px;
+  padding: 15px 40px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.5s, color 0.5s;
+}
+
+.back:hover {
+  background-color: #ffffff;
+  color: darkmagenta;
+  transition: background-color 0.5s, color 0.5s;
 }

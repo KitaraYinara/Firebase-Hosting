@@ -1,17 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { Table, Button } from "react-bootstrap";
+import { useParams } from "react-router-dom";
 import { db } from "../../firebase";
 import "./Test.css";
 import Navigation from "../../components/Navigation/Navigation";
-import {
-  collection,
-  doc,
-  getDoc,
-  query,
-  where,
-  onSnapshot,
-} from "firebase/firestore";
+import { collection, doc, getDoc, query, onSnapshot } from "firebase/firestore";
 
 function PatientTestPage() {
   const { patientId } = useParams();
@@ -55,15 +47,19 @@ function PatientTestPage() {
     window.location.href = `/report/${patientId}/${testId}`;
   };
 
+  const routeToPatients = () => {
+    window.location.href = "/patient";
+  };
+
   return (
     <div>
       <Navigation />
-      <h1 className="header">Patient: {patientName}</h1>
+      <h1>Patient: {patientName}</h1>
       {tests.length === 0 ? (
         <p>Loading tests...</p>
       ) : (
-        <div className="container">
-          <Table striped bordered hover size="sm">
+        <div>
+          <table>
             <thead>
               <tr>
                 <th>Test ID</th>
@@ -77,18 +73,48 @@ function PatientTestPage() {
                   <td>{test.id}</td>
                   <td>{test.datetime}</td>
                   <td>
-                    <Button
+                    <button
                       variant="primary"
                       className="view"
                       onClick={(e) => routeToReport(test.id)}
                     >
-                      Show Tests
-                    </Button>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="30"
+                        height="30"
+                        fill="currentColor"
+                        class="bi bi-view-list"
+                        viewBox="0 0 22 18"
+                      >
+                        <path d="M3 4.5h10a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1H3zM1 2a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 2zm0 12a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 14z" />
+                      </svg>
+                      View Report
+                    </button>
                   </td>
                 </tr>
               ))}
             </tbody>
-          </Table>
+          </table>
+          <button
+            variant="primary"
+            className="back"
+            onClick={(e) => routeToPatients()}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="30"
+              height="30"
+              fill="currentColor"
+              class="bi bi-arrow-return-left"
+              viewBox="0 0 22 18"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5z"
+              />
+            </svg>
+            Back to Patients
+          </button>
         </div>
       )}
     </div>
