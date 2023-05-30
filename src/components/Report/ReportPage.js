@@ -64,27 +64,51 @@ function ReportPage() {
     fetchSensorData();
     fetchPatientName();
   }, [patientId, testId]);
-
+  const routeToTests = () => {
+    window.location.href = `/patients/${patientId}/tests`;
+  };
   return (
-    <div>
-      <h1>
-        Report for Patient: {patientName}, Test ID: {testId}
-      </h1>
-      {sensorData.length === 0 ? (
-        <p>Loading sensor data...</p>
-      ) : (
-        <LineChart width={1900} height={800} data={sensorData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="timestamp" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey="bpm" stroke="#8884d8" />
-          <Line type="monotone" dataKey="spO2" stroke="#82ca9d" />
-          <Line type="monotone" dataKey="motion" stroke="#ffc658" />
-        </LineChart>
-      )}
-    </div>
+    <>
+      <div>
+        <h1 className="pageheader">
+          Report for Patient: {patientName}, Test ID: {testId}
+        </h1>
+        {sensorData.length === 0 ? (
+          <p>Loading sensor data...</p>
+        ) : (
+          <LineChart width={1900} height={800} data={sensorData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="timestamp" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line type="monotone" dataKey="bpm" stroke="#8884d8" />
+            <Line type="monotone" dataKey="spO2" stroke="#82ca9d" />
+            <Line type="monotone" dataKey="motion" stroke="#ffc658" />
+          </LineChart>
+        )}
+      </div>{" "}
+      <button
+        variant="primary"
+        className="back"
+        onClick={(e) => routeToTests()}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="30"
+          height="30"
+          fill="currentColor"
+          class="bi bi-arrow-return-left"
+          viewBox="0 0 22 18"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5z"
+          />
+        </svg>
+        Back to Tests
+      </button>
+    </>
   );
 }
 

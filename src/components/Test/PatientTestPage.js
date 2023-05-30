@@ -54,7 +54,7 @@ function PatientTestPage() {
   return (
     <div>
       <Navigation />
-      <h1 className="patientName">Patient: {patientName}</h1>
+      <h1 className="pageheader">Patient: {patientName}</h1>
       {tests.length === 0 ? (
         <p>Loading tests...</p>
       ) : (
