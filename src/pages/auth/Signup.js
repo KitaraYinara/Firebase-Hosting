@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Navigation from "../../components/Navigation/Navigation";
 import "../index.css";
-import { auth, app } from "../../firebase";
-import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
+import { auth } from "../../firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
 const Signup = () => {

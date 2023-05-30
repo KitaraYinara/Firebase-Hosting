@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { db } from "../../firebase";
-import {
-  collection,
-  doc,
-  getDoc,
-  query,
-  where,
-  onSnapshot,
-} from "firebase/firestore";
+import { collection, doc, getDoc, query, onSnapshot } from "firebase/firestore";
 import {
   LineChart,
   Line,

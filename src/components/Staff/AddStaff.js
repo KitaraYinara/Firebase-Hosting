@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Alert, InputGroup, Button, ButtonGroup } from "react-bootstrap";
+import { Alert } from "react-bootstrap";
 import StaffDataService from "../../services/staff.services";
 
 const AddStaff = ({ id, setStaffId }) => {

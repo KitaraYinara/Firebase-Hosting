@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { auth, app } from "../../firebase";
+import { auth } from "../../firebase";
 import Nav from "react-bootstrap/Nav";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 

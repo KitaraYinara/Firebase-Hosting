@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Navigation from "../../components/Navigation/Navigation";
 import "../index.css";
-import { auth, app } from "../../firebase";
+import { auth } from "../../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
