@@ -40,7 +40,7 @@ const PatientsList = ({ getPatientId }) => {
   };
   return (
     <>
-      <table>
+      <table className="patienttable">
         <thead>
           <tr>
             <th>Patient Name</th>

@@ -1,6 +1,6 @@
-h1 {
+.patientName {
   padding-top: 1%;
-  padding-bottom: 1%;
+  padding-bottom: 3%;
   text-align: center;
   font-weight: bold;
   line-height: 1em;
@@ -8,7 +8,7 @@ h1 {
   font-size: 3em;
 }
 
-table {
+table.testtable {
   /* display: inline-block; */
   padding: 5px;
   width: 300px;
@@ -16,11 +16,11 @@ table {
   margin-left: auto;
   margin-right: auto;
   font-size: 1em;
-  max-width: 2000px;
-  min-width: 1800px;
   overflow: hidden;
   border-radius: 5px;
+  min-width: 1800px;
 }
+
 thead th {
   background-color: goldenrod;
   text-align: center;

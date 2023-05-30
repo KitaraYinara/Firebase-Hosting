@@ -1,66 +1,43 @@
-.table {
-    border-collapse: separate;
-    border-spacing: 0 10px;
-    width: 100%;
-    background-color: #f1f1f1;
-    color: #333;
-  }
-  
-  .table th,
-  .table td {
-    padding: 10px;
-    text-align: center;
-    vertical-align: middle;
-  }
-  
-  .table thead th {
-    background-color: #444;
-    color: #fff;
-    font-size: 16px;
-    text-transform: uppercase;
-  }
-  
-  .table tbody tr:nth-child(even) {
-    background-color: #ddd;
-  }
-  
-  .table tbody tr:hover {
-    background-color: #ccc;
-  }
-  
-  .btn {
-    border-radius: 5px;
-    padding: 10px;
-    font-size: 16px;
-    text-transform: uppercase;
-    margin-right: 10px;
-  }
-  
-  .btn.edit {
-    background-color: #009933;
-    border-color: #009933;
-    color: #fff;
-  }
-  
-  .btn.edit:hover {
-    background-color: #00802b;
-    border-color: #00802b;
-    color: #fff;
-  }
-  
-  .btn.delete {
-    background-color: #cc0000;
-    border-color: #cc0000;
-    color: #fff;
-  }
-  
-  .btn.delete:hover {
-    background-color: #b30000;
-    border-color: #b30000;
-    color: #fff;
-  }
-  
-  .mb-2 {
-    margin-bottom: 20px;
-  }
-  
+table.stafftable {
+  /* display: inline-block; */
+  padding: 5px;
+  width: 300px;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 1em;
+  max-width: 2000px;
+  min-width: 1800px;
+  overflow: hidden;
+  border-radius: 5px;
+}
+.addupdateform {
+  max-width: 1000px;
+  min-width: 800px;
+  margin: auto;
+}
+.table th,
+.table td {
+  padding: 10px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.table thead th {
+  background-color: #444;
+  color: #fff;
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+.table tbody tr:nth-child(even) {
+  background-color: #ddd;
+}
+
+.table tbody tr:hover {
+  background-color: #ccc;
+}
+
+.mb-2 {
+  margin-bottom: 20px;
+}

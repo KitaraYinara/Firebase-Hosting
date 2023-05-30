@@ -14,20 +14,20 @@ const Staff = () => {
   return (
     <>
       <Navigation></Navigation>
-      <Container style={{ width: "400px" }}>
+      <div>
         <Row>
           <Col>
             <AddStaff id={staffId} setStaffId={setStaffId} />
           </Col>
         </Row>
-      </Container>
-      <Container>
+      </div>
+      <div>
         <Row>
           <Col>
             <StaffsList getStaffId={getStaffIdHandler} />
           </Col>
         </Row>
-      </Container>
+      </div>
     </>
   );
 };

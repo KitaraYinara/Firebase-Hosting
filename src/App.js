@@ -8,7 +8,6 @@ import Chart from "./chart";
 import PatientTestPage from "./components/Test/PatientTestPage";
 import ReportPage from "./components/Report/ReportPage";
 import "bootstrap/dist/css/bootstrap.min.css";
-
 function App() {
   return (
     <Routes>
