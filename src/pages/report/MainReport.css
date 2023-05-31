@@ -1,0 +1,345 @@
+.page {
+  position: relative;
+  background-color: #ffffff;
+  width: 1400px; /* A4 width in pixels at 72 DPI */
+  height: 1800px; /* A4 height in pixels at 72 DPI */
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.page:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 2px solid #793838;
+  box-sizing: border-box;
+}
+.header {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.import_button_text {
+  position: absolute;
+  width: 250px;
+  left: 700px;
+  padding: 10px 20px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.import_button_text:hover {
+  background-color: #e0e0e0;
+}
+.upload-status {
+  position: absolute;
+  left: 1000px;
+  width: 100px;
+  height: 20px;
+  top: 10px;
+
+  color: green;
+  font-size: 14px;
+}
+
+.info_border {
+  position: absolute;
+  background-color: #a3a0a0;
+  left: 25px;
+  top: 80px;
+  width: 1365px;
+  height: 45px;
+  box-sizing: border-box;
+}
+.name {
+  position: absolute;
+  top: 10px;
+  left: 40px;
+  font-size: 20px;
+}
+.age {
+  position: absolute;
+  top: 10px;
+  left: 530px;
+  font-size: 20px;
+}
+.gender {
+  position: absolute;
+  top: 10px;
+  left: 970px;
+  font-size: 20px;
+}
+
+.std_border {
+  position: absolute;
+  background-color: #ffffff;
+  width: 960px;
+  height: 82px;
+  left: 25px;
+  top: 130px;
+
+  padding: 20px;
+  box-sizing: border-box;
+  border: 2px solid black;
+}
+.start {
+  position: absolute;
+  top: 2px;
+  left: 40px;
+  font-size: 20px;
+}
+.end {
+  position: absolute;
+  top: 2px;
+  left: 500px;
+  font-size: 20px;
+}
+.duration {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  font-size: 20px;
+}
+
+.note_border {
+  position: absolute;
+  background-color: #ffffff;
+  width: 960px;
+  height: 120px;
+  left: 25px;
+  top: 210px;
+  padding: 20px;
+  box-sizing: border-box;
+  border: 2px solid black;
+}
+.note {
+  position: absolute;
+  top: 2px;
+  left: 40px;
+  font-size: 20px;
+}
+
+.drop4_border {
+  position: absolute;
+  background-color: #ffffff;
+  width: 500px;
+  height: 25px;
+  left: 25px;
+  top: 335px;
+  padding: 20px;
+  box-sizing: border-box;
+  border: 2px solid black;
+}
+.drop4 {
+  position: absolute;
+  top: 2px;
+  left: 40px;
+  font-size: 20px;
+}
+.drop4_ph {
+  position: absolute;
+  top: 2px;
+  left: 250px;
+  font-size: 20px;
+}
+
+.drop3_border {
+  position: absolute;
+  background-color: #ffffff;
+  width: 500px;
+  height: 25px;
+  left: 25px;
+  top: 378px;
+  padding: 20px;
+  box-sizing: border-box;
+  border: 2px solid black;
+}
+
+.drop3 {
+  position: absolute;
+  top: 2px;
+  left: 40px;
+  font-size: 20px;
+}
+
+.drop3_ph {
+  position: absolute;
+  top: 2px;
+  left: 250px;
+  font-size: 20px;
+}
+
+.olt_table {
+  position: absolute;
+  top: 425px;
+  border-collapse: collapse;
+  max-width: 500px;
+  max-height: 30px;
+  width: 500px;
+  left: 25px;
+  border: 1px solid black;
+}
+.olt_table th,
+.olt_table td {
+  border-right: 1px solid black;
+  padding: 8px;
+  text-align: center;
+}
+.olt_table th:first-child,
+.olt_table td:first-child {
+  width: 200px;
+  height: 1opx;
+}
+.olt_table th {
+  background-color: aquamarine;
+  border-bottom: 1px solid black;
+}
+.olt_table td:last-child {
+  border-right: none;
+}
+.olt_table tr:last-child td {
+  border-bottom: none;
+}
+
+.plt_table {
+  position: absolute;
+  top: 615px;
+  border-collapse: collapse;
+  max-width: 500px;
+  max-height: 30px;
+  width: 500px;
+  left: 25px;
+  border: 1px solid black;
+}
+.plt_table th,
+.plt_table td {
+  border-right: 1px solid black;
+  padding: 8px;
+  text-align: center;
+}
+.plt_table th:first-child,
+.plt_table td:first-child {
+  width: 200px; /* Set the width for the first column */
+}
+.plt_table th {
+  background-color: aquamarine;
+  border-bottom: 1px solid black;
+}
+.plt_table td:last-child {
+  border-right: none;
+}
+.plt_table tr:last-child td {
+  border-bottom: none;
+}
+
+.O2ratio_display {
+  position: absolute;
+  background-color: #ffffff;
+  width: 455px;
+  height: 444px;
+  left: 530px;
+  top: 335px;
+  padding: 20px;
+  box-sizing: border-box;
+  border: 2px solid black;
+}
+
+.hal_table {
+  position: absolute;
+  top: 130px;
+  border-collapse: collapse;
+  max-width: 500px;
+  max-height: 1000px;
+  height: 200px;
+  width: 400px;
+  left: 990px;
+  border: 1px solid black;
+}
+.hal_table th,
+.hal_table td {
+  border-right: 1px solid black;
+  padding: 8px;
+  text-align: center;
+  border-bottom: 1px solid black;
+}
+.hal_table th:first-child,
+.hal_table td:first-child {
+  width: 200px; /* Set the width for the first column */
+}
+.hal_table th {
+  background-color: aquamarine;
+  border-bottom: 1px solid black;
+}
+.hal_table td:last-child {
+  border-right: none;
+}
+.hal_table tr:last-child td {
+  border-bottom: none;
+}
+.colored-bar {
+  height: 20px;
+  background: linear-gradient(to right, #00ff00, #ffff00, #ff0000);
+}
+.colored-bar::before {
+  content: "";
+  position: absolute;
+  top: 155px;
+  left: calc((var(--value) - 70) / 30 * 100%);
+  border: 5px solid transparent;
+  border-top: 5px solid black;
+  transform: translateX(-50%);
+}
+
+.ODT_table {
+  position: absolute;
+  top: 335px;
+  border-collapse: collapse;
+  max-width: 500px;
+  max-height: 6000px;
+  height: 425px;
+  width: 400px;
+  left: 990px;
+  border: 1px solid black;
+}
+.ODT_table th,
+.ODT_table td {
+  border-right: 1px solid black;
+  border-bottom: 1px solid black;
+  padding: 8px;
+  text-align: center;
+}
+.ODT_table th:first-child,
+.ODT_table td:first-child {
+  width: 120px; /* Set the width for the first column */
+}
+.ODT_table th {
+  background-color: aquamarine;
+  border-bottom: 1px solid black;
+}
+.ODT_table td:last-child {
+  border-right: none;
+}
+.ODt_table tr:last-child td {
+  border-bottom: none;
+}
+
+.graphs_border {
+  position: absolute;
+  background-color: #ffffff;
+  width: 1365px;
+  height: 1000px;
+  left: 25px;
+  top: 790px;
+  padding: 20px;
+  box-sizing: border-box;
+  border: 2px solid black;
+}

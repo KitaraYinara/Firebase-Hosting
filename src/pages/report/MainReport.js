@@ -1,4 +1,4 @@
-import React ,{ useState }from "react";
+import React, { useState } from "react";
 import Navigation from "../../components/Navigation/Navigation";
 import { Line } from "react-chartjs-2";
 import "./MainReport.css";
@@ -9,7 +9,7 @@ const MainReport = () => {
   const [oxygenLevelData, setOxygenLevelData] = useState({});
   const [motionData, setMotionData] = useState({});
   const [timestampData, setTimestampData] = useState([]);
-  const [fileUploaded, setFileUploaded] = useState(false); 
+  const [fileUploaded, setFileUploaded] = useState(false);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [duration, setDuration] = useState("");
@@ -34,13 +34,20 @@ const MainReport = () => {
             const oxygenLevelIndex = headerRow.indexOf("Oxygen Level");
             const motionIndex = headerRow.indexOf("Motion");
             const timestampIndex = headerRow.indexOf("Timestamp");
-            
 
             // Extracting the columns
-            const pulseRateColumn = data.slice(1).map((row) => handleNaN(Number(row[pulseRateIndex])));
-            const oxygenLevelColumn = data.slice(1).map((row) => handleNaN(Number(row[oxygenLevelIndex])));
-            const motionColumn = data.slice(1).map((row) => handleNaN(Number(row[motionIndex])));
-            const timestampColumn = data.slice(1).map((row) => row[timestampIndex]);
+            const pulseRateColumn = data
+              .slice(1)
+              .map((row) => handleNaN(Number(row[pulseRateIndex])));
+            const oxygenLevelColumn = data
+              .slice(1)
+              .map((row) => handleNaN(Number(row[oxygenLevelIndex])));
+            const motionColumn = data
+              .slice(1)
+              .map((row) => handleNaN(Number(row[motionIndex])));
+            const timestampColumn = data
+              .slice(1)
+              .map((row) => row[timestampIndex]);
 
             function handleNaN(value) {
               return isNaN(value) ? 0 : value;
@@ -48,22 +55,33 @@ const MainReport = () => {
 
             // Finding the highest, average, and lowest values in each column
             const pulseRateMax = Math.max(...pulseRateColumn);
-            const pulseRateAverage = pulseRateColumn.reduce((sum, value) => sum + value, 0) / pulseRateColumn.length;
+            const pulseRateAverage =
+              pulseRateColumn.reduce((sum, value) => sum + value, 0) /
+              pulseRateColumn.length;
             const pulseRateMin = Math.min(...pulseRateColumn);
             console.log("Pulse Rate Column:", pulseRateColumn);
 
             const oxygenLevelMax = Math.max(...oxygenLevelColumn);
-            const oxygenLevelAverage = oxygenLevelColumn.reduce((sum, value) => sum + value, 0) / oxygenLevelColumn.length;
+            const oxygenLevelAverage =
+              oxygenLevelColumn.reduce((sum, value) => sum + value, 0) /
+              oxygenLevelColumn.length;
             const oxygenLevelMin = Math.min(...oxygenLevelColumn);
             console.log("Oxygen Level Column:", oxygenLevelColumn); // Log the extracted oxygen level column values
 
             const motionMax = Math.max(...motionColumn);
-            const motionAverage = motionColumn.reduce((sum, value) => sum + value, 0) / motionColumn.length;
+            const motionAverage =
+              motionColumn.reduce((sum, value) => sum + value, 0) /
+              motionColumn.length;
             const motionMin = Math.min(...motionColumn);
 
-            const firstTimestamp = timestampColumn.map((timestamp) => new Date(timestamp)).sort((a, b) => a - b)[0];
-            const lastTimestamp = timestampColumn.map((timestamp) => new Date(timestamp)).sort((a, b) => b - a)[0];
-            const durationInMilliseconds = new Date(lastTimestamp) - new Date(firstTimestamp);
+            const firstTimestamp = timestampColumn
+              .map((timestamp) => new Date(timestamp))
+              .sort((a, b) => a - b)[0];
+            const lastTimestamp = timestampColumn
+              .map((timestamp) => new Date(timestamp))
+              .sort((a, b) => b - a)[0];
+            const durationInMilliseconds =
+              new Date(lastTimestamp) - new Date(firstTimestamp);
             const durationInSeconds = durationInMilliseconds / 1000;
             const durationInMinutes = durationInSeconds / 60;
             const durationInHours = durationInMinutes / 60;
@@ -96,66 +114,76 @@ const MainReport = () => {
               setEndTime(endTime);
               console.log("Start Time:", startTime);
               console.log("End Time:", endTime);
-            
+
               const durationInMilliseconds = lastTimestamp - firstTimestamp;
-              const durationInSeconds = Math.floor(durationInMilliseconds / 1000);
+              const durationInSeconds = Math.floor(
+                durationInMilliseconds / 1000
+              );
               const durationInMinutes = Math.floor(durationInSeconds / 60);
               const durationInHours = Math.floor(durationInMinutes / 60);
-              const duration = `${durationInHours} hours ${durationInMinutes % 60} minutes`;
+              const duration = `${durationInHours} hours ${
+                durationInMinutes % 60
+              } minutes`;
               setDuration(duration);
               console.log("Duration:", duration);
             } else {
               console.log("Invalid timestamps found.");
             }
             setTimestampData(timestampColumn);
-            setDuration(`${durationInHours.toFixed(0)} hours ${durationInMinutes.toFixed(0)} minutes`);
+            setDuration(
+              `${durationInHours.toFixed(0)} hours ${durationInMinutes.toFixed(
+                0
+              )} minutes`
+            );
           },
-      });
-      setFileUploaded(true); 
-    };
-    reader.readAsText(file);
-  });
-  input.click();
-};
+        });
+        setFileUploaded(true);
+      };
+      reader.readAsText(file);
+    });
+    input.click();
+  };
 
   return (
-    <div className="structure">
-      <Navigation/>
+    <div>
+      <Navigation />
       <div className="page">
-        <div className = "header">
-           <h1>Oxygen Level Report</h1>
-            <button className="import_button_text" onClick={handleFileImport}>
-              Click to Import CSV File
-              </button>
-              {fileUploaded && <div className="upload-status">File uploaded successfully!</div>}
+        <div className="header">
+          <h1>Oxygen Level Report</h1>
+          <button className="import_button_text" onClick={handleFileImport}>
+            Click to Import CSV File
+          </button>
+          {fileUploaded && (
+            <div className="upload-status">File uploaded successfully!</div>
+          )}
         </div>
-        
-         <div className="info_border">
+
+        <div className="info_border">
           <div className="name">Name: John Doe</div>
           <div className="age">Age: 30</div>
           <div className="gender">Gender: </div>
-         </div>
+        </div>
 
-         <div className="std_border">
-            <div className="start">Start Time: {startTime || '-'}</div>
-            <div className="end">End Time: {endTime || '-'}</div>
-            <div className="duration">Duration: {duration || '-'}</div>
-          </div>
-         <div className ="note_border">
+        <div className="std_border">
+          <div className="start">Start Time: {startTime || "-"}</div>
+          <div className="end">End Time: {endTime || "-"}</div>
+          <div className="duration">Duration: {duration || "-"}</div>
+        </div>
+        <div className="note_border">
           <div className="note">Note: Patient is recovering well.</div>
-         </div>
+        </div>
 
-         <div className="drop4_border">
+        <div className="drop4_border">
           <div className="drop4"> Drops &gt;4%: 114</div>
           <div className="drop4_ph">Drops per hour: 14.2</div>
-         </div>
+        </div>
 
-         <div className="drop3_border">
+        <div className="drop3_border">
           <div className="drop3"> Drops &gt;3%: 169</div>
           <div className="drop3_ph">Drops per hour: 21.1</div>
-         </div>
+        </div>
 
-         <table class="olt_table">
+        <table class="olt_table">
           <tr>
             <th>Oxygen Level Threshold: 94</th>
             <th>Duration</th>
@@ -165,7 +193,6 @@ const MainReport = () => {
             <td> &ge;95</td>
             <td></td>
             <td></td>
-
           </tr>
           <tr>
             <td>90-94</td>
@@ -176,9 +203,8 @@ const MainReport = () => {
             <td>&le; 90</td>
             <td></td>
             <td></td>
-
           </tr>
-          </table>
+        </table>
 
         <table class="plt_table">
           <tr>
@@ -201,11 +227,10 @@ const MainReport = () => {
             <td></td>
             <td></td>
           </tr>
-          </table>
+        </table>
 
-        <div className="O2ratio_display">
-          </div>
-        
+        <div className="O2ratio_display"></div>
+
         <table class="hal_table">
           <tr>
             <th> </th>
@@ -225,13 +250,15 @@ const MainReport = () => {
             <td>{pulseRateData.average}</td>
             <td>{pulseRateData.lowest}</td>
           </tr>
-          <br/>
+          <br />
           <tr>
             <td>O2 Score</td>
-            <td colSpan = "2"><div className="colored-bar"></div></td>
+            <td colSpan="2">
+              <div className="colored-bar"></div>
+            </td>
             <td></td>
           </tr>
-          </table>
+        </table>
 
         <table class="ODT_table">
           <tr>
@@ -280,15 +307,12 @@ const MainReport = () => {
             <td></td>
             <td></td>
           </tr>
-          </table>
+        </table>
 
         <div className="graphs_border"></div>
+      </div>
     </div>
-  </div>
-
-  
   );
-    
 };
 
 export default MainReport;
