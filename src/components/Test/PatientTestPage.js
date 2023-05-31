@@ -47,8 +47,8 @@ function PatientTestPage() {
     window.location.href = `/report/${patientId}/${testId}`;
   };
 
-  const routeToPatients = () => {
-    window.location.href = "/patient";
+  const routeToPatients = (testId) => {
+    window.location.href = `/mainreport/${patientId}/${testId}`;
   };
 
   return (
