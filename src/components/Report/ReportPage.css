@@ -1,0 +1,95 @@
+.line-chart-container {
+    background-color: #000000;
+    padding: 20px;
+    border-radius: 5px;
+  }
+  
+  .recharts-cartesian-grid-horizontal line,
+  .recharts-cartesian-grid-vertical line {
+    stroke: none; 
+  }
+  
+  .recharts-cartesian-grid-horizontal line {
+    stroke-dasharray: 3 3;
+  }
+  
+  .recharts-cartesian-axis-tick-value {
+    font-size: 12px;
+    fill: #666;
+  }
+  
+  .recharts-legend-item-text {
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  .recharts-reference-line text {
+    fill: #666;
+    font-size: 12px;
+  }
+  
+  .recharts-tooltip-label {
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  .recharts-tooltip-item-name {
+    font-weight: bold;
+  }
+  
+  .recharts-tooltip-item-value {
+    font-weight: bold;
+  }
+  
+  .recharts-tooltip-box {
+    fill: #fff;
+    stroke: #ccc;
+    stroke-width: 1px;
+    opacity: 0.9;
+  }
+  
+  .recharts-dot {
+    stroke-width: 2px;
+  }
+  
+  .recharts-y-axis,
+  .recharts-x-axis {
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  .recharts-y-axis-label,
+  .recharts-x-axis-label {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .recharts-line-dots {
+    stroke-width: 0;
+    fill: #fff;
+  }
+  
+  .recharts-line-dot {
+    stroke-width: 2px;
+  }
+  
+  .recharts-line {
+    stroke-width: 3px;
+  }
+  
+  .recharts-line-dash {
+    stroke-dasharray: 5 5;
+  }
+  
+  .recharts-line-bpm path {
+    stroke: #ff5252;
+  }
+  
+  .recharts-line-spO2 path {
+    stroke: #448aff;
+  }
+  
+  .recharts-line-motion path {
+    stroke: #4caf50;
+  }
+  
