@@ -46,7 +46,7 @@ tbody tr:nth-of-type(even) {
   background-color: #39445c;
 }
 
-td:first-child {
+table.testtable td:first-child {
   color: goldenrod;
 }
 
