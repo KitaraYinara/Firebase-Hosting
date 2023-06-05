@@ -28,7 +28,6 @@ function ReportPage() {
     setShowAbnormalValues(!showAbnormalValues);
   };
 
-
   useEffect(() => {
     const fetchSensorData = () => {
       const sensorsCollectionRef = collection(
@@ -51,20 +50,19 @@ function ReportPage() {
           }))
           .sort((a, b) => a.timestamp - b.timestamp); // Sort the sensor data by timestamp
 
-          const abnormalBPMData = sensorDataList.filter(
-            (data) => data.bpm < 60 || data.bpm > 100
-          );
-          const abnormalSpO2Data = sensorDataList.filter(
-            (data) => data.spO2 < 95 || data.spO2 > 100
-          );
+        const abnormalBPMData = sensorDataList.filter(
+          (data) => data.bpm < 40 || data.bpm > 50
+        );
+        const abnormalSpO2Data = sensorDataList.filter(
+          (data) => data.spO2 < 95 || data.spO2 > 100
+        );
 
-          setAbnormalBPM(abnormalBPMData);
-          setAbnormalSpO2(abnormalSpO2Data);
+        setAbnormalBPM(abnormalBPMData);
+        setAbnormalSpO2(abnormalSpO2Data);
 
-          setSensorData(sensorDataList);
-          setCurrentPage(0);
+        setSensorData(sensorDataList);
+        setCurrentPage(0);
       });
-      
 
       return () => {
         unsubscribe();
@@ -86,19 +84,21 @@ function ReportPage() {
   }, [patientId, testId]);
 
   const handleDownloadCSV = () => {
-    const csvContent = "data:text/csv;charset=utf-8," + [
-      ["Date", "Time", "Pulse Rate", "Oxygen Level", "Motion"], // Updated column names
-      ...sensorData.map((data) => [
-        data.timestamp.toLocaleDateString(), // Get only the date part
-        data.timestamp.toLocaleTimeString(), // Get only the time part
-        data.bpm,
-        data.spO2,
-        data.motion,
-      ]),
-    ]
-      .map((row) => row.join(","))
-      .join("\n");
-  
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [
+        ["Date", "Time", "Pulse Rate", "Oxygen Level", "Motion"], // Updated column names
+        ...sensorData.map((data) => [
+          data.timestamp.toLocaleDateString(), // Get only the date part
+          data.timestamp.toLocaleTimeString(), // Get only the time part
+          data.bpm,
+          data.spO2,
+          data.motion,
+        ]),
+      ]
+        .map((row) => row.join(","))
+        .join("\n");
+
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
@@ -169,36 +169,38 @@ function ReportPage() {
         Download CSV
       </button>
       <button className="report-btn" onClick={handleShowAbnormalValues}>
-        {showAbnormalValues ? 'Hide Abnormal Values' : 'Show Abnormal Values'}
+        {showAbnormalValues ? "Hide Abnormal Values" : "Show Abnormal Values"}
       </button>
-{showAbnormalValues && (
-  <div>
-    {abnormalBPM.length > 0 && (
-      <div>
-        <h2 className="abnormal-bpm">Abnormal BPM Values:</h2>
-        <ul>
-          {abnormalBPM.map((data) => (
-            <li className="abnormal-bpm" key={data.timestamp}>
-              Timestamp: {data.timestamp.toLocaleString()} - BPM: {data.bpm}
-            </li>
-          ))}
-        </ul>
-      </div>
-    )}
-    {abnormalSpO2.length > 0 && (
-      <div>
-        <h2 className="abnormal-spO2">Abnormal SpO2 Values:</h2>
-        <ul>
-          {abnormalSpO2.map((data) => (
-            <li className="abnormal-spO2" key={data.timestamp}>
-              Timestamp: {data.timestamp.toLocaleString()} - SpO2: {data.spO2}
-            </li>
-          ))}
-        </ul>
-      </div>
-    )}
-  </div>
-)}
+      {showAbnormalValues && (
+        <div>
+          {abnormalBPM.length > 0 && (
+            <div>
+              <h2 className="abnormal-bpm">Abnormal BPM Values:</h2>
+              <ul>
+                {abnormalBPM.map((data) => (
+                  <li className="abnormal-bpm" key={data.timestamp}>
+                    Timestamp: {data.timestamp.toLocaleString()} - BPM:{" "}
+                    {data.bpm}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {abnormalSpO2.length > 0 && (
+            <div>
+              <h2 className="abnormal-spO2">Abnormal SpO2 Values:</h2>
+              <ul>
+                {abnormalSpO2.map((data) => (
+                  <li className="abnormal-spO2" key={data.timestamp}>
+                    Timestamp: {data.timestamp.toLocaleString()} - SpO2:{" "}
+                    {data.spO2}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
       {!showAllData && (
         <button className="report-btn" onClick={handleShowAllData}>
           <svg
