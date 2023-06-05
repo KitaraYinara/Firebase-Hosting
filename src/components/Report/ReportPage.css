@@ -136,3 +136,11 @@
 .recharts-line-motion path {
   stroke: #4caf50;
 }
+
+.abnormal-bpm {
+  color: white;
+}
+
+.abnormal-spO2 {
+  color: white;
+}
