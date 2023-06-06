@@ -7,7 +7,7 @@ import Staff from "./pages/staffs/Staff";
 import Chart from "./chart";
 import PatientTestPage from "./components/Test/PatientTestPage";
 import ReportPage from "./components/Report/ReportPage";
-import MainReport from "./pages/report/MainReport";
+import MainReport from "./pages/report/O2Report";
 import ML from "./pages/ML/ML";
 import "bootstrap/dist/css/bootstrap.min.css";
 function App() {
