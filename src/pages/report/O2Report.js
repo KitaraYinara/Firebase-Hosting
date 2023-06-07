@@ -3,7 +3,7 @@ import Navigation from "../../components/Navigation/Navigation";
 import LineChart from "../../components/DisplayChart/LineChart";
 import BarChart from "../../components/DisplayChart/BarChart";
 import Papa from "papaparse";
-import "./MainReport.css";
+import "./O2Report.css";
 
 const O2Report = () => {
   const [fileUploaded, setFileUploaded] = useState(false);
