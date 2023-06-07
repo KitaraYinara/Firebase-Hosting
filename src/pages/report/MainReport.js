@@ -5,7 +5,7 @@ import BarChart from "../../components/DisplayChart/BarChart";
 import Papa from "papaparse";
 import "./MainReport.css";
 
-const MainReport = () => {
+const O2Report = () => {
   const [fileUploaded, setFileUploaded] = useState(false);
   const [pulseRateData, setPulseRateData] = useState({});
   const [oxygenLevelData, setOxygenLevelData] = useState({});
@@ -626,4 +626,4 @@ const MainReport = () => {
   );
 };
 
-export default MainReport;
+export default O2Report;
