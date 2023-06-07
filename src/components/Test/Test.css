@@ -49,7 +49,10 @@ tbody tr:nth-of-type(even) {
 table.testtable td:first-child {
   color: goldenrod;
 }
-
+h2.loading {
+  text-align: center;
+  color: #ffffff;
+}
 .back {
   overflow: hidden;
   padding: 5px;

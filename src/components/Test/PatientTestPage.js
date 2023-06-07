@@ -3,12 +3,14 @@ import { useParams } from "react-router-dom";
 import { db } from "../../firebase";
 import "./Test.css";
 import Navigation from "../../components/Navigation/Navigation";
+import Papa from "papaparse";
 import { collection, doc, getDoc, query, onSnapshot } from "firebase/firestore";
 
 function PatientTestPage() {
   const { patientId } = useParams();
   const [tests, setTests] = useState([]);
   const [patientName, setPatientName] = useState("");
+  const [fileUploaded, setFileUploaded] = useState(false);
 
   useEffect(() => {
     const fetchTests = async () => {
@@ -50,13 +52,64 @@ function PatientTestPage() {
   const routeToPatients = () => {
     window.location.href = "/patient";
   };
+  const handleFileImport = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".csv";
+
+    input.addEventListener("change", function (event) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+
+      reader.onload = function (e) {
+        const fileContent = e.target.result;
+
+        Papa.parse(fileContent, {
+          complete: function (results) {
+            const data = results.data;
+            const headerRow = data[0];
+            const pulseRateIndex = headerRow.indexOf("Pulse Rate");
+            const oxygenLevelIndex = headerRow.indexOf("Oxygen Level");
+            const motionIndex = headerRow.indexOf("Motion");
+            const timestampIndex = headerRow.indexOf("Time");
+            const dateIndex = headerRow.indexOf("Date");
+
+            // Extracting the columns
+            const pulseRateColumn = data
+              .slice(1)
+              .map((row) => handleNaN(Number(row[pulseRateIndex])));
+            const oxygenLevelColumn = data
+              .slice(1)
+              .map((row) => handleNaN(Number(row[oxygenLevelIndex])));
+            const motionColumn = data
+              .slice(1)
+              .map((row) => handleNaN(Number(row[motionIndex])));
+            const timestampColumn = data
+              .slice(1)
+              .map((row) => row[timestampIndex]);
+            const dateColumn = data.slice(1).map((row) => row[dateIndex]);
+
+            function handleNaN(value) {
+              return isNaN(value) ? 0 : value;
+            }
+          },
+        });
+        setFileUploaded(true);
+      };
+      reader.readAsText(file);
+    });
+    input.click();
+  };
 
   return (
     <div>
       <Navigation />
       <h1 className="pageheader">Patient: {patientName}</h1>
+      <button id="file-input" onClick={handleFileImport}>
+        Import CSV File
+      </button>
       {tests.length === 0 ? (
-        <p>Loading tests...</p>
+        <h2 className="loading">Loading tests...</h2>
       ) : (
         <div>
           <table className="testtable">

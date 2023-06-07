@@ -15,7 +15,7 @@ const MainReport = () => {
 
   const [pulseRateChartData, setPulseRateChartData] = useState({});
   const [oxygenLevelChartData, setOxygenLevelChartData] = useState({});
-  const [motionChartData, setMotionChartData] = useState({}); 
+  const [motionChartData, setMotionChartData] = useState({});
   const [OLRatioData, setOLRatioData] = useState({});
 
   const [dateStart, setDateStart] = useState("");
@@ -24,22 +24,19 @@ const MainReport = () => {
   const [endTime, setEndTime] = useState("");
   const [duration, setDuration] = useState("");
 
-  const [o2t, setO2t] = useState({})
-  const [o2tPercentage, setO2TPercentage] = useState({})
-  const [pr, setPR] = useState({})
-  const [prPercentage, setPRPercentage] = useState({})
-  const [ol, setOL] = useState({})
-  const [olPercentage, setOLPercentage] = useState({})
-  
+  const [o2t, setO2t] = useState({});
+  const [o2tPercentage, setO2TPercentage] = useState({});
+  const [pr, setPR] = useState({});
+  const [prPercentage, setPRPercentage] = useState({});
+  const [ol, setOL] = useState({});
+  const [olPercentage, setOLPercentage] = useState({});
 
   const [o2Score, seto2Score] = useState("");
 
   const [drop3Input, setDrop3Input] = useState("");
-  const [drop3phInput, setDrop3phInput] = useState("");  
+  const [drop3phInput, setDrop3phInput] = useState("");
   const [drop4Input, setDrop4Input] = useState("");
-  const [drop4phInput, setDrop4phInput] = useState("");  
-
-
+  const [drop4phInput, setDrop4phInput] = useState("");
 
   const handleFileImport = () => {
     const input = document.createElement("input");
@@ -60,7 +57,7 @@ const MainReport = () => {
             const pulseRateIndex = headerRow.indexOf("Pulse Rate");
             const oxygenLevelIndex = headerRow.indexOf("Oxygen Level");
             const motionIndex = headerRow.indexOf("Motion");
-            const timestampIndex = headerRow.indexOf("Time"); 
+            const timestampIndex = headerRow.indexOf("Time");
             const dateIndex = headerRow.indexOf("Date");
 
             // Extracting the columns
@@ -76,28 +73,29 @@ const MainReport = () => {
             const timestampColumn = data
               .slice(1)
               .map((row) => row[timestampIndex]);
-            const dateColumn = data
-              .slice(1)
-              .map((row)=> row[dateIndex])
-            
+            const dateColumn = data.slice(1).map((row) => row[dateIndex]);
 
             function handleNaN(value) {
               return isNaN(value) ? 0 : value;
             }
 
-            function calculateColumnStats(pulseRateColumn, oxygenLevelColumn, motionColumn) {
+            function calculateColumnStats(
+              pulseRateColumn,
+              oxygenLevelColumn,
+              motionColumn
+            ) {
               const pulseRateMax = Math.max(...pulseRateColumn);
               const pulseRateAverage =
                 pulseRateColumn.reduce((sum, value) => sum + value, 0) /
                 pulseRateColumn.length;
               const pulseRateMin = Math.min(...pulseRateColumn);
-              
+
               const oxygenLevelMax = Math.max(...oxygenLevelColumn);
               const oxygenLevelAverage =
                 oxygenLevelColumn.reduce((sum, value) => sum + value, 0) /
                 oxygenLevelColumn.length;
               const oxygenLevelMin = Math.min(...oxygenLevelColumn);
-              
+
               const motionMax = Math.max(...motionColumn);
               const motionAverage =
                 motionColumn.reduce((sum, value) => sum + value, 0) /
@@ -109,7 +107,7 @@ const MainReport = () => {
                 average: pulseRateAverage.toFixed(2),
                 lowest: pulseRateMin.toFixed(2),
               });
-              
+
               setOxygenLevelData({
                 highest: oxygenLevelMax.toFixed(2),
                 average: oxygenLevelAverage.toFixed(2),
@@ -122,7 +120,11 @@ const MainReport = () => {
                 lowest: motionMin.toFixed(2),
               });
             }
-            calculateColumnStats(pulseRateColumn, oxygenLevelColumn, motionColumn);
+            calculateColumnStats(
+              pulseRateColumn,
+              oxygenLevelColumn,
+              motionColumn
+            );
 
             function calculateO2Score(oxygenLevelColumn) {
               const o2valueCounts = {
@@ -131,10 +133,10 @@ const MainReport = () => {
                 "80-84": 0,
                 "85-89": 0,
                 "90-94": 0,
-                "95-100": 0
+                "95-100": 0,
               };
               // Step 2: Count the values within each range
-              oxygenLevelColumn.forEach(o2value => {
+              oxygenLevelColumn.forEach((o2value) => {
                 if (o2value >= 70 && o2value <= 74) {
                   o2valueCounts["70-74"]++;
                 } else if (o2value >= 75 && o2value <= 79) {
@@ -149,20 +151,28 @@ const MainReport = () => {
                   o2valueCounts["95-100"]++;
                 }
               });
-            
+
               // Step 3: Calculate the total count
               const o2totalCount = oxygenLevelColumn.length;
-            
-              // Step 4: Calculate the ratio for each range
-              const o2ratios = Object.values(o2valueCounts).map(o2count => (o2count / o2totalCount) * 100);
-            
-              // Step 5: Calculate the score
-              const o2Score = (o2ratios[0] * 0.2) + (o2ratios[1] * 0.4) + (o2ratios[2] * 0.6) + (o2ratios[3] * 0.8) + (o2ratios[4] * 1) + (o2ratios[5] * 1.2);
-              
-               // Scale the score to fit within the range of 0-10
-                const scaledO2Score = (o2Score / 12) * 10;
 
-                return scaledO2Score;
+              // Step 4: Calculate the ratio for each range
+              const o2ratios = Object.values(o2valueCounts).map(
+                (o2count) => (o2count / o2totalCount) * 100
+              );
+
+              // Step 5: Calculate the score
+              const o2Score =
+                o2ratios[0] * 0.2 +
+                o2ratios[1] * 0.4 +
+                o2ratios[2] * 0.6 +
+                o2ratios[3] * 0.8 +
+                o2ratios[4] * 1 +
+                o2ratios[5] * 1.2;
+
+              // Scale the score to fit within the range of 0-10
+              const scaledO2Score = (o2Score / 12) * 10;
+
+              return scaledO2Score;
             }
             const o2Score = calculateO2Score(oxygenLevelColumn);
             //console.log("O2 Score:", o2Score);
@@ -182,11 +192,15 @@ const MainReport = () => {
               const startTime = timestampColumn[0];
               const endTime = timestampColumn[timestampColumn.length - 1];
               // Convert start time and end time to 24-hour format
-              const startTime24 = new Date('2000-01-01 ' + startTime).toLocaleTimeString('en-US', { hour12: false });
-              const endTime24 = new Date('2000-01-01 ' + endTime).toLocaleTimeString('en-US', { hour12: false });
+              const startTime24 = new Date(
+                "2000-01-01 " + startTime
+              ).toLocaleTimeString("en-US", { hour12: false });
+              const endTime24 = new Date(
+                "2000-01-01 " + endTime
+              ).toLocaleTimeString("en-US", { hour12: false });
               // Convert start time and end time to Date objects
-              const startDate = new Date('2000-01-01 ' + startTime24);
-              const endDate = new Date('2000-01-01 ' + endTime24);
+              const startDate = new Date("2000-01-01 " + startTime24);
+              const endDate = new Date("2000-01-01 " + endTime24);
               // Calculate the difference in milliseconds
               const durationMs = endDate - startDate;
               // Calculate the duration in hours, minutes, and seconds
@@ -194,8 +208,10 @@ const MainReport = () => {
               const minutes = Math.floor((durationMs % 3600000) / 60000);
               const seconds = Math.floor((durationMs % 60000) / 1000);
               // Format the duration in HH:mm:ss format
-              const duration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-              
+              const duration = `${hours.toString().padStart(2, "0")}:${minutes
+                .toString()
+                .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+
               if (durationMs >= 21599000) {
                 setDrop4Input("0");
                 setDrop3Input("0");
@@ -212,18 +228,23 @@ const MainReport = () => {
               setDuration(duration);
             }
             calculateTimeDuration(timestampColumn);
-            
-            function prepareChartData(timestampColumn, oxygenLevelColumn, pulseRateColumn, motionColumn) {
+
+            function prepareChartData(
+              timestampColumn,
+              oxygenLevelColumn,
+              pulseRateColumn,
+              motionColumn
+            ) {
               const valueCounts = {
                 "95-100": 0,
                 "90-94": 0,
                 "85-89": 0,
                 "80-84": 0,
                 "75-79": 0,
-                "70-74": 0
+                "70-74": 0,
               };
               const totalCount = oxygenLevelColumn.length;
-              oxygenLevelColumn.forEach(value => {
+              oxygenLevelColumn.forEach((value) => {
                 if (value >= 70 && value <= 74) {
                   valueCounts["70-74"]++;
                 } else if (value >= 75 && value <= 79) {
@@ -240,8 +261,8 @@ const MainReport = () => {
               });
               const ranges = Object.keys(valueCounts);
               const counts = Object.values(valueCounts);
-              const ratios = counts.map(count => (count / totalCount) * 100);
-  
+              const ratios = counts.map((count) => (count / totalCount) * 100);
+
               const OLRatioData = {
                 labels: ranges,
                 datasets: [
@@ -254,7 +275,6 @@ const MainReport = () => {
                 ],
               };
 
-
               const OLchartData = {
                 labels: timestampColumn,
                 datasets: [
@@ -263,10 +283,10 @@ const MainReport = () => {
                     data: oxygenLevelColumn,
                     borderColor: "blue",
                     backgroundColor: "rgba(0, 0, 255, 0.3)",
-                  }
+                  },
                 ],
               };
-            
+
               const PRchartData = {
                 labels: timestampColumn,
                 datasets: [
@@ -278,7 +298,7 @@ const MainReport = () => {
                   },
                 ],
               };
-            
+
               const MotionChartData = {
                 labels: timestampColumn,
                 datasets: [
@@ -290,23 +310,28 @@ const MainReport = () => {
                   },
                 ],
               };
-            
+
               setOLRatioData(OLRatioData);
               setOxygenLevelChartData(OLchartData);
               setPulseRateChartData(PRchartData);
               setMotionChartData(MotionChartData);
             }
-            prepareChartData(timestampColumn, oxygenLevelColumn, pulseRateColumn, motionColumn);
+            prepareChartData(
+              timestampColumn,
+              oxygenLevelColumn,
+              pulseRateColumn,
+              motionColumn
+            );
 
             function calculateOxygenLevelThreshold(oxygenLevelColumn) {
               const o2t = {
                 "≥95": 0,
                 "90-94": 0,
-                "≤90": 0
+                "≤90": 0,
               };
               const totalCount = oxygenLevelColumn.length;
 
-              oxygenLevelColumn.forEach(o2tvalue => {
+              oxygenLevelColumn.forEach((o2tvalue) => {
                 if (o2tvalue >= 95) {
                   o2t["≥95"]++;
                 } else if (o2tvalue >= 90 && o2tvalue <= 94) {
@@ -315,11 +340,11 @@ const MainReport = () => {
                   o2t["≤90"]++;
                 }
               });
-          
+
               const o2tPercentage = {
-                "≥95": (o2t["≥95"] / totalCount* 100).toFixed(2),
-                "90-94": (o2t["90-94"] / totalCount* 100).toFixed(2) ,
-                "≤90": (o2t["≤90"] / totalCount* 100).toFixed(2)
+                "≥95": ((o2t["≥95"] / totalCount) * 100).toFixed(2),
+                "90-94": ((o2t["90-94"] / totalCount) * 100).toFixed(2),
+                "≤90": ((o2t["≤90"] / totalCount) * 100).toFixed(2),
               };
               setO2t(o2t);
               setO2TPercentage(o2tPercentage);
@@ -330,11 +355,11 @@ const MainReport = () => {
               const pr = {
                 "≥120": 0,
                 "50-120": 0,
-                "≤50": 0
+                "≤50": 0,
               };
               const totalCount = pulseRateColumn.length;
 
-              pulseRateColumn.forEach(prvalue => {
+              pulseRateColumn.forEach((prvalue) => {
                 if (prvalue >= 95) {
                   pr["≥120"]++;
                 } else if (prvalue >= 90 && prvalue <= 94) {
@@ -345,20 +370,19 @@ const MainReport = () => {
               });
 
               console.log(pulseRateColumn);
-          
+
               const prPercentage = {
-                "≥120": (pr["≥120"] / totalCount * 100).toFixed(2),
-                "50-120": (pr["50-120"] / totalCount* 100).toFixed(2),
-                "≤50": (pr["≤50"] / totalCount* 100).toFixed(2)
+                "≥120": ((pr["≥120"] / totalCount) * 100).toFixed(2),
+                "50-120": ((pr["50-120"] / totalCount) * 100).toFixed(2),
+                "≤50": ((pr["≤50"] / totalCount) * 100).toFixed(2),
               };
-          
-              
+
               setPR(pr);
               setPRPercentage(prPercentage);
             }
             calculatePulseRateThreshold(pulseRateColumn);
 
-             function calculateOxygenLevelDuration(oxygenLevelColumn) {
+            function calculateOxygenLevelDuration(oxygenLevelColumn) {
               const ol = {
                 "96-100": 0,
                 "91-95": 0,
@@ -366,11 +390,11 @@ const MainReport = () => {
                 "81-85": 0,
                 "76-80": 0,
                 "70-75": 0,
-                "≤70": 0
+                "≤70": 0,
               };
               const totalCount = oxygenLevelColumn.length;
 
-              oxygenLevelColumn.forEach(value => {
+              oxygenLevelColumn.forEach((value) => {
                 if (value <= 70) {
                   ol["≤70"]++;
                 } else if (value >= 70 && value <= 75) {
@@ -396,7 +420,7 @@ const MainReport = () => {
                 "81-85": ((ol["81-85"] / totalCount) * 100).toFixed(2),
                 "76-80": ((ol["76-80"] / totalCount) * 100).toFixed(2),
                 "70-75": ((ol["70-75"] / totalCount) * 100).toFixed(2),
-                "≤70": ((ol["≤70"] / totalCount) * 100).toFixed(2)
+                "≤70": ((ol["≤70"] / totalCount) * 100).toFixed(2),
               };
               setOL(ol);
               setOLPercentage(olPercentage);
@@ -432,9 +456,15 @@ const MainReport = () => {
         </div>
 
         <div className="std_border">
-          <div className="start">Start Time: {startTime ? startTime + "," + (dateStart ? dateStart : "-") : "-"}</div>
-          <div className="end">End Time: {endTime ? endTime + "," + (dateEnd ? dateEnd : "-") : "-"}</div>
-          <div className="duration">Duration: {duration ? duration: "-"}</div>
+          <div className="start">
+            Start Time:{" "}
+            {startTime ? startTime + "," + (dateStart ? dateStart : "-") : "-"}
+          </div>
+          <div className="end">
+            End Time:{" "}
+            {endTime ? endTime + "," + (dateEnd ? dateEnd : "-") : "-"}
+          </div>
+          <div className="duration">Duration: {duration ? duration : "-"}</div>
         </div>
 
         <div className="note_border">
@@ -442,12 +472,12 @@ const MainReport = () => {
         </div>
 
         <div className="drop4_border">
-          <div className="drop4"> Drops &gt;4%:  {drop4Input}</div>
+          <div className="drop4"> Drops &gt;4%: {drop4Input}</div>
           <div className="drop4_ph">Drops per hour: {drop4phInput}</div>
         </div>
 
         <div className="drop3_border">
-          <div className="drop3"> Drops &gt;3%:  {drop3Input}</div>
+          <div className="drop3"> Drops &gt;3%: {drop3Input}</div>
           <div className="drop3_ph">Drops per hour: {drop3phInput}</div>
         </div>
 
@@ -459,18 +489,18 @@ const MainReport = () => {
           </tr>
           <tr>
             <td>&ge;95</td>
-            <td>{(o2t['≥95'] * 2).toFixed(0)}</td>
-            <td>{o2tPercentage['≥95']}%</td>
+            <td>{(o2t["≥95"] * 2).toFixed(0)}</td>
+            <td>{o2tPercentage["≥95"]}%</td>
           </tr>
           <tr>
             <td>90-94</td>
-            <td>{(o2t['90-94'] * 2).toFixed(0)}</td>
-            <td>{o2tPercentage['90-94']}%</td>
+            <td>{(o2t["90-94"] * 2).toFixed(0)}</td>
+            <td>{o2tPercentage["90-94"]}%</td>
           </tr>
           <tr>
             <td>&le; 90</td>
-            <td>{(o2t['≤90'] * 2).toFixed(0)}</td>
-            <td>{o2tPercentage['≤90']}%</td>
+            <td>{(o2t["≤90"] * 2).toFixed(0)}</td>
+            <td>{o2tPercentage["≤90"]}%</td>
           </tr>
         </table>
 
@@ -482,18 +512,18 @@ const MainReport = () => {
           </tr>
           <tr>
             <td> &ge;120</td>
-            <td>{(pr['≥120'] * 2).toFixed(0)}</td>
-            <td>{prPercentage['≥120']}%</td>
+            <td>{(pr["≥120"] * 2).toFixed(0)}</td>
+            <td>{prPercentage["≥120"]}%</td>
           </tr>
           <tr>
             <td>50-120</td>
-            <td>{(pr['50-120'] * 2).toFixed(0)}</td>
-            <td>{prPercentage['50-120']}%</td>
+            <td>{(pr["50-120"] * 2).toFixed(0)}</td>
+            <td>{prPercentage["50-120"]}%</td>
           </tr>
           <tr>
             <td>&le; 50</td>
-            <td>{(pr['≤50'] * 2).toFixed(0)}</td>
-            <td>{prPercentage['≤50']}%</td>
+            <td>{(pr["≤50"] * 2).toFixed(0)}</td>
+            <td>{prPercentage["≤50"]}%</td>
           </tr>
         </table>
 
@@ -502,7 +532,7 @@ const MainReport = () => {
             <BarChart chartData={OLRatioData} />
           </div>
         </div>
-          
+
         <table className="hal_table">
           <tr>
             <th> </th>
@@ -527,8 +557,9 @@ const MainReport = () => {
             <td>O2 Score</td>
             <td colSpan="2">
               <div className="colored-bar">
-              <div className="arrow-indicator"></div>
-              </div>{o2Score}
+                <div className="arrow-indicator"></div>
+              </div>
+              {o2Score}
             </td>
             <td> </td>
           </tr>
@@ -584,15 +615,14 @@ const MainReport = () => {
         </table>
 
         <div className="graphs_border">
-          <div className = "graph_size"> 
-          <LineChart chartData={oxygenLevelChartData} />
-          <LineChart chartData={pulseRateChartData} />
-          <LineChart chartData={motionChartData} />
-          </div>
+          <div className="graph_size">
+            <LineChart chartData={oxygenLevelChartData} />
+            <LineChart chartData={pulseRateChartData} />
+            <LineChart chartData={motionChartData} />
           </div>
         </div>
-        
       </div>
+    </div>
   );
 };
 
