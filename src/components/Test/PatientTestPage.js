@@ -4,13 +4,20 @@ import { db } from "../../firebase";
 import "./Test.css";
 import Navigation from "../../components/Navigation/Navigation";
 import Papa from "papaparse";
-import { collection, doc, getDoc, query, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  addDoc,
+  getDoc,
+  setDoc,
+  query,
+  onSnapshot,
+} from "firebase/firestore";
 
 function PatientTestPage() {
   const { patientId } = useParams();
   const [tests, setTests] = useState([]);
   const [patientName, setPatientName] = useState("");
-  const [fileUploaded, setFileUploaded] = useState(false);
 
   useEffect(() => {
     const fetchTests = async () => {
@@ -39,11 +46,50 @@ function PatientTestPage() {
         setPatientName(patientData.name);
       }
     };
-
     fetchTests();
     fetchPatientName();
   }, [patientId]);
-
+  const addTest = (newTest) => {
+    const testsCollectionRef = doc(
+      collection(db, "patients", patientId, "tests")
+    );
+    const testDateTime = newTest[1][0] + " " + newTest[1][1];
+    console.log(testDateTime);
+    const d = new Date(testDateTime);
+    const test = {
+      datetime: d,
+    };
+    console.log(testsCollectionRef.id);
+    setDoc(testsCollectionRef, test);
+    const AddSensor = (data, testId) => {
+      data.shift();
+      console.log(data);
+      console.log(testId);
+      const sensorCollectionRef = collection(
+        db,
+        "patients",
+        patientId,
+        "tests",
+        testId,
+        "sensors"
+      );
+      data.forEach((element) => {
+        console.log(element);
+        const datetime = element[0] + " " + element[1];
+        console.log(element[0]);
+        console.log(datetime);
+        const d = new Date(datetime);
+        const snsr = {
+          bpm: element[2],
+          motion: element[4],
+          spO2: element[3],
+          timestamp: d,
+        };
+        addDoc(sensorCollectionRef, snsr);
+      });
+    };
+    AddSensor(newTest, testsCollectionRef.id);
+  };
   const routeToReport = (testId) => {
     console.log(testId);
     window.location.href = `/report/${patientId}/${testId}`;
@@ -65,36 +111,14 @@ function PatientTestPage() {
         const fileContent = e.target.result;
 
         Papa.parse(fileContent, {
+          header: false,
           complete: function (results) {
             const data = results.data;
-            const headerRow = data[0];
-            const pulseRateIndex = headerRow.indexOf("Pulse Rate");
-            const oxygenLevelIndex = headerRow.indexOf("Oxygen Level");
-            const motionIndex = headerRow.indexOf("Motion");
-            const timestampIndex = headerRow.indexOf("Time");
-            const dateIndex = headerRow.indexOf("Date");
-
-            // Extracting the columns
-            const pulseRateColumn = data
-              .slice(1)
-              .map((row) => handleNaN(Number(row[pulseRateIndex])));
-            const oxygenLevelColumn = data
-              .slice(1)
-              .map((row) => handleNaN(Number(row[oxygenLevelIndex])));
-            const motionColumn = data
-              .slice(1)
-              .map((row) => handleNaN(Number(row[motionIndex])));
-            const timestampColumn = data
-              .slice(1)
-              .map((row) => row[timestampIndex]);
-            const dateColumn = data.slice(1).map((row) => row[dateIndex]);
-
-            function handleNaN(value) {
-              return isNaN(value) ? 0 : value;
-            }
+            console.log(data);
+            addTest(data);
           },
+          error: (err) => console.log("ERROR", err),
         });
-        setFileUploaded(true);
       };
       reader.readAsText(file);
     });
@@ -105,9 +129,8 @@ function PatientTestPage() {
     <div>
       <Navigation />
       <h1 className="pageheader">Patient: {patientName}</h1>
-      <button id="file-input" onClick={handleFileImport}>
-        Import CSV File
-      </button>
+      <input type="file" id="file-input" onClick={handleFileImport} />
+
       {tests.length === 0 ? (
         <h2 className="loading">Loading tests...</h2>
       ) : (
