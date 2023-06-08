@@ -24,6 +24,19 @@ const O2Report = () => {
   const [endTime, setEndTime] = useState("");
   const [duration, setDuration] = useState("");
 
+  const [gt95, setGt95] = useState("");
+  const [el9094, setEl9094] = useState("");
+  const [lt90, setLt90] = useState("");
+  const [gt120, setGt120] = useState("");
+  const [bt50120, setBt50120] = useState("");
+  const [lt50, setLt50] = useState("");
+  const [bt96100, setBt96100] = useState("");
+  const [bt9195, setBt9195] = useState("");
+  const [bt8690, setBt8690] = useState("");
+  const [bt8185, setBt8185] = useState("");
+  const [bt7680, setBt7680] = useState("");
+  const [bt7075, setBt7075] = useState("");
+  const [lt70, setLt70] = useState("");
   const [o2t, setO2t] = useState({});
   const [o2tPercentage, setO2TPercentage] = useState({});
   const [pr, setPR] = useState({});
@@ -188,6 +201,17 @@ const O2Report = () => {
             }
             calculateDateRange(dateColumn);
 
+            function secondsToHMS(seconds) {
+              const hours = Math.floor(seconds / 3600);
+              const minutes = Math.floor((seconds % 3600) / 60);
+              const remainingSeconds = seconds % 60;
+              return `${hours.toString().padStart(2, "0")}:${minutes
+                .toString()
+                .padStart(2, "0")}:${remainingSeconds
+                .toString()
+                .padStart(2, "0")}`;
+            }
+
             function calculateTimeDuration(timestampColumn) {
               const startTime = timestampColumn[0];
               const endTime = timestampColumn[timestampColumn.length - 1];
@@ -346,6 +370,17 @@ const O2Report = () => {
                 "90-94": ((o2t["90-94"] / totalCount) * 100).toFixed(2),
                 "≤90": ((o2t["≤90"] / totalCount) * 100).toFixed(2),
               };
+              const gt95 = secondsToHMS(o2t["≥95"] * 4);
+              const el9094 = secondsToHMS(o2t["90-94"] * 4);
+              const lt90 = secondsToHMS(o2t["≤90"] * 4);
+
+              //console.log("Variable '≥95' duration:", gt95);
+              //console.log("Variable '90-94' duration:", el9094);
+              //console.log("Variable '≤90' duration:", lt90);
+
+              setGt95(gt95);
+              setEl9094(el9094);
+              setLt90(lt90);
               setO2t(o2t);
               setO2TPercentage(o2tPercentage);
             }
@@ -377,6 +412,17 @@ const O2Report = () => {
                 "≤50": ((pr["≤50"] / totalCount) * 100).toFixed(2),
               };
 
+              const gt120 = secondsToHMS(pr["≥120"] * 4);
+              const bt50120 = secondsToHMS(pr["50-120"] * 4);
+              const lt50 = secondsToHMS(pr["≤50"] * 4);
+
+              //console.log("Variable '≥95' duration:", gt120);
+              //console.log("Variable '90-94' duration:", bt50120);
+              //console.log("Variable '≤90' duration:", lt50);
+
+              setGt120(gt120);
+              setBt50120(bt50120);
+              setLt50(lt50);
               setPR(pr);
               setPRPercentage(prPercentage);
             }
@@ -422,6 +468,21 @@ const O2Report = () => {
                 "70-75": ((ol["70-75"] / totalCount) * 100).toFixed(2),
                 "≤70": ((ol["≤70"] / totalCount) * 100).toFixed(2),
               };
+              const bt96100 = secondsToHMS(ol["96-100"] * 4);
+              const bt9195 = secondsToHMS(ol["91-95"] * 4);
+              const bt8690 = secondsToHMS(ol["86-90"] * 4);
+              const bt8185 = secondsToHMS(ol["81-85"] * 4);
+              const bt7680 = secondsToHMS(ol["76-80"] * 4);
+              const bt7075 = secondsToHMS(ol["70-75"] * 4);
+              const lt70 = secondsToHMS(ol["≤70"] * 4);
+
+              setBt96100(bt96100);
+              setBt9195(bt9195);
+              setBt8690(bt8690);
+              setBt8185(bt8185);
+              setBt7680(bt7680);
+              setBt7075(bt7075);
+              setLt70(lt70);
               setOL(ol);
               setOLPercentage(olPercentage);
             }
