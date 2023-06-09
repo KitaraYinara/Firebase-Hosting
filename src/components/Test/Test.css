@@ -8,6 +8,35 @@
   font-size: 3em;
 }
 
+input[type="file"] {
+  display: none;
+}
+
+.custom-file-upload {
+  overflow: hidden;
+  padding: 5px;
+  margin-top: 30px;
+  margin-left: 20px;
+  background-color: maroon;
+  color: rgb(255, 255, 255);
+  border-color: maroon;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 5px;
+  padding: 15px 40px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.5s, color 0.5s;
+}
+
+.custom-file-upload:hover {
+  background-color: #ffffff;
+  color: maroon;
+  transition: background-color 0.5s, color 0.5s;
+}
+
 table.testtable {
   /* display: inline-block; */
   padding: 5px;

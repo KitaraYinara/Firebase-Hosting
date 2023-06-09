@@ -129,7 +129,15 @@ function PatientTestPage() {
     <div>
       <Navigation />
       <h1 className="pageheader">Patient: {patientName}</h1>
-      <input type="file" id="file-input" onClick={handleFileImport} />
+      <label for="file-input" class="custom-file-upload">
+        Custom Upload
+      </label>
+      <input
+        type="file"
+        id="file-input"
+        // className="csvinput"
+        onClick={handleFileImport}
+      />
 
       {tests.length === 0 ? (
         <h2 className="loading">Loading tests...</h2>
