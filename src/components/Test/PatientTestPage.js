@@ -10,6 +10,7 @@ import {
   addDoc,
   getDoc,
   setDoc,
+  deleteDoc,
   query,
   onSnapshot,
 } from "firebase/firestore";
@@ -49,11 +50,19 @@ function PatientTestPage() {
     fetchTests();
     fetchPatientName();
   }, [patientId]);
+
+  const deleteTest = (id) => {
+    const testDoc = doc(db, "patients", patientId, "tests", id);
+    console.log(testDoc);
+    deleteDoc(testDoc);
+  };
+
   const addTest = (newTest) => {
     const testsCollectionRef = doc(
       collection(db, "patients", patientId, "tests")
     );
-    const testDateTime = newTest[1][0] + " " + newTest[1][1];
+    // const testDateTime = newTest[1][0] + " " + newTest[1][1];
+    const testDateTime = newTest[1][0];
     console.log(testDateTime);
     const d = new Date(testDateTime);
     const test = {
@@ -74,18 +83,20 @@ function PatientTestPage() {
         "sensors"
       );
       data.forEach((element) => {
-        console.log(element);
-        const datetime = element[0] + " " + element[1];
-        console.log(element[0]);
-        console.log(datetime);
-        const d = new Date(datetime);
-        const snsr = {
-          bpm: element[2],
-          motion: element[4],
-          spO2: element[3],
-          timestamp: d,
-        };
-        addDoc(sensorCollectionRef, snsr);
+        if (element != "") {
+          console.log(element);
+          // const datetime = element[0] + " " + element[1];
+          const datetime = element[0];
+          console.log(datetime);
+          const d = new Date(datetime);
+          const snsr = {
+            bpm: element[2],
+            motion: element[3],
+            spO2: element[1],
+            timestamp: d,
+          };
+          addDoc(sensorCollectionRef, snsr);
+        }
       });
     };
     AddSensor(newTest, testsCollectionRef.id);
@@ -173,6 +184,24 @@ function PatientTestPage() {
                         <path d="M3 4.5h10a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1H3zM1 2a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 2zm0 12a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 14z" />
                       </svg>
                       View Report
+                    </button>
+                    <button
+                      variant="danger"
+                      className="delete"
+                      onClick={(e) => deleteTest(test.id)}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="30"
+                        height="30"
+                        fill="currentColor"
+                        class="bi bi-trash"
+                        viewBox="0 0 22 18"
+                      >
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                      </svg>
+                      Delete
                     </button>
                   </td>
                 </tr>

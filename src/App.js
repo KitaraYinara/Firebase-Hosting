@@ -8,7 +8,6 @@ import Chart from "./chart";
 import PatientTestPage from "./components/Test/PatientTestPage";
 import ReportPage from "./components/Report/ReportPage";
 import MainReport from "./pages/report/O2Report";
-import ML from "./pages/ML/ML";
 import "bootstrap/dist/css/bootstrap.min.css";
 function App() {
   return (
@@ -22,7 +21,6 @@ function App() {
       <Route path="/patients/:patientId/tests" element={<PatientTestPage />} />
       <Route path="/report/:patientId/:testId" element={<ReportPage />} />
       <Route path="/mainreport/:patientId/:testId/" element={<MainReport />} />
-      <Route path="/ML" element={<ML />} />
     </Routes>
   );
 }
