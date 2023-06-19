@@ -130,7 +130,7 @@ function PatientTestPage() {
       <Navigation />
       <h1 className="pageheader">Patient: {patientName}</h1>
       <label for="file-input" class="custom-file-upload">
-        Custom Upload
+        Upload CSV
       </label>
       <input
         type="file"
