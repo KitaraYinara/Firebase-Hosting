@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Prediction Page</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.15.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1"></script>
+  
+</head>
+<body>
+  <h1>Prediction Page</h1>
+  <input type="file" id="csvFileInput">
+  <button onclick="processCSVFile()">Predict</button>
+  <p id="predictionResult"></p>
+
+  <script>
+    // Load the JSON model
+    var model;
+    var classes = ['BadOSA', 'Healthy', 'HeartFailure', 'Parkinson'];
+
+    async function loadModel() {
+      try {
+        model = await tf.loadLayersModel('https://raw.githubusercontent.com/Abhi4201790/JSON-hosting/main/model.json');
+        console.log('Model loaded:', model);
+        console.log('Model summary:');
+        model.summary();
+
+        console.log('Model weights loaded');
+      } catch (error) {
+        console.error('Error loading model:', error);
+      }
+    }
+
+    async function makePrediction(data) {
+      console.log('Making prediction:', data);
+      var predictedLabels = [];
+
+      for (var i = 0; i < data.length; i++) {
+        var input = tf.tensor2d([data[i]], [1, 3]);
+        var predictions = model.predict(input);
+        var predictedProbabilities = await predictions.array();
+        console.log('Predictions for row', i + 1, ':', predictedProbabilities);
+
+        // Get the predicted class for the row
+        var predictedClass = tf.argMax(predictions, axis=1).dataSync()[0];
+
+        // Map the predicted class index to the actual class label
+        var predictedLabel = classes[predictedClass];
+        predictedLabels.push(predictedLabel);
+
+        console.log('Predicted label for row', i + 1, ':', predictedLabel);
+
+        // Dispose the tensors to free up memory
+        input.dispose();
+        predictions.dispose();
+      }
+
+      // Determine the class with the highest occurrence
+      var counts = {};
+      var maxCount = 0;
+      var predictedClass;
+
+      for (var j = 0; j < predictedLabels.length; j++) {
+        var label = predictedLabels[j];
+        counts[label] = counts[label] ? counts[label] + 1 : 1;
+
+        if (counts[label] > maxCount) {
+          maxCount = counts[label];
+          predictedClass = label;
+        }
+      }
+
+      // Display the predicted class on the website
+      var predictionResultElement = document.getElementById('predictionResult');
+      predictionResultElement.textContent = 'Predicted class is: ' + predictedClass;
+    }
+
+    function processCSVFile() {
+      var fileInput = document.getElementById('csvFileInput');
+      var file = fileInput.files[0];
+
+      console.log('Processing file:', file);
+
+      if (file) {
+        Papa.parse(file, {
+          header: true,
+          complete: function(results) {
+            console.log('File parsing complete:', results);
+
+            var data = results.data;
+            var selectedData = data.map(function(row) {
+              return [
+                parseFloat(row["Pulse Rate"]),
+                parseFloat(row["Oxygen Level"]),
+                parseFloat(row["Motion"])
+              ];
+            });
+
+            makePrediction(selectedData);
+          }
+        });
+      }
+    }
+
+    // Call the loadModel function to load the model
+    loadModel();
+  </script>
+</body>
+</html>
