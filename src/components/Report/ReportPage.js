@@ -13,7 +13,7 @@ import {
 } from "recharts";
 import ExcelJS from "exceljs";
 import "./ReportPage.css";
-import * as tf from "@tensorflow/tfjs";
+
 function ReportPage() {
   const { patientId, testId } = useParams();
   const [sensorData, setSensorData] = useState([]);
@@ -24,17 +24,18 @@ function ReportPage() {
   const [abnormalBPM, setAbnormalBPM] = useState([]);
   const [abnormalSpO2, setAbnormalSpO2] = useState([]);
   const [showAbnormalValues, setShowAbnormalValues] = useState(false);
+  const [file, setFile] = useState();
+  const fileReader = new FileReader();
+
+  const handlePredictClick = () => {
+    window.open("http://localhost:8080/SleepClinicWebApp-master/src/components/Report/prediction-page.html", "_blank");
+  };
+
   const handleShowAbnormalValues = () => {
     setShowAbnormalValues(!showAbnormalValues);
   };
+
   useEffect(() => {
-    const fetchModel = async () => {
-      const model = await tf.loadGraphModel(
-        process.env.PUBLIC_URL + "/model.json"
-      );
-      const zeros = tf.zeros([1, 224, 224, 3]);
-      model.predict(zeros).print();
-    };
     const fetchSensorData = () => {
       const sensorsCollectionRef = collection(
         db,
@@ -84,7 +85,7 @@ function ReportPage() {
         setPatientName(patientData.name);
       }
     };
-    fetchModel();
+
     fetchSensorData();
     fetchPatientName();
   }, [patientId, testId]);
@@ -173,6 +174,9 @@ function ReportPage() {
           />
         </svg>
         Download CSV
+      </button>
+      <button className="report-btn" onClick={handlePredictClick}>
+        Predict
       </button>
       <button className="report-btn" onClick={handleShowAbnormalValues}>
         {showAbnormalValues ? "Hide Abnormal Values" : "Show Abnormal Values"}
