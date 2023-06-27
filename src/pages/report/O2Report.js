@@ -39,7 +39,6 @@ const O2Report = () => {
   const [bt7075,setBt7075]  = useState("");
   const [lt70,setLt70]  = useState("");
 
-
   const [o2t, setO2t] = useState({});
   const [o2tPercentage, setO2TPercentage] = useState({});
   const [pr, setPR] = useState({});
@@ -59,9 +58,9 @@ const O2Report = () => {
   const [drop3phInput, setDrop3phInput] = useState("");  
   const [drop4Input, setDrop4Input] = useState("");
   const [drop4phInput, setDrop4phInput] = useState("");  
-
- const container = React.useRef(null);
+  const container = React.useRef(null);
   const pdfExportComponent = React.useRef(null);
+
   const exportPDFWithMethod = () => {
     let element = container.current || document.body;
     savePDF(element, {
@@ -70,6 +69,7 @@ const O2Report = () => {
       fileName: `Report for ${new Date().getFullYear()}`,
     });
   };
+
   const exportPDFWithComponent = () => {
     if (pdfExportComponent.current) {
       pdfExportComponent.current.save();
@@ -115,9 +115,6 @@ const O2Report = () => {
               .slice(1)
               .map((row)=> row[dateIndex])
 
-            console.log(oxygenLevelColumn)
-            
-            
             function handleNaN(value) {
               return Number.isNaN(value) ? "-" : value;
             }
@@ -198,7 +195,6 @@ const O2Report = () => {
               
                // Scale the score to fit within the range of 0-10
                 const scaledO2Score = (o2Score / 12) * 10; 
-
                 return scaledO2Score;
             }
             const o2Score = (calculateO2Score(oxygenLevelColumn) /10).toFixed(1);
@@ -233,55 +229,48 @@ const O2Report = () => {
               const endTime24 = new Date(
                 "2000-01-01 " + mendTime
               ).toLocaleTimeString("en-US", { hour12: false });
-              // Convert start time and end time to Date objects
+
               const mstartDate = new Date("2000-01-01 " + startTime24);
               const mendDate = new Date("2000-01-01 " + endTime24);
 
-              // Calculate the difference in milliseconds
               const mdurationMs = mendDate - mstartDate;
-              // Calculate the duration in hours, minutes, and seconds
               const mhours = Math.floor(mdurationMs / 3600000);
               const mminutes = Math.floor((mdurationMs % 3600000) / 60000);
               const mseconds = Math.floor((mdurationMs % 60000) / 1000);
-              // Format the duration in HH:mm:ss format
               const mduration = `${mhours.toString().padStart(2, "0")}:${mminutes
                 .toString()
                 .padStart(2, "0")}:${mseconds.toString().padStart(2, "0")}`;
-
 
               const startTime = timestampColumn[0];
               const endTime = timestampColumn[timestampColumn.length -2];
               //console.log (startTime);
               //console.log(endTime);
+
               const startDate = new Date(startTime);
               const endDate = new Date(endTime);
-              // Convert start time and end time to Date objects
-              //const startDate = new Date('2000-01-01 ' + startTime24);
-              //const endDate = new Date('2000-01-01 ' + endTime24);
-              // Calculate the difference in milliseconds
               const durationMs = endDate - startDate  + 10000;
-              // Calculate the duration in hours, minutes, and seconds
               const hours = Math.floor(durationMs / 3600000);
               const minutes = Math.floor((durationMs % 3600000) / 60000);
               const seconds = Math.floor((durationMs % 60000) / 1000);
-              // Format the duration in HH:mm:ss format
               const duration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-              console.log(duration);
+              
+              //const startDate = new Date('2000-01-01 ' + startTime24);
+              //const endDate = new Date('2000-01-01 ' + endTime24);
+              //console.log(duration);
 
-              const Drop4 = ((Math.max(...oxygenLevelColumn)/100)*96)
+              //const Drop4 = ((Math.max(...oxygenLevelColumn)/100)*96)
+              const Drop4 = (Math.max(...oxygenLevelColumn)-4)
+              //console.log(Drop4);
 
-              //const Drop4 = (Math.max(...oxygenLevelColumn)-4)
-              console.log(Drop4);
-              const Drop3 = ((Math.max(...oxygenLevelColumn)/100)*97)
-
-              //const Drop3 = (Math.max(...oxygenLevelColumn)-3)
-              console.log(Drop3);
+              //const Drop3 = ((Math.max(...oxygenLevelColumn)/100)*97)
+              const Drop3 = (Math.max(...oxygenLevelColumn)-3)
+              //console.log(Drop3);
 
               const o2drop = {
                 ">3": 0 ,
                 ">4":0
               }
-
+              
               oxygenLevelColumn.forEach(value => {
                 if (value > Drop4) {
                   o2drop[">4"]++;
@@ -292,17 +281,19 @@ const O2Report = () => {
 
 
               let timeString = String(hours);
-              // Extract the hour value
               let Ihours = timeString.slice(0, 2);
-              console.log(Ihours);
+              //console.log(Ihours);
 
-              const Drop4ph =  (o2drop[">4"]/Ihours).toFixed(2)
+              let Drop4ph =  (o2drop[">4"]/Ihours).toFixed(2)
               //console.log(Drop4ph)
-              const Drop3ph = (o2drop[">3"]/Ihours).toFixed(2)
+              let Drop3ph = (o2drop[">3"]/Ihours).toFixed(2)
 
-              
-              console.log(Drop3ph)
-              console.log(Drop4ph)
+              if (Ihours < 6){
+                Drop3ph = "<6h";
+                Drop4ph = "<6h";
+              }
+              //console.log(Drop3ph)
+              //console.log(Drop4ph)
 
               setStartTime(startTime);
               setEndTime(endTime);
@@ -544,7 +535,6 @@ const O2Report = () => {
             setOLPercentage(olPercentage);
             }
             calculateOxygenLevelDuration(oxygenLevelColumn);
-            //console.log(duration)
         },
       });
         setFileUploaded(true);
@@ -554,13 +544,20 @@ const O2Report = () => {
     input.click();
   };
 
-
   return (
     <div>
       <Navigation />
+      <button className="import_button_text" onClick={handleFileImport}>
+        Click to Import CSV File
+      </button>
+      {fileUploaded && (
+        <div className="upload-status">File uploaded successfully!</div>
+      )}
+      <div className ="export_label" > Export as: </div>
+      <button className="export_button_text"  onClick={exportPDFWithComponent}>
+        PDF</button>
 
       <div className="page">
-       
         <PDFExport
           ref={pdfExportComponent}
           paperSize="auto"
@@ -568,15 +565,6 @@ const O2Report = () => {
           fileName={`O2Report for`}
         > 
         <div className="header">
-        <button className="import_button_text" onClick={handleFileImport}>
-            Click to Import CSV File
-          </button>
-          {fileUploaded && (
-            <div className="upload-status">File uploaded successfully!</div>
-          )}
-           <button className="export_button_text"  onClick={exportPDFWithComponent}>
-            Export as PDF</button>
-
           <h1>Oxygen Level Report</h1>
         </div>
 
@@ -757,11 +745,6 @@ const O2Report = () => {
     </PDFExport>
         </div>
       </div>
-
-
-
-
-
   );
 };
 
