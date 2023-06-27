@@ -5,6 +5,7 @@
 .page {
     position: relative;
     background-color: #ffffff;
+    top: 50px;
     width: 1400px; /* A4 width in pixels at 72 DPI */
     height: 2850px; /* A4 height in pixels at 72 DPI */
     margin: 0 auto;
@@ -32,7 +33,7 @@
   .import_button_text {
     position: absolute;
     width: 250px;
-    left: 650px;
+    left: 1900px;
     padding: 10px 20px;
     background-color: #f0f0f0;
     border: none;
@@ -46,19 +47,29 @@
   }
   .upload-status {
     position: absolute;
-    left: 910px;
+    left: 2160px;
     width: 100px;
     height: 20px;
-    top: 10px;
+    top: 60px;
 
     color: green;
     font-size: 14px;
   }
 
+  .export_label{
+    position: absolute;
+    top: 55px;
+    left: 2270px;
+    font-size: 25px;
+
+
+
+  }
+
   .export_button_text {
     position: absolute;
-    width: 250px;
-    left: 1000px;
+    width: 100px;
+    left: 2400px;
     padding: 10px 20px;
     background-color: #f0f0f0;
     border: none;
