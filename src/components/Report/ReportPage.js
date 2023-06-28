@@ -28,7 +28,7 @@ function ReportPage() {
   const fileReader = new FileReader();
 
   const handlePredictClick = () => {
-    window.open("http://localhost:8080/SleepClinicWebApp-master/src/components/Report/prediction-page.html", "_blank");
+    window.open("https://abhi4201790.github.io/JSON-hosting/prediction-page", "_blank");
   };
 
   const handleShowAbnormalValues = () => {
@@ -94,10 +94,9 @@ function ReportPage() {
     const csvContent =
       "data:text/csv;charset=utf-8," +
       [
-        ["Date", "Time", "Pulse Rate", "Oxygen Level", "Motion"], // Updated column names
+        ["Time", "Pulse Rate", "Oxygen Level", "Motion"], 
         ...sensorData.map((data) => [
-          data.timestamp.toLocaleDateString(), // Get only the date part
-          data.timestamp.toLocaleTimeString(), // Get only the time part
+          `${data.timestamp.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })} ${data.timestamp.toLocaleDateString('en-US', { month: 'short', day: '2-digit' })} ${data.timestamp.toLocaleDateString('en-US', { year: 'numeric' })}`, 
           data.bpm,
           data.spO2,
           data.motion,
@@ -105,7 +104,7 @@ function ReportPage() {
       ]
         .map((row) => row.join(","))
         .join("\n");
-
+  
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
@@ -114,6 +113,10 @@ function ReportPage() {
     link.click();
     document.body.removeChild(link);
   };
+  
+  
+
+  
 
   const handleShowAllData = () => {
     setShowAllData(true);
