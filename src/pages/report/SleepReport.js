@@ -13,6 +13,14 @@ const SleepReport = () => {
   const [apneaDurationMin, setApneaMin] = useState(null);
   const [apneaDurationMean, setApneaMean] = useState(null);
 
+  const [sleepOnset, setSleepOnset] = useState("");
+  const [sleepConclusion, setSleepConclusion] = useState("");
+  const [wakeTransition, setWakeTransition] = useState(0);
+  const [totalSleepTimeHours, setTotalSleepTimeHours] = useState("");
+  const [totalSleepTimeMinutes, setTotalSleepTimeMinutes] = useState("");
+  const [wakeAfterSleepOnsetHours, setWakeAfterSleepOnsetHours] = useState("");
+  const [wakeAfterSleepOnsetMinutes, setWakeAfterSleepOnsetMinutes] = useState("");
+
 
   const [dateData, setDateData] = useState({});
   const [motionData, setMotionData] = useState({});
@@ -247,11 +255,113 @@ const SleepReport = () => {
               setDrop4ph(Drop4ph);
             }
             calculateTimeDuration(timestampColumn);
+
+
+
+            function calculateSleepOnset(pulseRateColumn, timestampColumn) {
+              let time = 0;
+              let pulseRate = 0;
+              let dateTime = 0;
+              let timeOnly = 0;
+
+              for (let i = pulseRateColumn.length - 1; i >= 0; i--) {
+                pulseRate = pulseRateColumn[i];
             
+                if (pulseRate >= 50 || pulseRate <= 60) {
+                  dateTime = timestampColumn[i];
+                  timeOnly = dateTime.split(' ')[0] + (' ') + dateTime.split(' ')[1];  // To split datetime to extract time only
+
+                  time = timeOnly;
+                }
+                setSleepOnset(time);
+              }
+              return null; // Return null if no matching time value is found
+            }
+            calculateSleepOnset(pulseRateColumn, timestampColumn)
 
 
 
+            function calculateSleepConclusion(pulseRateColumn, timestampColumn) {
+              let time = 0;
+              let pulseRate = 0;
+              let dateTime = 0;
+              let timeOnly = 0;
 
+              for (let i = 0; i < pulseRateColumn.length; i++) {
+                pulseRate = pulseRateColumn[i];
+                
+                if (pulseRate >= 70) {
+                  dateTime = timestampColumn[i];
+                  timeOnly = dateTime.split(' ')[0] + (' ') + dateTime.split(' ')[1];  // To split datetime to extract time only
+
+                  time = timeOnly;
+                }
+                setSleepConclusion(time);
+                //console.log(time);
+              }
+              return null; // Return null if no matching time value is found
+            }
+            calculateSleepConclusion(pulseRateColumn, timestampColumn)
+
+
+            function calculateWakeTransition(motionColumn) {
+              let count = 0;
+
+              for (let i = 0; i < motionColumn.length; i++) {
+                const motion = motionColumn[i];
+            
+                if (motion >= 80) {
+                  count++;
+                }
+              } 
+                //console.log("motion:" ,count);
+                setWakeTransition(count);
+            }
+            calculateWakeTransition(motionColumn)
+
+
+            function calculateTotalSleepTime(motionColumn){
+              let totalTime = 0;
+
+              for (let i = 0; i < motionColumn.length; i++){
+                const motionValue = motionColumn[i];
+
+                if (motionValue < 10){
+                  totalTime += 4;
+                }
+              }
+              const hours = Math.floor(totalTime / 3600);
+              const minutes = Math.floor((totalTime % 3600) / 60);
+
+              //console.log('Total time: ' + hours + ' hours ' + minutes + ' minutes');
+
+              setTotalSleepTimeHours(hours);
+              setTotalSleepTimeMinutes(minutes);
+            }
+            calculateTotalSleepTime(motionColumn);
+
+
+
+            function calculateWakeAfterSleepOnset(motionColumn){
+              let totalTime = 0;
+
+              for (let i = 0; i < motionColumn.length; i++){
+                const motionValue = motionColumn[i];
+
+                if (motionValue >= 10){
+                  totalTime += 4;
+                }
+              }
+              const hours = Math.floor(totalTime / 3600);
+              const minutes = Math.floor((totalTime % 3600) / 60);
+
+              setWakeAfterSleepOnsetHours(hours);
+              setWakeAfterSleepOnsetMinutes(minutes);
+
+              //console.log('Total time: ' + hours + ' hours ' + minutes + ' minutes');
+            }
+            calculateWakeAfterSleepOnset(motionColumn);
+            
 
             function calculateOxygenLevelThreshold(oxygenLevelColumn) {
               const o2t = {
@@ -432,10 +542,10 @@ const SleepReport = () => {
       <div className="SO_Duration">Duration  {duration ? duration: "-"}<br/> Expected 7-9 hours </div>
     </div>
 
-    <div className="=SA _section">
+    <div class="SA _section">
       <div className="SA_label">Sleep Apnea</div>
-      <div className="SA_SAI">SAI<br/> Expected &lt; 5 </div>
-      <div className="SA_sAHI">sAHI</div>
+      <div className="SA_SAI">sAHI<span class="small-number">4%</span></div>
+      <div className="SA_sAHI">sAHI<span class="small-number">3%</span></div>
     </div>
 
     <div className="SP_section">
@@ -447,20 +557,20 @@ const SleepReport = () => {
   
 
   
-    <div className="SLPO_title">Sleep onset </div>
-    <div className="SLPO_input"></div>
+    <div className="SLPO_title">Sleep Onset </div>
+    <div className="SLPO_input">{sleepOnset}</div>
 
     <div className="SLPC_title">Sleep Conclusion </div>
-    <div className="SLPC_input"></div>
+    <div className="SLPC_input">{sleepConclusion}</div>
 
     <div className="TST_title">TST</div>
-    <div className="TST_input"></div>
+    <div className="TST_input">{totalSleepTimeHours}h:{totalSleepTimeMinutes}m</div>
 
     <div className="WASO_title">WASO </div>
-    <div className="WASO_input"></div>
+    <div className="WASO_input">{wakeAfterSleepOnsetHours}h:{wakeAfterSleepOnsetMinutes}m</div>
 
     <div className="WT_title">Wake Transistion</div>
-    <div className="WT_input"></div>   
+    <div className="WT_input"> #{wakeTransition}</div>   
 
     <div className="SAI_title">SAI </div>
     <div className="SAI_input"></div>
