@@ -4,6 +4,7 @@ import { db } from "../../firebase";
 import "./Test.css";
 import Navigation from "../../components/Navigation/Navigation";
 import Papa from "papaparse";
+import * as tf from "@tensorflow/tfjs";
 import {
   collection,
   doc,
@@ -19,7 +20,7 @@ function PatientTestPage() {
   const { patientId } = useParams();
   const [tests, setTests] = useState([]);
   const [patientName, setPatientName] = useState("");
-
+  const [model, setModel] = useState();
   useEffect(() => {
     const fetchTests = async () => {
       const testsCollectionRef = collection(db, "patients", patientId, "tests");
@@ -38,6 +39,22 @@ function PatientTestPage() {
       };
     };
 
+    const loadModel = async () => {
+      try {
+        const model = await tf.loadLayersModel(
+          "https://raw.githubusercontent.com/Abhi4201790/JSON-hosting/main/model.json"
+        );
+        setModel(model);
+        console.log("Model loaded:", model);
+        console.log("Model summary:");
+        model.summary();
+
+        console.log("Model weights loaded");
+      } catch (error) {
+        console.error("Error loading model:", error);
+      }
+    };
+
     const fetchPatientName = async () => {
       const patientDocRef = doc(db, "patients", patientId);
       const patientDoc = await getDoc(patientDocRef);
@@ -49,6 +66,7 @@ function PatientTestPage() {
     };
     fetchTests();
     fetchPatientName();
+    loadModel();
   }, [patientId]);
 
   const deleteTest = (id) => {
