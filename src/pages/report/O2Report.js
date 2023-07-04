@@ -10,9 +10,7 @@ const O2Report = () => {
   const [fileUploaded, setFileUploaded] = useState(false);
   const [pulseRateData, setPulseRateData] = useState({});
   const [oxygenLevelData, setOxygenLevelData] = useState({});
-  const [dateData, setDateData] = useState({});
   const [motionData, setMotionData] = useState({});
-  const [timestampData, setTimestampData] = useState([]);
   const [pulseRateChartData, setPulseRateChartData] = useState({});
   const [oxygenLevelChartData, setOxygenLevelChartData] = useState({});
   const [motionChartData, setMotionChartData] = useState({}); 
@@ -38,37 +36,17 @@ const O2Report = () => {
   const [bt7680,setBt7680]  = useState("");
   const [bt7075,setBt7075]  = useState("");
   const [lt70,setLt70]  = useState("");
-
-  const [o2t, setO2t] = useState({});
   const [o2tPercentage, setO2TPercentage] = useState({});
-  const [pr, setPR] = useState({});
   const [prPercentage, setPRPercentage] = useState({});
-  const [ol, setOL] = useState({});
   const [olPercentage, setOLPercentage] = useState({});
-  
   const [Drop3ph,setDrop3ph] = useState("");
   const [Drop4ph,setDrop4ph] = useState("");
-  const [Drop3,setDrop3] = useState("");
-  const [Drop4,setDrop4] = useState("");
-
   const [o2Score, seto2Score] = useState("");
   const [o2drop,setO2drop] = useState("");
-
-  const [drop3Input, setDrop3Input] = useState("");
-  const [drop3phInput, setDrop3phInput] = useState("");  
-  const [drop4Input, setDrop4Input] = useState("");
-  const [drop4phInput, setDrop4phInput] = useState("");  
-  const container = React.useRef(null);
+  const [o2t, setO2t] = useState({});
+  const [pr, setPR] = useState({});
+  const [ol, setOL] = useState({});
   const pdfExportComponent = React.useRef(null);
-
-  const exportPDFWithMethod = () => {
-    let element = container.current || document.body;
-    savePDF(element, {
-      paperSize: "auto",
-      margin: 40,
-      fileName: `Report for ${new Date().getFullYear()}`,
-    });
-  };
 
   const exportPDFWithComponent = () => {
     if (pdfExportComponent.current) {
@@ -167,7 +145,7 @@ const O2Report = () => {
                 "90-94": 0,
                 "95-100": 0
               };
-              // Step 2: Count the values within each range
+
               oxygenLevelColumn.forEach(o2value => {
                 if (o2value >= 70 && o2value <= 74) {
                   o2valueCounts["70-74"]++;
@@ -184,22 +162,27 @@ const O2Report = () => {
                 }
               });
             
-              // Step 3: Calculate the total count
               const o2totalCount = oxygenLevelColumn.length;
-            
-              // Step 4: Calculate the ratio for each range
               const o2ratios = Object.values(o2valueCounts).map(o2count => (o2count / o2totalCount) * 100);
-            
-              // Step 5: Calculate the score
               const o2Score = (o2ratios[0] * 0.2) + (o2ratios[1] * 0.4) + (o2ratios[2] * 0.6) + (o2ratios[3] * 0.8) + (o2ratios[4] * 1) + (o2ratios[5] * 1.2);
-              
-               // Scale the score to fit within the range of 0-10
-                const scaledO2Score = (o2Score / 12) * 10; 
-                return scaledO2Score;
+              const scaledO2Score = (o2Score / 12) * 10; 
+              return scaledO2Score;
             }
-            const o2Score = (calculateO2Score(oxygenLevelColumn) /10).toFixed(1);
+            const startDate = new Date(startTime);
+              const endDate = new Date(endTime);
+              const durationMs = endDate - startDate  + 10000;
+              const hours = Math.floor(durationMs / 3600000);
+              let timeString = String(hours);
+              let Ihours = timeString.slice(0, 2);
+              let o2Score;
+              if (Ihours < 6) {
+                o2Score = "Time<6h";
+              } else {
+                o2Score = (calculateO2Score(oxygenLevelColumn, Ihours) / 10).toFixed(1);
+              }
+            //const o2Score = (calculateO2Score(oxygenLevelColumn) /10).toFixed(1);
             //console.log("O2 Score:", o2Score);
-            seto2Score(o2Score);
+              seto2Score(o2Score);
 
             function calculateDateRange(dateColumn) {
               const dateStart = dateColumn[0];
@@ -289,8 +272,8 @@ const O2Report = () => {
               let Drop3ph = (o2drop[">3"]/Ihours).toFixed(2)
 
               if (Ihours < 6){
-                Drop3ph = "<6h";
-                Drop4ph = "<6h";
+                Drop3ph = "Time<6h";
+                Drop4ph = "Time<6h";
               }
               //console.log(Drop3ph)
               //console.log(Drop4ph)
@@ -450,8 +433,6 @@ const O2Report = () => {
                   pr["≤50"]++;
                 }
               });
-
-              //console.log(pulseRateColumn);
           
               const prPercentage = {
                 "≥120": (pr["≥120"] / totalCount * 100).toFixed(2),
@@ -462,10 +443,6 @@ const O2Report = () => {
               const gt120 = secondsToHMS(pr["≥120"] * 4);
               const bt50120 = secondsToHMS(pr["50-120"] * 4);
               const lt50 = secondsToHMS(pr["≤50"] * 4);
-            
-              //console.log("Variable '≥95' duration:", gt120);
-              //console.log("Variable '90-94' duration:", bt50120);
-              //console.log("Variable '≤90' duration:", lt50);
 
               setGt120(gt120);
               setBt50120(bt50120);
@@ -505,7 +482,6 @@ const O2Report = () => {
               }
             });
 
-            //console.log("pp",ol["96-100"]);
             const olPercentage = {
               "96-100": ((ol["96-100"] / totalCount) * 100).toFixed(2),
               "91-95": ((ol["91-95"] / totalCount) * 100).toFixed(2),
