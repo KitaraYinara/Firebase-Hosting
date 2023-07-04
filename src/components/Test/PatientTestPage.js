@@ -30,6 +30,7 @@ function PatientTestPage() {
         const testList = snapshot.docs.map((doc) => ({
           id: doc.id,
           datetime: doc.data().datetime.toDate().toLocaleString(),
+          prediction: doc.data().prediction,
         }));
         setTests(testList);
       });
@@ -69,27 +70,71 @@ function PatientTestPage() {
     loadModel();
   }, [patientId]);
 
+  const makePrediction = (data, alldata) => {
+    console.log("Making prediction:", data);
+    var predictedLabels = [];
+    var classes = ["BadOSA", "Healthy", "HeartFailure", "Parkinson"];
+    for (var i = 0; i < data.length; i++) {
+      var input = tf.tensor2d(data[i], [1, 3]);
+      var predictions = model.predict(input);
+      var predictedProbabilities = predictions.array();
+      console.log("Predictions for row", i + 1, ":", predictedProbabilities);
+
+      // Get the predicted class for the row
+      var predictedClass = tf.argMax(predictions, 1).dataSync()[0];
+
+      // Map the predicted class index to the actual class label
+      var predictedLabel = classes[predictedClass];
+      predictedLabels.push(predictedLabel);
+
+      console.log("Predicted label for row", i + 1, ":", predictedLabel);
+
+      // Dispose the tensors to free up memory
+      input.dispose();
+      predictions.dispose();
+    }
+    // Determine the class with the highest occurrence
+    var counts = {};
+    var maxCount = 0;
+    var predictedClass;
+
+    for (var j = 0; j < predictedLabels.length; j++) {
+      var label = predictedLabels[j];
+      counts[label] = counts[label] ? counts[label] + 1 : 1;
+
+      if (counts[label] > maxCount) {
+        maxCount = counts[label];
+        predictedClass = label;
+      }
+    }
+
+    // Display the predicted class on the website
+    console.log("Predicted class is: " + predictedClass);
+    addTest(alldata, predictedClass);
+  };
+
   const deleteTest = (id) => {
     const testDoc = doc(db, "patients", patientId, "tests", id);
     console.log(testDoc);
     deleteDoc(testDoc);
   };
 
-  const addTest = (newTest) => {
+  const addTest = (newTest, predictedClass) => {
     const testsCollectionRef = doc(
       collection(db, "patients", patientId, "tests")
     );
     // const testDateTime = newTest[1][0] + " " + newTest[1][1];
-    const testDateTime = newTest[1][0];
+    console.log(newTest[0]["Time"]);
+    const testDateTime = newTest[0]["Time"];
     console.log(testDateTime);
     const d = new Date(testDateTime);
     const test = {
       datetime: d,
+      prediction: predictedClass,
     };
     console.log(testsCollectionRef.id);
     setDoc(testsCollectionRef, test);
     const AddSensor = (data, testId) => {
-      data.shift();
       console.log(data);
       console.log(testId);
       const sensorCollectionRef = collection(
@@ -104,13 +149,13 @@ function PatientTestPage() {
         if (element != "") {
           console.log(element);
           // const datetime = element[0] + " " + element[1];
-          const datetime = element[0];
+          const datetime = element["Time"];
           console.log(datetime);
           const d = new Date(datetime);
           const snsr = {
-            bpm: element[2],
-            motion: element[3],
-            spO2: element[1],
+            bpm: element["Pulse Rate"],
+            motion: element["Motion"],
+            spO2: element["Oxygen Level"],
             timestamp: d,
           };
           addDoc(sensorCollectionRef, snsr);
@@ -140,11 +185,18 @@ function PatientTestPage() {
         const fileContent = e.target.result;
 
         Papa.parse(fileContent, {
-          header: false,
+          header: true,
+          skipEmptyLines: true,
           complete: function (results) {
             const data = results.data;
-            console.log(data);
-            addTest(data);
+            if (data.length > 0) {
+              const selectedData = data.map((row) => [
+                parseFloat(row["Pulse Rate"] || 0),
+                parseFloat(row["Oxygen Level"] || 0),
+                parseFloat(row["Motion"] || 0),
+              ]);
+              makePrediction(selectedData, data);
+            }
           },
           error: (err) => console.log("ERROR", err),
         });
@@ -177,6 +229,7 @@ function PatientTestPage() {
               <tr>
                 <th>Test ID</th>
                 <th>DateTime</th>
+                <th>AI Prediction</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -185,6 +238,7 @@ function PatientTestPage() {
                 <tr key={test.id}>
                   <td>{test.id}</td>
                   <td>{test.datetime}</td>
+                  <td>{test.prediction}</td>
                   <td>
                     <button
                       variant="primary"
