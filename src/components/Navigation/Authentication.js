@@ -40,7 +40,8 @@ const Authentication = () => {
             Sign Out
           </Nav.Link>
           <Nav.Link href="/patient">Patient</Nav.Link>
-          <Nav.Link href="/mainreport">Report</Nav.Link>
+          <Nav.Link href="/mainreport">O2 Report</Nav.Link>
+          <Nav.Link href="/sleepreport">Sleep Report</Nav.Link>
         </>
       )}
     </>

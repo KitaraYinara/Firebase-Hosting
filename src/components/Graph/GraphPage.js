@@ -11,10 +11,9 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import ExcelJS from "exceljs";
-import "./ReportPage.css";
+import "./GraphPage.css";
 
-function ReportPage() {
+function GraphPage() {
   const { patientId, testId } = useParams();
   const [sensorData, setSensorData] = useState([]);
   const [patientName, setPatientName] = useState("");
@@ -28,7 +27,10 @@ function ReportPage() {
   const fileReader = new FileReader();
 
   const handlePredictClick = () => {
-    window.open("https://abhi4201790.github.io/JSON-hosting/prediction-page", "_blank");
+    window.open(
+      "https://abhi4201790.github.io/JSON-hosting/prediction-page",
+      "_blank"
+    );
   };
 
   const handleShowAbnormalValues = () => {
@@ -94,9 +96,18 @@ function ReportPage() {
     const csvContent =
       "data:text/csv;charset=utf-8," +
       [
-        ["Time", "Pulse Rate", "Oxygen Level", "Motion"], 
+        ["Time", "Pulse Rate", "Oxygen Level", "Motion"],
         ...sensorData.map((data) => [
-          `${data.timestamp.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })} ${data.timestamp.toLocaleDateString('en-US', { month: 'short', day: '2-digit' })} ${data.timestamp.toLocaleDateString('en-US', { year: 'numeric' })}`, 
+          `${data.timestamp.toLocaleTimeString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          })} ${data.timestamp.toLocaleDateString("en-US", {
+            month: "short",
+            day: "2-digit",
+          })} ${data.timestamp.toLocaleDateString("en-US", {
+            year: "numeric",
+          })}`,
           data.bpm,
           data.spO2,
           data.motion,
@@ -104,7 +115,7 @@ function ReportPage() {
       ]
         .map((row) => row.join(","))
         .join("\n");
-  
+
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
@@ -113,10 +124,6 @@ function ReportPage() {
     link.click();
     document.body.removeChild(link);
   };
-  
-  
-
-  
 
   const handleShowAllData = () => {
     setShowAllData(true);
@@ -160,7 +167,7 @@ function ReportPage() {
   return (
     <div>
       <h1 className="pageheader">
-        Report for Patient: {patientName}, Test ID: {testId}
+        Patient: {patientName}, Test ID: {testId}
       </h1>
       <button className="report-btn" onClick={handleDownloadCSV}>
         <svg
@@ -368,7 +375,7 @@ function ReportPage() {
             >
               <path d="M3 4.5h10a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1H3zM1 2a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 2zm0 12a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 14z" />
             </svg>
-            Main Report
+            O2 Report
           </button>
         </div>
       )}
@@ -376,4 +383,4 @@ function ReportPage() {
   );
 }
 
-export default ReportPage;
+export default GraphPage;

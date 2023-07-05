@@ -5,8 +5,9 @@ import Signup from "./pages/auth/Signup";
 import Patient from "./pages/patients/Patient";
 import Chart from "./chart";
 import PatientTestPage from "./components/Test/PatientTestPage";
-import ReportPage from "./components/Report/ReportPage";
+import GraphPage from "./components/Graph/GraphPage";
 import MainReport from "./pages/report/O2Report";
+import SleepReport from "./pages/report/SleepReport";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useEffect, useState } from "react";
 import { auth } from "./firebase";
@@ -56,12 +57,16 @@ const App = () => {
         element={<PrivateRoute element={<PatientTestPage />} />}
       />
       <Route
-        path="/report/:patientId/:testId"
-        element={<PrivateRoute element={<ReportPage />} />}
+        path="/graph/:patientId/:testId"
+        element={<PrivateRoute element={<GraphPage />} />}
       />
       <Route
         path="/mainreport"
         element={<PrivateRoute element={<MainReport />} />}
+      />
+      <Route
+        path="/sleepreport"
+        element={<PrivateRoute element={<SleepReport />} />}
       />
     </Routes>
   );

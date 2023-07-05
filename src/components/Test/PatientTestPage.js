@@ -166,7 +166,7 @@ function PatientTestPage() {
   };
   const routeToReport = (testId) => {
     console.log(testId);
-    window.location.href = `/report/${patientId}/${testId}`;
+    window.location.href = `/graph/${patientId}/${testId}`;
   };
 
   const routeToPatients = () => {
