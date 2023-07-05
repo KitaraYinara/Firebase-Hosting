@@ -3,7 +3,6 @@ import Home from "./pages/Home";
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
 import Patient from "./pages/patients/Patient";
-import Staff from "./pages/staffs/Staff";
 import Chart from "./chart";
 import PatientTestPage from "./components/Test/PatientTestPage";
 import ReportPage from "./components/Report/ReportPage";
@@ -50,18 +49,8 @@ const App = () => {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
-      <Route
-        path="/patient"
-        element={<PrivateRoute element={<Patient />} />}
-      />
-      <Route
-        path="/staff"
-        element={<PrivateRoute element={<Staff />} />}
-      />
-      <Route
-        path="/chart"
-        element={<PrivateRoute element={<Chart />} />}
-      />
+      <Route path="/patient" element={<PrivateRoute element={<Patient />} />} />
+      <Route path="/chart" element={<PrivateRoute element={<Chart />} />} />
       <Route
         path="/patients/:patientId/tests"
         element={<PrivateRoute element={<PatientTestPage />} />}
@@ -71,7 +60,7 @@ const App = () => {
         element={<PrivateRoute element={<ReportPage />} />}
       />
       <Route
-        path="/mainreport/:patientId/:testId/"
+        path="/mainreport"
         element={<PrivateRoute element={<MainReport />} />}
       />
     </Routes>

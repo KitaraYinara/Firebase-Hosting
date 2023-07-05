@@ -40,7 +40,7 @@ const Authentication = () => {
             Sign Out
           </Nav.Link>
           <Nav.Link href="/patient">Patient</Nav.Link>
-          <Nav.Link href="/staff">Staff</Nav.Link>
+          <Nav.Link href="/mainreport">Report</Nav.Link>
         </>
       )}
     </>
