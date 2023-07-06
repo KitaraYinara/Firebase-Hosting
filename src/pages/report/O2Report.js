@@ -46,7 +46,11 @@ const O2Report = () => {
   const [o2t, setO2t] = useState({});
   const [pr, setPR] = useState({});
   const [ol, setOL] = useState({});
+  const [IfileName, setIFileName] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const pdfExportComponent = React.useRef(null);
+  const currentDate = new Date().toLocaleDateString();
+  const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
   const exportPDFWithComponent = () => {
     if (pdfExportComponent.current) {
@@ -62,6 +66,13 @@ const O2Report = () => {
     input.addEventListener("change", function (event) {
       const file = event.target.files[0];
       const reader = new FileReader();
+      if (file.type !== "text/csv") {
+        setErrorMessage("Invalid file type. Select a New CSV File");
+        return;
+      }
+      setIFileName(file.name);
+      setFileUploaded(true);
+      setErrorMessage("");
 
       reader.onload = function (e) {
         const fileContent = e.target.result;
@@ -526,6 +537,9 @@ const O2Report = () => {
       <button className="import_button_text" onClick={handleFileImport}>
         Click to Import CSV File
       </button>
+      {errorMessage && <div className="error-message">{errorMessage}</div>}
+
+
       {fileUploaded && (
         <div className="upload-status">File uploaded successfully!</div>
       )}
@@ -543,6 +557,9 @@ const O2Report = () => {
         <div className="header">
           <h1>Oxygen Level Report</h1>
         </div>
+        <div className="current-datetime">File Imported Datetime: {currentDate},{currentTime}</div>
+        <div className="current-filename">File Imported Name: {IfileName}</div>
+      
 
         <div className="info_border">
           <div className="name">Name: </div>
@@ -560,7 +577,9 @@ const O2Report = () => {
         <div className="std_border">
           <div className="start">Start Time: {startTime ? startTime + "," + (firstDate ? firstDate : "-") : "-"}</div>
           <div className="end">End Time: {endTime ? endTime + "," + (lastDate ? lastDate : "-") : "-"}</div>
-          <div className="duration">Duration: {duration ? duration + "," + (mduration ? mduration: "-"): "-"}</div>
+          {/*<div className="duration">Duration: {duration ? duration + "," + (mduration ? mduration: "-"): "-"}</div>*/}
+          <div className="duration">Duration: {duration ? duration : "-"}</div>
+          
         </div>
 
         <div className="note_border">
@@ -596,7 +615,7 @@ const O2Report = () => {
             <td>{o2tPercentage['90-94']}%</td>
           </tr>
           <tr>
-            <td>&le; 90</td>
+            <td>&lt; 90</td>
             <td>{lt90}</td>
             <td>{o2tPercentage['≤90']}%</td>
           </tr>
@@ -619,7 +638,7 @@ const O2Report = () => {
             <td>{prPercentage['50-120']}%</td>
           </tr>
           <tr>
-            <td>&le; 50</td>
+            <td>&lt; 50</td>
             <td>{lt50}</td>
             <td>{prPercentage['≤50']}%</td>
           </tr>
@@ -650,7 +669,6 @@ const O2Report = () => {
             <td>{pulseRateData.average}</td>
             <td>{pulseRateData.lowest}</td>
           </tr>
-          <br />
           <tr>
             <td>O2 Score</td>
             <td colSpan="2">
