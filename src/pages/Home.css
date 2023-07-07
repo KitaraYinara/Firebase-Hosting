@@ -8,13 +8,13 @@
 
 .sleepeasy {
   position: absolute;
-  font-size: 200px;
+  font-size: 12.5rem;
   font-weight: bold;
   font-style: italic;
-  left: 250px;
-  top: 350px;
+  left: 15%;
+  top: 30%;
   color: salmon;
-  margin-bottom: 10px;
+  margin-bottom: 5%;
 }
 
 .title {
@@ -23,14 +23,14 @@
   font-weight: bold;
   font-style: italic;
   color: white;
-  left: 600px;
-  top: 465px;
+  left: 27.25%;
+  top: 40%;
   margin: 0;
   padding: 0;
 }
 
 .bottom-brand {
-  margin-top: 40%;
+  margin-top: 75%;
   margin-bottom: 0%;
   margin-left: auto;
   margin-right: auto;
@@ -38,4 +38,8 @@
   text-align: center;
   font-family: Georgia, serif;
   color: #f0f7d4;
+}
+
+.container {
+  max-width: 100%;
 }

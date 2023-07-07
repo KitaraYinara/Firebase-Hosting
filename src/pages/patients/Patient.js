@@ -12,23 +12,13 @@ const Patient = () => {
     setPatientId(id);
   };
   return (
-    <>
+    <div className="container">
       <Navigation></Navigation>
-      <div>
-        <Row>
-          <Col>
-            <AddPatient id={patientId} setPatientId={setPatientId} />
-          </Col>
-        </Row>
-      </div>
-      <div>
-        <Row>
-          <Col>
-            <PatientsList getPatientId={getPatientIdHandler} />
-          </Col>
-        </Row>
-      </div>
-    </>
+
+      <AddPatient id={patientId} setPatientId={setPatientId} />
+
+      <PatientsList getPatientId={getPatientIdHandler} />
+    </div>
   );
 };
 

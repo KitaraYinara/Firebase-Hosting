@@ -4,14 +4,14 @@ import "./Home.css";
 
 const Home = () => {
   return (
-    <div>
+    <div className="container">
       <Navigation />
       <div className="title-section">
         <h1 className="sleepeasy">SleepEasy</h1>
         <h2 className="title">Patient & Report Management System</h2>
-        <div className="bottom-brand">
-          <p>&copy; 2023 SleepEasy Centre. All rights reserved.</p>
-        </div>
+      </div>
+      <div className="bottom-brand">
+        <p>&copy; 2023 SleepEasy Centre. All rights reserved.</p>
       </div>
     </div>
   );
