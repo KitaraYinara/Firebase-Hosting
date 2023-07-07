@@ -37,7 +37,7 @@
     margin-bottom: 20px;
   }
   
-  .import_button_text {
+  .import_button_text_o2 {
     position: absolute;
     width: 250px;
     left: 500px;
@@ -52,7 +52,7 @@
   .import_button_text:hover {
     background-color: #e0e0e0;
   }
-  .upload-status {
+  .upload-status_o2 {
     position: absolute;
     left: 780px;
     width: 120px;
@@ -61,7 +61,7 @@
     color: aquamarine;
     font-size: 14px;
   }
-  .error-message {
+  .error-message_o2 {
     position: absolute;
     left: 800px;
     width: 140px;
@@ -71,7 +71,7 @@
     font-size: 14px;
   }
 
-  .export_label{
+  .export_label_o2{
     position: absolute;
     top: 5px;
     left: 1000px;
@@ -79,7 +79,7 @@
     color: aquamarine;
   }
 
-  .export_button_text {
+  .export_button_text_o2 {
     position: absolute;
     width: 100px;
     left: 1130px;
@@ -91,7 +91,7 @@
     font-size: 16px;
     cursor: pointer;
   }
-  .export_button_text:hover {
+  .export_button_text_o2:hover {
     background-color: #e0e0e0;
   }
 
