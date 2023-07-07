@@ -1,7 +1,17 @@
+  .page_control{
+    position: relative;
+    top: 0px;
+    left: 145px;
+    width: 1400px;
+    height: 55px;
+    box-sizing: border-box;
+    margin: 0 auto;
+    padding: 20px;
+  }
   .page {
     position: relative;
     background-color: #ffffff;
-    top: 50px;
+    top: 0px;
     width: 1400px;
     height: 2850px;
     margin: 0 auto;
@@ -18,6 +28,7 @@
     border: 2px solid #793838;
     box-sizing: border-box;
   }
+
   .header {
     position: absolute;
     display: flex;
@@ -29,8 +40,8 @@
   .import_button_text {
     position: absolute;
     width: 250px;
-    left: 900px;
-    top :60px;
+    left: 500px;
+    top :5px;
     padding: 10px 20px;
     background-color: #f0f0f0;
     border-radius: 4px;
@@ -43,27 +54,27 @@
   }
   .upload-status {
     position: absolute;
-    left: 1150px;
+    left: 780px;
     width: 120px;
-    height: 20px;
-    top: 60px;
+    height: 0px;
+    top: 5px;
     color: aquamarine;
     font-size: 14px;
   }
   .error-message {
     position: absolute;
-    left: 1150px;
+    left: 800px;
     width: 140px;
     height: 20px;
-    top: 60px;
+    top: 5px;
     color: red;
     font-size: 14px;
   }
 
   .export_label{
     position: absolute;
-    top: 60px;
-    left: 1300px;
+    top: 5px;
+    left: 1000px;
     font-size: 25px;
     color: aquamarine;
   }
@@ -71,8 +82,8 @@
   .export_button_text {
     position: absolute;
     width: 100px;
-    left: 1430px;
-    top: 60px;
+    left: 1130px;
+    top: 5px;
     padding: 10px 20px;
     background-color: #f0f0f0;
     border: none;
@@ -452,4 +463,3 @@
     height: 800px;
     width: 1350px;
   }
-
