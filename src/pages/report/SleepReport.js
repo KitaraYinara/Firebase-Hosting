@@ -20,7 +20,7 @@ const SleepReport = () => {
   const [totalSleepTimeMinutes, setTotalSleepTimeMinutes] = useState("");
   const [wakeAfterSleepOnsetHours, setWakeAfterSleepOnsetHours] = useState("");
   const [wakeAfterSleepOnsetMinutes, setWakeAfterSleepOnsetMinutes] = useState("");
-
+  const [sleepApneaIndicator, setSleepApneaIndicator] = useState(0);
 
   const [dateData, setDateData] = useState({});
   const [motionData, setMotionData] = useState({});
@@ -256,8 +256,6 @@ const SleepReport = () => {
             }
             calculateTimeDuration(timestampColumn);
 
-
-
             function calculateSleepOnset(pulseRateColumn, timestampColumn) {
               let time = 0;
               let pulseRate = 0;
@@ -278,8 +276,6 @@ const SleepReport = () => {
               return null; // Return null if no matching time value is found
             }
             calculateSleepOnset(pulseRateColumn, timestampColumn)
-
-
 
             function calculateSleepConclusion(pulseRateColumn, timestampColumn) {
               let time = 0;
@@ -341,7 +337,6 @@ const SleepReport = () => {
             calculateTotalSleepTime(motionColumn);
 
 
-
             function calculateWakeAfterSleepOnset(motionColumn){
               let totalTime = 0;
 
@@ -361,6 +356,332 @@ const SleepReport = () => {
               //console.log('Total time: ' + hours + ' hours ' + minutes + ' minutes');
             }
             calculateWakeAfterSleepOnset(motionColumn);
+
+
+            function calculateSleepApneaIndicator(pulseRateColumn, motionColumn, timestampColumn){
+              const startDate = new Date(startTime);
+              const endDate = new Date(endTime);
+              const durationMs = endDate - startDate  + 10000;
+              const hours = Math.floor(durationMs / 3600000);
+              const minutes = Math.floor((durationMs % 3600000) / 60000);
+              const seconds = Math.floor((durationMs % 60000) / 1000);
+              const duration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+              let pulseCount = 0;
+              let motionCount = 0;
+              let timeSum = 0;
+
+              for (let i = 0; i < motionColumn.length; i++ ){
+                const motion = motionColumn[i];
+                if (motion >= 20) {
+                  motionCount++;
+                }
+              }
+
+              for (let i = 0; i < pulseRateColumn.length; i++ ){
+                const pulseRate = pulseRateColumn[i];
+                if (pulseRate >= 70) {
+                  pulseCount++;
+                }
+              }
+
+              for (let i = 0; i < timestampColumn.length; i++ ){
+                const time = timestampColumn[i];
+                timeSum += time;
+              }
+
+              let timeString = String(hours);
+              let Ihours = timeString.slice(0, 2);
+              //console.log(Ihours);
+
+              const result = Math.round((pulseCount + motionCount) / Ihours);
+              //console.log(result)
+
+              setSleepApneaIndicator(result);
+
+              const sleepApneaElements = document.querySelectorAll('.Feedback_point2');
+              const sleepApneaElement = sleepApneaElements[0];
+              let sleepApneaText = '';
+
+              if (result > 10){
+                sleepApneaText = 'Sleep Apnea Indicator is <span class="bold">above</span> expected value.';
+              }
+              else{
+                sleepApneaText = 'Sleep Apnea Indicator is <span class="bold">below</span> expected value.';
+              }
+              sleepApneaElement.innerHTML = sleepApneaText;
+            }
+            calculateSleepApneaIndicator(pulseRateColumn, motionColumn, timestampColumn);
+
+
+            function generateRandomRdiNumbers() {
+              let randomNumber1 = Math.floor(Math.random() * 10) + 1;
+              let randomNumber2 = Math.floor(Math.random() * 10) + 1;
+            
+              // Assign the generated numbers to the respective HTML elements
+              document.querySelector('.SRDI_input').textContent = randomNumber1;
+              document.querySelector('.SRDI_input1').textContent = randomNumber2;
+            
+              if (randomNumber1 <= randomNumber2) {
+                // Swap the numbers if needed
+                [randomNumber1, randomNumber2] = [randomNumber2, randomNumber1];
+            
+                document.querySelector('.SRDI_input').textContent = randomNumber1;
+                document.querySelector('.SRDI_input1').textContent = randomNumber2;
+              }
+            }
+            generateRandomRdiNumbers();
+
+
+            function generateRandomObstructiveNumbers() {
+              let randomNumber1 = Math.floor(Math.random() * 40) + 1;
+              let randomNumber2 = Math.floor(Math.random() * 40) + 1;
+            
+              // Generate random difference between 1 and 9 (inclusive)
+              const difference = Math.floor(Math.random() * 9) + 1;
+            
+              if (randomNumber1 <= randomNumber2) {
+                randomNumber1 = randomNumber2 + difference;
+              } else {
+                randomNumber2 = randomNumber1 - difference;
+              }
+            
+              document.querySelector('.SAHIO_input').textContent = randomNumber1;
+              document.querySelector('.SAHIO_input1').textContent = randomNumber2;
+            }
+            generateRandomObstructiveNumbers();
+
+
+            function generateRandomTotalNumbers() {
+              let randomNumber1 = Math.floor(Math.random() * 30) + 1;
+              let randomNumber2 = Math.floor(Math.random() * 30) + 1;
+            
+              // Generate random difference between 2 and 6 (inclusive)
+              const difference = Math.floor(Math.random() * 5) + 2;
+            
+              if (randomNumber1 <= randomNumber2) {
+                randomNumber1 = randomNumber2 + difference;
+              } else {
+                randomNumber2 = randomNumber1 - difference;
+              }
+            
+              document.querySelector('.SAHIT_input').textContent = randomNumber1;
+              document.querySelector('.SAHIT_input1').textContent = randomNumber2;
+            
+              const existingSeverityElements = document.querySelectorAll('.severity');
+              existingSeverityElements.forEach((element) => {
+                element.remove();
+              });
+              document.querySelector('.SA_SAI').style.backgroundColor = '';
+              document.querySelector('.SA_sAHI').style.backgroundColor = '';
+            
+              const severityLevel1 = getSeverityLevel(randomNumber1);
+              const severityLevel2 = getSeverityLevel(randomNumber2);
+            
+              document.querySelector('.SA_SAI').innerHTML = `sAHI<span class="small-number">3%</span>&nbsp;&nbsp;&nbsp;${randomNumber1}<div class="severity smaller-font1">${severityLevel1}</div>`;
+              document.querySelector('.SA_sAHI').innerHTML = `sAHI<span class="small-number">4%</span>&nbsp;&nbsp;&nbsp;${randomNumber2}<div class="severity smaller-font1">${severityLevel2}</div>`;
+
+            
+              const saiElement = document.querySelector('.SA_SAI');
+              const sahiElement = document.querySelector('.SA_sAHI');
+
+              const sai2Elements = document.querySelectorAll(".Feedback_point2");
+              const sai2Element = sai2Elements[1];
+              let sai2Text = "";
+            
+              if (severityLevel1 === 'Normal') {
+                saiElement.style.backgroundColor = 'green';
+                sai2Text = 'Apnea Hypopnea Index is <span class="bold">Normal</span>.';
+              } else if (severityLevel1 === 'Mild') {
+                saiElement.style.backgroundColor = 'rgb(255, 204, 0)';
+                sai2Text = 'Apnea Hypopnea Index is <span class="bold">Mild</span>.';
+              } else if (severityLevel1 === 'Severe') {
+                saiElement.style.backgroundColor = 'red';
+                sai2Text = 'Apnea Hypopnea Index is <span class="bold">Severe</span>.';
+              }
+
+              sai2Element.innerHTML = sai2Text;
+
+            
+              if (severityLevel2 === 'Normal') {
+                sahiElement.style.backgroundColor = 'green';
+              } else if (severityLevel2 === 'Mild') {
+                sahiElement.style.backgroundColor = 'rgb(255, 204, 0)';
+              } else if (severityLevel2 === 'Severe') {
+                sahiElement.style.backgroundColor = 'red';
+              }
+            }
+            
+            function getSeverityLevel(value) {
+              if (value >= 1 && value <= 4) {
+                return 'Normal';
+              } else if (value >= 5 && value <= 15) {
+                return 'Mild';
+              } else {
+                return 'Severe';
+              }
+            }
+            generateRandomTotalNumbers();
+
+
+            function generateRandomSleepQualityIndex() {
+              const randomNumber = Math.floor(Math.random() * 36) + 30;
+              const sqiElement = document.querySelector('.SQ_SQI');
+              sqiElement.innerHTML = `SQI&nbsp;&nbsp;&nbsp;<span class="smaller-font">${randomNumber}</span><br/><span class="expected smaller-font1">Expected &gt;55</span>`;
+            
+              const sleepQualityElements = document.querySelectorAll('.Feedback_point1');
+              const sleepQualityElement = sleepQualityElements[1];
+              let sleepQualityText = '';
+            
+              if (randomNumber > 55) {
+                sqiElement.style.backgroundColor = 'green';
+                sleepQualityText = 'Sleep Quality is <span class="bold">above</span> expected value.';
+              } else if (randomNumber >= 45 && randomNumber <= 55) {
+                sqiElement.style.backgroundColor = "rgb(255, 204, 0)";
+                sleepQualityText = 'Sleep Quality is <span class="bold">below</span> expected value.';
+              } else {
+                sqiElement.style.backgroundColor = 'red';
+                sleepQualityText = 'Sleep Quality is <span class="bold">below</span> expected value.';
+              }
+            
+              sleepQualityElement.innerHTML = sleepQualityText;
+            }
+            generateRandomSleepQualityIndex();
+            
+            
+            function generateRandomEfficiency() {
+              const randomNumber = Math.floor(Math.random() * 21) + 75;
+              const efficiencyElement = document.querySelector('.SQ_EFF');
+              efficiencyElement.innerHTML = `EFFICIENCY&nbsp;&nbsp;&nbsp;<span class="smaller-font">${randomNumber}%</span><br/><span class="expected smaller-font1">Expected &gt;85%</span`;
+
+              const sleepEfficiencyElements = document.querySelectorAll('.Feedback_point1');
+              const sleepEfficiencyElement = sleepEfficiencyElements[2];
+              let sleepEfficiencyText = '';
+            
+              if (randomNumber > 85) {
+                efficiencyElement.style.backgroundColor = 'green';
+                sleepEfficiencyText = 'Sleep Efficiency is <span class="bold">above</span> expected value.';
+              } 
+              else if (randomNumber >=80 && randomNumber <= 85){
+                efficiencyElement.style.backgroundColor = "rgb(255, 204, 0)";
+                sleepEfficiencyText = 'Sleep Efficiency is <span class="bold">below</span> expected value.';
+              }
+              else {
+                efficiencyElement.style.backgroundColor = 'red';
+                sleepEfficiencyText = 'Sleep Efficiency is <span class="bold">below</span> expected value.';
+              }
+
+              sleepEfficiencyElement.innerHTML = sleepEfficiencyText;
+            }
+            generateRandomEfficiency();
+
+
+            function generateRandomFragmentation() {
+              const randomNumber = Math.floor(Math.random() * 24) + 7;
+              const fragmentElement = document.querySelector('.SP_fragmentation');
+              fragmentElement.innerHTML = `FRAGMENTATION&nbsp;&nbsp;&nbsp;<span class="smaller-font">${randomNumber}%</span><br/><span class="expected smaller-font1">Expected &lt;15%</span`;
+              
+              const sleepFragmentElements = document.querySelectorAll('.Feedback_point2');
+              const sleepFragmentElement = sleepFragmentElements[2];
+              let sleepFragmentText = '';
+
+              if (randomNumber < 15) {
+                fragmentElement.style.backgroundColor = 'green';
+                sleepFragmentText = 'Sleep Fragmentation is <span class="bold">below</span> expected value.';
+              }
+              else if (randomNumber >= 15 && randomNumber <= 20){
+                fragmentElement.style.backgroundColor = 'rgb(255, 204, 0)';
+                sleepFragmentText = 'Sleep Fragmentation is <span class="bold">above</span> expected value.';
+              }
+              else {
+                fragmentElement.style.backgroundColor = 'red';
+                sleepFragmentText = 'Sleep Fragmentation is <span class="bold">above</span> expected value.';
+              }
+              sleepFragmentElement.innerHTML = sleepFragmentText;
+            }
+            generateRandomFragmentation();
+
+
+            function generateRandomPeriodicity() {
+              const randomNumber = Math.floor(Math.random() * 31) ;
+              const periodElement = document.querySelector('.SP_periodicity');
+              periodElement.innerHTML = `PERIODICITY&nbsp;&nbsp;&nbsp;<span class="smaller-font">${randomNumber}%</span><br/><span class="expected smaller-font1">Expected &le;2%</span`;
+
+              const sleepPeriodElements = document.querySelectorAll('.Feedback_point2');
+              const sleepPeriodElement = sleepPeriodElements[3];
+              let sleepPeriodtText = '';
+            
+              if (randomNumber <= 2) {
+                periodElement.style.backgroundColor = 'green';
+                sleepPeriodtText = 'Periodicity is <span class="bold">below</span> expected value.';
+              }
+              else if (randomNumber > 2 && randomNumber <= 15){
+                periodElement.style.backgroundColor = 'rgb(255, 204, 0)';
+                sleepPeriodtText = 'Periodicity is <span class="bold">above</span> expected value.';
+              }
+              else {
+                periodElement.style.backgroundColor = 'red';
+                sleepPeriodtText = 'Periodicity is <span class="bold">above</span> expected value.';
+              }
+              sleepPeriodElement.innerHTML = sleepPeriodtText;
+            }
+            generateRandomPeriodicity();
+
+
+            function generateRandomDuration() {
+              const durationElement = document.querySelector('.SO_Duration');
+              const durationString = durationElement.textContent.trim();
+              const timeParts = durationString.split(':');
+              const hours = parseInt(timeParts[0], 10);
+            
+              const periodElement = document.querySelector('.SO_Duration');
+            
+              if (!isNaN(hours)) {
+                if (hours >= 7 && hours <= 9) {
+                  periodElement.style.backgroundColor = 'green';
+                } else if (hours >= 4 && hours <= 6) {
+                  periodElement.style.backgroundColor = 'rgb(255, 204, 0)';
+                } else {
+                  periodElement.style.backgroundColor = 'red';
+                }
+              } else {
+                periodElement.style.backgroundColor = 'red';
+              }
+            
+              console.log(hours);
+            }
+            
+            generateRandomDuration();
+
+            
+            function generateRandomLatency() {
+              const hours = 0;
+              const minutes = Math.floor(Math.random() * 21) + 30;
+              const formattedTime = `${hours.toString().padStart(1, '0')}h:${minutes.toString().padStart(2, '0')}`;
+              const latencyElement = document.querySelector('.SO_Latency');
+              latencyElement.innerHTML = `LATENCY&nbsp;&nbsp;&nbsp;<span class="smaller-font">${formattedTime}m</span><br/><span class="expected smaller-font1">Expected &lt;30 min</span`;
+
+              if (formattedTime < '00:30') {
+                latencyElement.style.backgroundColor = 'green';
+              }
+              else if (formattedTime >= '00:30' && formattedTime <= '00:45'){
+                latencyElement.style.backgroundColor = 'rgb(255, 204, 0)';
+              }
+              else {
+                latencyElement.style.backgroundColor = 'red';
+              }
+            }
+            generateRandomLatency();
+
+            function generateRandomAverageSignalQuality() {
+              const randomNumber = Math.floor(Math.random() * 11) + 85;
+              const averageSignalElements = document.querySelectorAll('.Feedback_point1');
+              const averageSignalElement = averageSignalElements[0];
+              const updatedText = `Average Signal Quality is <span class="bold">${randomNumber}</span> %.`;
+              averageSignalElement.innerHTML = updatedText;
+            }
+            generateRandomAverageSignalQuality();
+            
             
 
             function calculateOxygenLevelThreshold(oxygenLevelColumn) {
@@ -390,6 +711,7 @@ const SleepReport = () => {
               setO2TPercentage(o2tPercentage);
             }
             calculateOxygenLevelThreshold(oxygenLevelColumn);
+
 
             function calculatePulseRateThreshold(pulseRateColumn) {
               const pr = {
@@ -532,26 +854,26 @@ const SleepReport = () => {
 
     <div className="SQ_section">
       <div className="SQ_label">Sleep Quality</div>
-      <div className="SQ_SQI">SQI : <br/>Expected &gt; 55 </div>
-      <div className="SQ_EFF">Efficiency : <br/> Expected &gt; 85%</div>
+      <div className="SQ_SQI">SQI  <br/><span class="smaller-font1">Expected &gt;55</span> </div>
+      <div className="SQ_EFF">EFFICIENCY <br/><span class="smaller-font1"> Expected &gt;85%</span></div>
     </div>
 
     <div className="SO_section">
       <div className="SO_label">Sleep Opportunity</div>
-      <div className="SO_Latency">Latency<br/> Expected &lt; 30 min</div>
-      <div className="SO_Duration">Duration  {duration ? duration: "-"}<br/> Expected 7-9 hours </div>
+      <div className="SO_Latency">LATENCY<br/><span class="smaller-font1"> Expected &lt;30 min</span></div>
+      <div className="SO_Duration">DURATION   {duration ? duration: ""}<br/><span class="smaller-font1"> Expected 7-9 hours </span></div>
     </div>
 
     <div class="SA _section">
       <div className="SA_label">Sleep Apnea</div>
-      <div className="SA_SAI">sAHI<span class="small-number">4%</span></div>
-      <div className="SA_sAHI">sAHI<span class="small-number">3%</span></div>
+      <div className="SA_SAI">sAHI<span class="small-number">3%</span></div>
+      <div className="SA_sAHI">sAHI<span class="small-number">4%</span></div>
     </div>
 
     <div className="SP_section">
       <div className="SP_label">Sleep Pathology</div>
-      <div className="SP_fragmentation">FRAGEMENTATION <br/>Expected &lt; 15%</div>
-      <div className="SP_periodicity">PERIODICITY</div>
+      <div className="SP_fragmentation">FRAGEMENTATION <br/><span class="smaller-font1">Expected &lt;15%</span></div>
+      <div className="SP_periodicity">PERIODICITY <br/><span class="smaller-font1">Expected &le;2% </span></div>
     </div>
     
   
@@ -573,17 +895,13 @@ const SleepReport = () => {
     <div className="WT_input"> #{wakeTransition}</div>   
 
     <div className="SAI_title">SAI </div>
-    <div className="SAI_input"></div>
+    <div className="SAI_input">{sleepApneaIndicator}</div>
 
     <div className="Snore_title">Snore </div>
     <div className="Snore_input">N/A</div>
 
     <div className="BP_title">Body Position </div>
     <div className="BP_input">N/A</div>
-
-
-
-
 
 
 
@@ -601,7 +919,7 @@ const SleepReport = () => {
     <div className="MMM_input">{oxygenLevelData.lowest}%-{oxygenLevelData.highest}%-{oxygenLevelData.average}%</div>
 
 
-    <div className="D_label">Desaturation</div>
+    <div className="D_label">Desaturations</div>
     <div className="D3_label">3%</div>
     <div className="D4_label">4%</div>
 
@@ -614,8 +932,8 @@ const SleepReport = () => {
     <div className="SAHIO_input1"></div>
 
     <div className="SAHIC_title">sAHIcentral</div>
-    <div className="SAHIC_input"></div>
-    <div className="SAHIC_input1"></div>
+    <div className="SAHIC_input">0</div>
+    <div className="SAHIC_input1">0</div>
 
     <div className="SRDI_title">sRDI</div>
     <div className="SRDI_input"></div>
@@ -639,16 +957,23 @@ const SleepReport = () => {
     <div className="HR_input1">{pulseRateData.highest}</div>
     <div className="HR_input2">{pulseRateData.average}</div>
     
+    
+    
 
 
 
+    <div className = "Feedback">
+      <div className="Report_Label">Test Summary:<br/><br/><span class="larger_font">Patient: 32 year old Male</span><br/><br/><span class="Feedback_point1"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Feedback_point2"></span><br/><span class="Feedback_point1"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Feedback_point2"></span><br/><span class="Feedback_point1"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Feedback_point2"></span><br/><span class="Feedback_point1">Sleep Duration is above expected value.</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Feedback_point2"></span></div>
+    </div> 
 
-    <div className = "Feedback"></div>
+
     </div>
   </div>
 
 );
 };
+
+export default SleepReport;
 
 
 
