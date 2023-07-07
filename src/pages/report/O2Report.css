@@ -29,7 +29,7 @@
   .import_button_text {
     position: absolute;
     width: 250px;
-    left: 1000px;
+    left: 900px;
     top :60px;
     padding: 10px 20px;
     background-color: #f0f0f0;
@@ -43,7 +43,7 @@
   }
   .upload-status {
     position: absolute;
-    left: 1260px;
+    left: 1150px;
     width: 120px;
     height: 20px;
     top: 60px;
@@ -52,7 +52,7 @@
   }
   .error-message {
     position: absolute;
-    left: 1260px;
+    left: 1150px;
     width: 140px;
     height: 20px;
     top: 60px;
@@ -63,7 +63,7 @@
   .export_label{
     position: absolute;
     top: 60px;
-    left: 1420px;
+    left: 1300px;
     font-size: 25px;
     color: aquamarine;
   }
@@ -71,7 +71,7 @@
   .export_button_text {
     position: absolute;
     width: 100px;
-    left: 1550px;
+    left: 1430px;
     top: 60px;
     padding: 10px 20px;
     background-color: #f0f0f0;
@@ -452,3 +452,4 @@
     height: 800px;
     width: 1350px;
   }
+
