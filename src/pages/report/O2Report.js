@@ -3,10 +3,24 @@ import Navigation from "../../components/Navigation/Navigation";
 import LineChart from "../../components/DisplayChart/LineChart";
 import BarChart from "../../components/DisplayChart/BarChart";
 import { PDFExport, savePDF } from "@progress/kendo-react-pdf";
+import { useParams } from "react-router-dom";
+import { db } from "../../firebase";
+import { useEffect } from "react";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  onSnapshot,
+} from "firebase/firestore";
 import Papa from "papaparse";
 import "./O2Report.css";
 
 const O2Report = () => {
+  const { patientId, testId } = useParams();
+  const [tests, setTests] = useState([]);
+  const [patientName, setPatientName] = useState("");
   const [fileUploaded, setFileUploaded] = useState(false);
   const [pulseRateData, setPulseRateData] = useState({});
   const [oxygenLevelData, setOxygenLevelData] = useState({});
