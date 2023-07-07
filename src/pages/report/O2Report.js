@@ -128,6 +128,7 @@ const O2Report = () => {
       const reader = new FileReader();
       if (file.type !== "text/csv") {
         setErrorMessage("Invalid file type. Select a New CSV File");
+        setFileUploaded(false);
         return;
       }
       setIFileName(file.name);
