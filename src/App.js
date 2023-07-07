@@ -61,7 +61,11 @@ const App = () => {
         element={<PrivateRoute element={<GraphPage />} />}
       />
       <Route
-        path="/mainreport"
+        path="/mainreport/"
+        element={<PrivateRoute element={<MainReport />} />}
+      />
+      <Route
+        path="/mainreport/:patientId/:testId"
         element={<PrivateRoute element={<MainReport />} />}
       />
       <Route

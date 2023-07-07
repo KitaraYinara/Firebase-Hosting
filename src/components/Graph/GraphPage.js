@@ -26,13 +26,6 @@ function GraphPage() {
   const [file, setFile] = useState();
   const fileReader = new FileReader();
 
-  const handlePredictClick = () => {
-    window.open(
-      "https://abhi4201790.github.io/JSON-hosting/prediction-page",
-      "_blank"
-    );
-  };
-
   const handleShowAbnormalValues = () => {
     setShowAbnormalValues(!showAbnormalValues);
   };
@@ -184,9 +177,6 @@ function GraphPage() {
           />
         </svg>
         Download CSV
-      </button>
-      <button className="report-btn" onClick={handlePredictClick}>
-        Predict
       </button>
       <button className="report-btn" onClick={handleShowAbnormalValues}>
         {showAbnormalValues ? "Hide Abnormal Values" : "Show Abnormal Values"}
