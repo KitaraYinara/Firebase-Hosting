@@ -117,33 +117,38 @@
   }
   .name{
     position: absolute;
-    top: 10px;
+    top: 8px;
     left: 40px;
     font-size: 20px;
   }
   .name_input{
     position: absolute;
-    top: 8px;
+    top: 6px;
     left: 110px;
     font-size: 20px;
+    border: none; 
+    background-color: transparent; 
   }
 
   .age{
     position: absolute;
-    top: 10px;
+    top: 8px;
     left: 530px;
     font-size: 20px;
   }
   .age_input{
     position: absolute;
-    top: 8px;
+    top: 6px;
+    width:200px;
     left: 580px;
     font-size: 20px;
+    border: none; 
+    background-color: transparent; 
   }
 
   .gender{
     position: absolute;
-    top: 10px;
+    top: 8px;
     left: 970px;
     font-size: 20px;
   }
@@ -160,6 +165,8 @@
     position: absolute;
     top: 8px; 
     left: 1050px;
+    border: none; 
+    background-color: transparent; 
   }
 
 
@@ -214,13 +221,24 @@
   }
   .note_input {
     position: absolute;
-    left:-40px;
-    width: 955px; 
-    height: 115px;
+    left: -39px;
+    width: 955px;
+    height: 110px;
+    max-height: 120px;
+
+
     font-size: 15px;
     white-space: pre-wrap;
-    overflow-wrap: break-word;
+    
+    border: none;
+    background-color: transparent;
+
+    vertical-align: top;
+    box-sizing: border-box;
+    overflow-y: hidden;
   }
+  
+  
   
   .drop4_border{
     position: absolute;
@@ -403,16 +421,16 @@
     width: var(--value, 0%);
     background-color: rgba(0, 0, 0, 0.3);
   }
-  /*.arrow-indicator {
+  .arrow-indicator {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    top: -10px;
+    transform: translateX(-50%);
     border-width: 10px;
     border-style: solid;
-    border-color: transparent transparent transparent black;
+    border-color: black transparent transparent transparent;
     left: var(--value, 0%);
     transition: left 0.3s ease-in-out;
-  }*/
+  }
 
   
   .ODT_table {
@@ -463,3 +481,9 @@
     height: 800px;
     width: 1350px;
   }
+
+
+
+
+  
+  
