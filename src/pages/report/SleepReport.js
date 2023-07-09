@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import Navigation from "../../components/Navigation/Navigation";
+import { PDFExport, savePDF } from "@progress/kendo-react-pdf";
 import Papa from "papaparse";
 import "./SleepReport.css";
+import { ValueType } from "exceljs";
 
 const SleepReport = () => {
   const [fileUploaded, setFileUploaded] = useState(false);
@@ -22,14 +24,12 @@ const SleepReport = () => {
   const [wakeAfterSleepOnsetMinutes, setWakeAfterSleepOnsetMinutes] = useState("");
   const [sleepApneaIndicator, setSleepApneaIndicator] = useState(0);
 
-  const [dateData, setDateData] = useState({});
-  const [motionData, setMotionData] = useState({});
-  const [timestampData, setTimestampData] = useState([]);
 
-  const [pulseRateChartData, setPulseRateChartData] = useState({});
-  const [oxygenLevelChartData, setOxygenLevelChartData] = useState({});
-  const [motionChartData, setMotionChartData] = useState({}); 
-  const [OLRatioData, setOLRatioData] = useState({});
+
+
+  const [motionData, setMotionData] = useState({});
+
+
 
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -46,12 +46,6 @@ const SleepReport = () => {
   const [Drop3,setDrop3] = useState("");
   const [Drop4,setDrop4] = useState("");
 
-  const [o2Score, seto2Score] = useState("");
-
-  const [drop3Input, setDrop3Input] = useState("");
-  const [drop3phInput, setDrop3phInput] = useState("");  
-  const [drop4Input, setDrop4Input] = useState("");
-  const [drop4phInput, setDrop4phInput] = useState("");  
 
   const [firstDate, setDateStart] = useState("");
   const [lastDate, setDateEnd] = useState("");
@@ -59,26 +53,23 @@ const SleepReport = () => {
   const [mstartTime, setMStartTime] = useState("");
   const [mendTime, setMEndTime] = useState("");
   const [mduration, setMDuration] = useState("");
-  const [gt95,setGt95]  = useState("");
-  const [el9094,setEl9094]  = useState("");
-  const [lt90,setLt90] = useState("");
-  const [gt120,setGt120]  = useState("");
-  const [bt50120,setBt50120]  = useState("");
-  const [lt50,setLt50] = useState("");
-  const [bt96100,setBt96100]  = useState("");  
-  const [bt9195,setBt9195]  = useState("");  
-  const [bt8690,setBt8690]  = useState("");
-  const [bt8185,setBt8185]  = useState("");
-  const [bt7680,setBt7680]  = useState("");
-  const [bt7075,setBt7075]  = useState("");
-  const [lt70,setLt70]  = useState("");
-
-
-
   const [o2drop,setO2drop] = useState("");
 
+  const [lt90,setLt90] = useState("");
+  const [lt80,setLt80] = useState("");
+  const [lt88,setLt88] = useState("");
 
-  const [showPdf, setShowPdf] = useState(false);
+  const [IfileName, setIFileName] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const pdfExportComponent = React.useRef(null);
+  const currentDate = new Date().toLocaleDateString();
+  const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+  const exportPDFWithComponent = () => {
+    if (pdfExportComponent.current) {
+      pdfExportComponent.current.save();
+    }
+  };
 
 
   const handleFileImport = () => {
@@ -89,7 +80,14 @@ const SleepReport = () => {
     input.addEventListener("change", function (event) {
       const file = event.target.files[0];
       const reader = new FileReader();
-
+      if (file.type !== "text/csv") {
+        setErrorMessage("Invalid file type. Select a New CSV File");
+        setFileUploaded(false);
+        return;
+      }
+      setIFileName(file.name);
+      setFileUploaded(true);
+      setErrorMessage("");
       reader.onload = function (e) {
         const fileContent = e.target.result;
 
@@ -105,16 +103,16 @@ const SleepReport = () => {
 
             // Extracting the columns
             const pulseRateColumn = data
-              .slice(1)
+              .slice(1,-1)
               .map((row) => handleNaN(Number(row[pulseRateIndex])));
             const oxygenLevelColumn = data
-              .slice(1)
+              .slice(1,-1)
               .map((row) => handleNaN(Number(row[oxygenLevelIndex])));
             const motionColumn = data
               .slice(1)
               .map((row) => handleNaN(Number(row[motionIndex])));
             const timestampColumn = data
-              .slice(1)
+              .slice(1,-1)
               .map((row) => row[timestampIndex]);
             const dateColumn = data
               .slice(1)
@@ -161,7 +159,6 @@ const SleepReport = () => {
             function handleNaN(value) {
               return Number.isNaN(value) ? "-" : value;
             }
-
             function calculateDateRange(dateColumn) {
               const dateStart = dateColumn[0];
               const dateEnd = dateColumn[dateColumn.length - 1];
@@ -172,7 +169,9 @@ const SleepReport = () => {
             }
             calculateDateRange(dateColumn);
 
+
             function calculateTimeDuration(timestampColumn) {
+          
               const mstartTime = timestampColumn[0];
               const mendTime = timestampColumn[timestampColumn.length - 1];
 
@@ -182,67 +181,65 @@ const SleepReport = () => {
               const endTime24 = new Date(
                 "2000-01-01 " + mendTime
               ).toLocaleTimeString("en-US", { hour12: false });
-              // Convert start time and end time to Date objects
+
               const mstartDate = new Date("2000-01-01 " + startTime24);
               const mendDate = new Date("2000-01-01 " + endTime24);
 
-              // Calculate the difference in milliseconds
               const mdurationMs = mendDate - mstartDate;
-              // Calculate the duration in hours, minutes, and seconds
               const mhours = Math.floor(mdurationMs / 3600000);
               const mminutes = Math.floor((mdurationMs % 3600000) / 60000);
               const mseconds = Math.floor((mdurationMs % 60000) / 1000);
-              // Format the duration in HH:mm:ss format
               const mduration = `${mhours.toString().padStart(2, "0")}:${mminutes
                 .toString()
                 .padStart(2, "0")}:${mseconds.toString().padStart(2, "0")}`;
-
 
               const startTime = timestampColumn[0];
               const endTime = timestampColumn[timestampColumn.length -2];
               //console.log (startTime);
               //console.log(endTime);
+
               const startDate = new Date(startTime);
               const endDate = new Date(endTime);
-              // Convert start time and end time to Date objects
-              //const startDate = new Date('2000-01-01 ' + startTime24);
-              //const endDate = new Date('2000-01-01 ' + endTime24);
-              // Calculate the difference in milliseconds
               const durationMs = endDate - startDate  + 10000;
-              // Calculate the duration in hours, minutes, and seconds
               const hours = Math.floor(durationMs / 3600000);
               const minutes = Math.floor((durationMs % 3600000) / 60000);
               const seconds = Math.floor((durationMs % 60000) / 1000);
-              // Format the duration in HH:mm:ss format
               const duration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-              console.log(duration);
-
+            
               //const Drop4 = ((Math.max(...oxygenLevelColumn)/100)*96)
-              //console.log(Drop4);
               const Drop4 = (Math.max(...oxygenLevelColumn)-4)
+              //console.log(Drop4);
 
               //const Drop3 = ((Math.max(...oxygenLevelColumn)/100)*97)
+              const Drop3 = (Math.max(...oxygenLevelColumn)-3)
               //console.log(Drop3);
-              const Drop = (Math.max(...oxygenLevelColumn)-4)
-
-              const Drop4ph = Drop4/hours
-              //console.log(Drop4ph)
-              const Drop3ph = Drop3/hours
 
               const o2drop = {
                 ">3": 0 ,
                 ">4":0
               }
+
+              
               oxygenLevelColumn.forEach(value => {
-                if (value > Drop4) {
+                if (value < Drop4) {
                   o2drop[">4"]++;
-                } else if (value >Drop3) { 
+                } else if (value <Drop3) { 
                   o2drop[">3"]++;
                 }
+                
               });
+              let timeString = String(hours);
+              let Ihours = timeString.slice(0, 2);
+              //console.log(Ihours);
 
-              console.log(Drop3ph)
-              console.log(Drop4ph)
+              let Drop4ph =  (o2drop[">4"]/Ihours).toFixed()
+              //console.log(Drop4ph)
+              let Drop3ph = (o2drop[">3"]/Ihours).toFixed()
+
+              if (Ihours < 6){
+                Drop3ph = "Time<6h";
+                Drop4ph = "Time<6h";
+              }
 
               setStartTime(startTime);
               setEndTime(endTime);
@@ -255,6 +252,7 @@ const SleepReport = () => {
               setDrop4ph(Drop4ph);
             }
             calculateTimeDuration(timestampColumn);
+
 
             function calculateSleepOnset(pulseRateColumn, timestampColumn) {
               let time = 0;
@@ -276,6 +274,7 @@ const SleepReport = () => {
               return null; // Return null if no matching time value is found
             }
             calculateSleepOnset(pulseRateColumn, timestampColumn)
+
 
             function calculateSleepConclusion(pulseRateColumn, timestampColumn) {
               let time = 0;
@@ -452,78 +451,6 @@ const SleepReport = () => {
             generateRandomObstructiveNumbers();
 
 
-            function generateRandomTotalNumbers() {
-              let randomNumber1 = Math.floor(Math.random() * 30) + 1;
-              let randomNumber2 = Math.floor(Math.random() * 30) + 1;
-            
-              // Generate random difference between 2 and 6 (inclusive)
-              const difference = Math.floor(Math.random() * 5) + 2;
-            
-              if (randomNumber1 <= randomNumber2) {
-                randomNumber1 = randomNumber2 + difference;
-              } else {
-                randomNumber2 = randomNumber1 - difference;
-              }
-            
-              document.querySelector('.SAHIT_input').textContent = randomNumber1;
-              document.querySelector('.SAHIT_input1').textContent = randomNumber2;
-            
-              const existingSeverityElements = document.querySelectorAll('.severity');
-              existingSeverityElements.forEach((element) => {
-                element.remove();
-              });
-              document.querySelector('.SA_SAI').style.backgroundColor = '';
-              document.querySelector('.SA_sAHI').style.backgroundColor = '';
-            
-              const severityLevel1 = getSeverityLevel(randomNumber1);
-              const severityLevel2 = getSeverityLevel(randomNumber2);
-            
-              document.querySelector('.SA_SAI').innerHTML = `sAHI<span class="small-number">3%</span>&nbsp;&nbsp;&nbsp;${randomNumber1}<div class="severity smaller-font1">${severityLevel1}</div>`;
-              document.querySelector('.SA_sAHI').innerHTML = `sAHI<span class="small-number">4%</span>&nbsp;&nbsp;&nbsp;${randomNumber2}<div class="severity smaller-font1">${severityLevel2}</div>`;
-
-            
-              const saiElement = document.querySelector('.SA_SAI');
-              const sahiElement = document.querySelector('.SA_sAHI');
-
-              const sai2Elements = document.querySelectorAll(".Feedback_point2");
-              const sai2Element = sai2Elements[1];
-              let sai2Text = "";
-            
-              if (severityLevel1 === 'Normal') {
-                saiElement.style.backgroundColor = 'green';
-                sai2Text = 'Apnea Hypopnea Index is <span class="bold">Normal</span>.';
-              } else if (severityLevel1 === 'Mild') {
-                saiElement.style.backgroundColor = 'rgb(255, 204, 0)';
-                sai2Text = 'Apnea Hypopnea Index is <span class="bold">Mild</span>.';
-              } else if (severityLevel1 === 'Severe') {
-                saiElement.style.backgroundColor = 'red';
-                sai2Text = 'Apnea Hypopnea Index is <span class="bold">Severe</span>.';
-              }
-
-              sai2Element.innerHTML = sai2Text;
-
-            
-              if (severityLevel2 === 'Normal') {
-                sahiElement.style.backgroundColor = 'green';
-              } else if (severityLevel2 === 'Mild') {
-                sahiElement.style.backgroundColor = 'rgb(255, 204, 0)';
-              } else if (severityLevel2 === 'Severe') {
-                sahiElement.style.backgroundColor = 'red';
-              }
-            }
-            
-            function getSeverityLevel(value) {
-              if (value >= 1 && value <= 4) {
-                return 'Normal';
-              } else if (value >= 5 && value <= 15) {
-                return 'Mild';
-              } else {
-                return 'Severe';
-              }
-            }
-            generateRandomTotalNumbers();
-
-
             function generateRandomSleepQualityIndex() {
               const randomNumber = Math.floor(Math.random() * 36) + 30;
               const sqiElement = document.querySelector('.SQ_SQI');
@@ -547,7 +474,7 @@ const SleepReport = () => {
               sleepQualityElement.innerHTML = sleepQualityText;
             }
             generateRandomSleepQualityIndex();
-            
+
             
             function generateRandomEfficiency() {
               const randomNumber = Math.floor(Math.random() * 21) + 75;
@@ -628,30 +555,45 @@ const SleepReport = () => {
             generateRandomPeriodicity();
 
 
-            function generateRandomDuration() {
-              const durationElement = document.querySelector('.SO_Duration');
-              const durationString = durationElement.textContent.trim();
-              const timeParts = durationString.split(':');
-              const hours = parseInt(timeParts[0], 10);
+            function generateRandomDuration(timestampColumn) {
+              const startTime = timestampColumn[0];
+              const endTime = timestampColumn[timestampColumn.length - 2];
+              
+              const startDate = new Date(startTime);
+              const endDate = new Date(endTime);
+              const durationMs = endDate - startDate + 10000;
+              const hours = Math.floor(durationMs / 3600000);              
+              const minutes = Math.floor((durationMs % 3600000) / 60000);
+              const seconds = Math.floor((durationMs % 60000) / 1000);
+              const duration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             
               const periodElement = document.querySelector('.SO_Duration');
+
+              let timeString = String(hours);
+              let Ihours = timeString.slice(0, 2);
+
+              const randomDurationElements = document.querySelectorAll('.Feedback_point1');
+              const randomDurationElement = randomDurationElements[3];
+              let randomDurationText = '';
+
             
-              if (!isNaN(hours)) {
-                if (hours >= 7 && hours <= 9) {
-                  periodElement.style.backgroundColor = 'green';
-                } else if (hours >= 4 && hours <= 6) {
-                  periodElement.style.backgroundColor = 'rgb(255, 204, 0)';
-                } else {
-                  periodElement.style.backgroundColor = 'red';
-                }
+              if (Ihours > 6) {
+                periodElement.style.backgroundColor = 'green';
+                randomDurationText = 'Sleep Duration is <span class="bold">within</span> expected value.';
+              } else if (Ihours >= 2 && Ihours <= 6) {
+                periodElement.style.backgroundColor = 'rgb(255, 204, 0)'
+                randomDurationText = 'Sleep Duration is <span class="bold">below</span> expected value. ';
               } else {
                 periodElement.style.backgroundColor = 'red';
+                randomDurationText = 'Sleep Duration is <span class="bold">below</span> expected value. ';
               }
             
-              console.log(hours);
+              console.log(Ihours);
+              setDuration(duration);
+
+              randomDurationElement.innerHTML = randomDurationText;
             }
-            
-            generateRandomDuration();
+            generateRandomDuration(timestampColumn);
 
             
             function generateRandomLatency() {
@@ -673,6 +615,7 @@ const SleepReport = () => {
             }
             generateRandomLatency();
 
+
             function generateRandomAverageSignalQuality() {
               const randomNumber = Math.floor(Math.random() * 11) + 85;
               const averageSignalElements = document.querySelectorAll('.Feedback_point1');
@@ -681,9 +624,24 @@ const SleepReport = () => {
               averageSignalElement.innerHTML = updatedText;
             }
             generateRandomAverageSignalQuality();
-            
-            
 
+
+            function generateRandomCentral() {
+              const randomCentralNumber = Math.floor(Math.random() * 6);
+
+              document.querySelector('.SAHIC_input').textContent = randomCentralNumber;
+              document.querySelector('.SAHIC_input1').textContent = randomCentralNumber;
+
+            }
+            generateRandomCentral();
+
+
+            function secondsToHMS(seconds) {
+              const hours = Math.floor(seconds / 3600);
+              const minutes = Math.floor((seconds % 3600) / 60);
+              const remainingSeconds = seconds % 60;
+              return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+            }
             function calculateOxygenLevelThreshold(oxygenLevelColumn) {
               const o2t = {
                 "<90": 0,
@@ -701,13 +659,21 @@ const SleepReport = () => {
                   o2t["<80"]++;
                 }
               });
+
+              
+              const lt90 = secondsToHMS(o2t["<90"] * 4);
+              const lt88 = secondsToHMS(o2t["<88"] * 4);
+              const lt80 = secondsToHMS(o2t["<80"] * 4);
           
               const o2tPercentage = {
                 "<90": (o2t["<90"] / totalCount* 100).toFixed(2),
                 "<88": (o2t["<88"] / totalCount* 100).toFixed(2) ,
                 "<80": (o2t["<80"] / totalCount* 100).toFixed(2)
               };
-              setO2t(o2t);
+              setLt90(lt90);
+              setLt80(lt80);
+              setLt88(lt88);
+
               setO2TPercentage(o2tPercentage);
             }
             calculateOxygenLevelThreshold(oxygenLevelColumn);
@@ -745,10 +711,11 @@ const SleepReport = () => {
             }
             calculatePulseRateThreshold(pulseRateColumn);
 
+
             function calculateApneaDuration(oxygenLevelColumn) {
               let apneaDurationSum = 0;
               let apneaDurationCount = 0;
-              let apneaDurationMin = Infinity;
+              let apneaDurationMin = 0;
               let apneaDurationMax = 0;
   
               for (let i = 0; i < oxygenLevelColumn.length; i++) {
@@ -770,7 +737,12 @@ const SleepReport = () => {
                 }
               }
   
-              const apneaDurationMean = apneaDurationSum / apneaDurationCount;
+              let apneaDurationMean = apneaDurationSum / apneaDurationCount;
+              console.log("test11" ,apneaDurationCount)
+              console.log("test" ,apneaDurationMean)
+              if (isNaN(apneaDurationMean)) {
+                apneaDurationMean = 0;
+              }
               return {
                 lowest: apneaDurationMin,
                 highest: apneaDurationMax,
@@ -828,6 +800,65 @@ const SleepReport = () => {
             }
             calculateOxygenLevelDuration(oxygenLevelColumn);
 
+
+            function calculateSahiTotal() {
+              const SAHIO_inputValue = parseInt(document.querySelector('.SAHIO_input').textContent);
+              const SAHIC_inputValue = parseInt(document.querySelector('.SAHIC_input').textContent);
+              const SAHIO_input1Value = parseInt(document.querySelector('.SAHIO_input1').textContent);
+              const SAHIC_input1Value = parseInt(document.querySelector('.SAHIC_input1').textContent);
+              const total = SAHIO_inputValue + SAHIC_inputValue;
+
+              document.querySelector('.SAHIT_input').textContent = total;
+              document.querySelector('.SAHIT_input1').textContent = SAHIO_input1Value + SAHIC_input1Value;
+            }
+            calculateSahiTotal();
+
+            function displaySahiTotal() {
+              const SAHIT_inputValue = parseInt(document.querySelector('.SAHIT_input').textContent);
+              const SA_SAI = document.querySelector('.SA_SAI');
+
+              SA_SAI.innerHTML = `sAHI<span class="small-number">3%</span> ${SAHIT_inputValue}`;
+
+              const saiElements = document.querySelectorAll(".Feedback_point2");
+              const saiElement = saiElements[1];
+              let saiText = "";
+
+              if (SAHIT_inputValue >= 1 && SAHIT_inputValue <= 4) {
+                SA_SAI.style.backgroundColor = 'green';
+                SA_SAI.innerHTML += '<br>Normal';
+                saiText = 'Apnea Hypopnea Index is <span class="bold">Normal</span>.';
+              } else if (SAHIT_inputValue >= 5 && SAHIT_inputValue <= 15) {
+                SA_SAI.style.backgroundColor = 'rgb(255, 204, 0)';
+                SA_SAI.innerHTML += '<br>Mild';
+                saiText = 'Apnea Hypopnea Index is <span class="bold">Mild</span>.';
+              } else {
+                SA_SAI.style.backgroundColor = 'red';
+                SA_SAI.innerHTML += '<br>Severe';
+                saiText = 'Apnea Hypopnea Index is <span class="bold">Severe</span>.';
+              }
+              saiElement.innerHTML = saiText;
+
+
+              function displaySahiTotal1() {
+                const SAHIT_inputValue = parseInt(document.querySelector('.SAHIT_input1').textContent);
+                const SA_sAHI = document.querySelector('.SA_sAHI');
+  
+                SA_sAHI.innerHTML = `sAHI<span class="small-number">4%</span> ${SAHIT_inputValue}`;
+  
+                if (SAHIT_inputValue >= 1 && SAHIT_inputValue <= 4) {
+                  SA_sAHI.style.backgroundColor = 'green';
+                  SA_sAHI.innerHTML += '<br>Normal';
+                } else if (SAHIT_inputValue >= 5 && SAHIT_inputValue <= 15) {
+                  SA_sAHI.style.backgroundColor = 'rgb(255, 204, 0)';
+                  SA_sAHI.innerHTML += '<br>Mild';
+                } else {
+                  SA_sAHI.style.backgroundColor = 'red';
+                  SA_sAHI.innerHTML += '<br>Severe';
+                }
+              }
+              displaySahiTotal1();
+            }
+            displaySahiTotal();
           },
         });
         setFileUploaded(true);
@@ -837,19 +868,35 @@ const SleepReport = () => {
     input.click();
   };
 
+
   return ( 
     <div>
     <Navigation/>
-    <div className="SRpage">
-    <div className="SRheader">
-      <h1>Sleep Quality Report</h1>
-      <button className="import_button_text" onClick={handleFileImport}>
+    <div className =  "page_control">
+    <button className="import_button_text" onClick={handleFileImport}>
         Click to Import CSV File
       </button>
+      {errorMessage && <div className="error-message">{errorMessage}</div>}
       {fileUploaded && (
         <div className="upload-status">File uploaded successfully!</div>
       )}
+      <div className ="export_label" > Export as: </div>
+      <button className="export_button_text"  onClick={exportPDFWithComponent}>
+        PDF</button>
+        </div>
+
+    <div className="SRpage">
+    <PDFExport
+          ref={pdfExportComponent}
+          paperSize="auto"
+          margin={40}
+          fileName={`O2Report for`}
+        > 
+    <div className="SRheader">
+      <h1>Sleep Quality Report</h1>
     </div>
+    <div className="current-datetime">File Imported Datetime: {currentDate}, {currentTime}</div>
+        <div className="current-filename">File Imported Name: {IfileName}</div>
     
 
     <div className="SQ_section">
@@ -861,7 +908,7 @@ const SleepReport = () => {
     <div className="SO_section">
       <div className="SO_label">Sleep Opportunity</div>
       <div className="SO_Latency">LATENCY<br/><span class="smaller-font1"> Expected &lt;30 min</span></div>
-      <div className="SO_Duration">DURATION   {duration ? duration: ""}<br/><span class="smaller-font1"> Expected 7-9 hours </span></div>
+      <div class="SO_Duration">DURATION {duration } <br/><span class="smaller-font1"> Expected 7-9 hours </span></div>
     </div>
 
     <div class="SA _section">
@@ -906,14 +953,14 @@ const SleepReport = () => {
 
 
 
-    <div className="SPH_title">Sp02 &lt;90%</div>
-    <div className="SPH_input">{(o2t['<90'] * 2).toFixed(0)}-{o2tPercentage['<90']}%</div>
+    <div className="SPH_title">SpO2 &lt;90%</div>
+    <div className="SPH_input">{lt90} - {o2tPercentage['<90']}%</div>
 
-    <div className="SPM_title">Sp02 &lt;88%</div>
-    <div className="SPM_input">{(o2t['<88'] * 2).toFixed(0)}-{o2tPercentage['<88']}%</div>
+    <div className="SPM_title">SpO2 &lt;88%</div>
+    <div className="SPM_input">{lt88} - {o2tPercentage['<88']}%</div>
 
-    <div className="SPL_title">Sp02 &lt;80%</div>
-    <div className="SPL_input">{(o2t['<80'] * 2).toFixed(0)}-{o2tPercentage['<80']}%</div>
+    <div className="SPL_title">SpO2 &lt;80%</div>
+    <div className="SPL_input">{lt80} - {o2tPercentage['<80']}%</div>
 
     <div className="MMM_title">MIN-MAX-MEAN SPo2</div>
     <div className="MMM_input">{oxygenLevelData.lowest}%-{oxygenLevelData.highest}%-{oxygenLevelData.average}%</div>
@@ -932,16 +979,16 @@ const SleepReport = () => {
     <div className="SAHIO_input1"></div>
 
     <div className="SAHIC_title">sAHIcentral</div>
-    <div className="SAHIC_input">0</div>
-    <div className="SAHIC_input1">0</div>
+    <div className="SAHIC_input"></div>
+    <div className="SAHIC_input1"></div>
 
     <div className="SRDI_title">sRDI</div>
     <div className="SRDI_input"></div>
     <div className="SRDI_input1"></div>
 
     <div className="ODI_title">ODI</div>
-    <div className="ODI_input">{(Drop3ph) ? "NaN" : Drop3ph} </div>
-    <div className="ODI_input1">{(Drop4ph) ? "NaN" : Drop4ph}</div>
+    <div className="ODI_input">{Drop3ph}</div>
+    <div className="ODI_input1">{Drop4ph}</div>
 
     <div className="Min_label">Min</div>
     <div className="Max_label">Max</div>
@@ -956,17 +1003,37 @@ const SleepReport = () => {
     <div className="HR_input">{pulseRateData.lowest}</div>
     <div className="HR_input1">{pulseRateData.highest}</div>
     <div className="HR_input2">{pulseRateData.average}</div>
-    
-    
-    
-
-
 
     <div className = "Feedback">
-      <div className="Report_Label">Test Summary:<br/><br/><span class="larger_font">Patient: 32 year old Male</span><br/><br/><span class="Feedback_point1"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Feedback_point2"></span><br/><span class="Feedback_point1"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Feedback_point2"></span><br/><span class="Feedback_point1"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Feedback_point2"></span><br/><span class="Feedback_point1">Sleep Duration is above expected value.</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Feedback_point2"></span></div>
+    <div className="Report_Label">
+      Test Summary:<br/><br/>
+      <span class="larger_font">Patient: <input
+      type="number"
+      className="age_input_sr"
+      min="1"
+      max="100"
+      placeholder="Age"
+      onInput={(event) => {
+        if (event.target.value > 100) {
+          event.target.value = 100;
+        } else if (event.target.value <= 1) {
+          event.target.value = 1;
+        }
+      }}/>
+      year old 
+      <select className="gender_input_sr">
+        <option value="">Select Gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select></span><br/><br/>
+      <span class="Feedback_point1"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Feedback_point2"></span><br/>
+      <span class="Feedback_point1"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Feedback_point2"></span><br/>
+      <span class="Feedback_point1"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Feedback_point2"></span><br/>
+      <span class="Feedback_point1"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="Feedback_point2"></span>
+    </div>
     </div> 
-
-
+    </PDFExport>
+      
     </div>
   </div>
 
@@ -974,6 +1041,7 @@ const SleepReport = () => {
 };
 
 export default SleepReport;
+
 
 
 
