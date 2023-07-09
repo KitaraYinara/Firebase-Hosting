@@ -1,3 +1,14 @@
+.page_control{
+  position: relative;
+  top: 0px;
+  left: 145px;
+  width: 1400px;
+  height: 55px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 20px;
+}
+
 .SRpage {
   position: relative;
   background-color: #ffffff;
@@ -28,10 +39,10 @@
 .import_button_text {
   position: absolute;
   width: 250px;
-  left: 700px;
+  left: 500px;
+  top :5px;
   padding: 10px 20px;
   background-color: #f0f0f0;
-  border: none;
   border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
@@ -42,13 +53,55 @@
 }
 .upload-status {
   position: absolute;
-  left: 1000px;
-  width: 100px;
-  height: 20px;
-  top: 10px;
-
-  color: green;
+  left: 780px;
+  width: 120px;
+  height: 0px;
+  top: 5px;
+  color: aquamarine;
   font-size: 14px;
+}
+.error-message {
+  position: absolute;
+  left: 800px;
+  width: 140px;
+  height: 20px;
+  top: 5px;
+  color: red;
+  font-size: 14px;
+}
+
+.export_label{
+  position: absolute;
+  top: 5px;
+  left: 1000px;
+  font-size: 25px;
+  color: aquamarine;
+}
+
+.export_button_text {
+  position: absolute;
+  width: 100px;
+  left: 1130px;
+  top: 5px;
+  padding: 10px 20px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.export_button_text:hover {
+  background-color: #e0e0e0;
+}
+
+.current-datetime{
+  position : absolute;
+  left: 800px;
+}
+.current-filename{
+  position : absolute;
+  top:50px;
+  left: 800px;
 }
 
 
@@ -449,7 +502,7 @@
 .Snore_title {
   position: absolute;
   top:  535px;
-  left: 470px;
+  left: 460px;
   width: 215px;
   height: 30px;
   background-color:#808080;
@@ -463,8 +516,8 @@
   .Snore_input {
   position: absolute;
   top:  535px;
-  left: 690px;
-  width: 160px;
+  left: 680px;
+  width: 170px;
   height: 30px;
   background-color:#808080;
   text-align: center;
@@ -478,7 +531,7 @@
   .BP_title {
     position: absolute;
     top:  570px;
-    left: 470px;
+    left: 460px;
     width: 215px;
     height: 30px;
     background-color:#808080;
@@ -492,8 +545,8 @@
     .BP_input {
     position: absolute;
     top:  570px;
-    left: 690px;
-    width: 160px;
+    left: 680px;
+    width: 170px;
     height: 30px;
     background-color:#808080;
     text-align: center;
@@ -507,7 +560,7 @@
   .SPH_title {
   position: absolute;
   top:  750px;
-  left: 470px;
+  left: 460px;
   width: 215px;
   height: 30px;
   background-color:#808080;
@@ -521,8 +574,8 @@
   .SPH_input {
   position: absolute;
   top:  750px;
-  left: 690px;
-  width: 160px;
+  left: 680px;
+  width: 180px;
   height: 30px;
   background-color:#808080;
   text-align: center;
@@ -536,7 +589,7 @@
   .SPM_title {
   position: absolute;
   top:  785px;
-  left: 470px;
+  left: 460px;
   width: 215px;
   height: 30px;
   background-color:#808080;
@@ -550,8 +603,8 @@
   .SPM_input {
   position: absolute;
   top:  785px;
-  left: 690px;
-  width: 160px;
+  left: 680px;
+  width: 180px;
   height: 30px;
   background-color:#808080;
   text-align: center;
@@ -565,7 +618,7 @@
   .SPL_title {
   position: absolute;
   top:  820px;
-  left: 470px;
+  left: 460px;
   width: 215px;
   height: 30px;
   background-color:#808080;
@@ -579,8 +632,8 @@
   .SPL_input {
   position: absolute;
   top:  820px;
-  left: 690px;
-  width: 160px;
+  left: 680px;
+  width: 180px;
   height: 30px;
   background-color:#808080;
   text-align: center;
@@ -594,7 +647,7 @@
   .MMM_title {
   position: absolute;
   top:  855px;
-  left: 470px;
+  left: 460px;
   width: 215px;
   height: 30px;
   background-color:#808080;
@@ -608,8 +661,8 @@
   .MMM_input {
   position: absolute;
   top:  855px;
-  left: 690px;
-  width: 160px;
+  left: 680px;
+  width: 180px;
   height: 30px;
   background-color:#808080;
   text-align: center;
@@ -1028,10 +1081,47 @@
   }
 
   .bold{
-    font-weight: 800;
+    font-weight: bold;
   }
 
+  .age_input_sr{
+    position: relative;
+    top: 0px;
+    width:65px;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    left: 4px;
+    font-size: 20px;
+    font-weight:bold;
+    border: none; 
+    background-color: transparent; 
+  }
+  .gender_input_sr {
+    position: relative;
+    appearance: none;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    padding: 3px 0px;
+    font-weight:bold;
+    border-radius: 5px;
+    font-size: 21px;
+    width: 165px;
+    top: -1px; 
+    left: 12px;
+    border: none; 
+    background-color: transparent; 
+  }
+
+  
+
  
+
+
+
+
+
+
+
+
+
 
 
 
