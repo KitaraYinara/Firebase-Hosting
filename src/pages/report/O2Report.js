@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Navigation from "../../components/Navigation/Navigation";
 import LineChart from "../../components/DisplayChart/LineChart";
 import BarChart from "../../components/DisplayChart/BarChart";
@@ -43,12 +43,12 @@ const O2Report = () => {
   const [gt120, setGt120] = useState("");
   const [bt50120, setBt50120] = useState("");
   const [lt50, setLt50] = useState("");
-  const [bt96100, setBt96100] = useState("");
-  const [bt9195, setBt9195] = useState("");
+  const [bt95100, setbt95100] = useState("");
+  const [bt9094, setbt9094] = useState("");
   const [bt8690, setBt8690] = useState("");
   const [bt8185, setBt8185] = useState("");
-  const [bt7680, setBt7680] = useState("");
-  const [bt7075, setBt7075] = useState("");
+  const [bt8089, setbt8089] = useState("");
+  const [bt7079, setbt7079] = useState("");
   const [lt70, setLt70] = useState("");
   const [o2tPercentage, setO2TPercentage] = useState({});
   const [prPercentage, setPRPercentage] = useState({});
@@ -159,7 +159,7 @@ const O2Report = () => {
               .slice(1)
               .map((row) => handleNaN(Number(row[motionIndex])));
             const timestampColumn = data
-              .slice(1)
+              .slice(1, -1)
               .map((row) => row[timestampIndex]);
             const dateColumn = data.slice(1).map((row) => row[dateIndex]);
 
@@ -556,12 +556,10 @@ const O2Report = () => {
 
             function calculateOxygenLevelDuration(oxygenLevelColumn) {
               const ol = {
-                "96-100": 0,
-                "91-95": 0,
-                "86-90": 0,
-                "81-85": 0,
-                "76-80": 0,
-                "70-75": 0,
+                "95-100": 0,
+                "90-94": 0,
+                "80-89": 0,
+                "70-79": 0,
                 "≤70": 0,
               };
               const totalCount = oxygenLevelColumn.length;
@@ -569,45 +567,35 @@ const O2Report = () => {
               oxygenLevelColumn.forEach((value) => {
                 if (value <= 70) {
                   ol["≤70"]++;
-                } else if (value >= 70 && value <= 75) {
-                  ol["70-75"]++;
-                } else if (value >= 76 && value <= 80) {
-                  ol["76-80"]++;
-                } else if (value >= 81 && value <= 85) {
-                  ol["81-85"]++;
-                } else if (value >= 86 && value <= 90) {
-                  ol["86-90"]++;
-                } else if (value >= 91 && value <= 95) {
-                  ol["91-95"]++;
-                } else if (value >= 96 && value <= 100) {
-                  ol["96-100"]++;
+                } else if (value >= 70 && value <= 79) {
+                  ol["70-79"]++;
+                } else if (value >= 80 && value <= 89) {
+                  ol["80-89"]++;
+                } else if (value >= 90 && value <= 94) {
+                  ol["90-94"]++;
+                } else if (value >= 95 && value <= 100) {
+                  ol["95-100"]++;
                 }
               });
 
               const olPercentage = {
-                "96-100": ((ol["96-100"] / totalCount) * 100).toFixed(2),
-                "91-95": ((ol["91-95"] / totalCount) * 100).toFixed(2),
-                "86-90": ((ol["86-90"] / totalCount) * 100).toFixed(2),
-                "81-85": ((ol["81-85"] / totalCount) * 100).toFixed(2),
-                "76-80": ((ol["76-80"] / totalCount) * 100).toFixed(2),
-                "70-75": ((ol["70-75"] / totalCount) * 100).toFixed(2),
+                "95-100": ((ol["95-100"] / totalCount) * 100).toFixed(2),
+                "90-94": ((ol["90-94"] / totalCount) * 100).toFixed(2),
+                "80-89": ((ol["80-89"] / totalCount) * 100).toFixed(2),
+                "70-79": ((ol["70-79"] / totalCount) * 100).toFixed(2),
                 "≤70": ((ol["≤70"] / totalCount) * 100).toFixed(2),
               };
 
-              const bt96100 = secondsToHMS(ol["96-100"] * 4);
-              const bt9195 = secondsToHMS(ol["91-95"] * 4);
-              const bt8690 = secondsToHMS(ol["86-90"] * 4);
-              const bt8185 = secondsToHMS(ol["81-85"] * 4);
-              const bt7680 = secondsToHMS(ol["76-80"] * 4);
-              const bt7075 = secondsToHMS(ol["70-75"] * 4);
+              const bt95100 = secondsToHMS(ol["95-100"] * 4);
+              const bt9094 = secondsToHMS(ol["90-94"] * 4);
+              const bt8089 = secondsToHMS(ol["80-89"] * 4);
+              const bt7079 = secondsToHMS(ol["70-79"] * 4);
               const lt70 = secondsToHMS(ol["≤70"] * 4);
 
-              setBt96100(bt96100);
-              setBt9195(bt9195);
-              setBt8690(bt8690);
-              setBt8185(bt8185);
-              setBt7680(bt7680);
-              setBt7075(bt7075);
+              setbt95100(bt95100);
+              setbt9094(bt9094);
+              setbt8089(bt8089);
+              setbt7079(bt7079);
               setLt70(lt70);
               setOL(ol);
               setOLPercentage(olPercentage);
@@ -653,7 +641,7 @@ const O2Report = () => {
             <h1>Oxygen Level Report</h1>
           </div>
           <div className="current-datetime">
-            File Imported Datetime: {currentDate},{currentTime}
+            File Imported Datetime: {currentDate}, {currentTime}
           </div>
           <div className="current-filename">
             File Imported Name: {IfileName}
@@ -661,9 +649,27 @@ const O2Report = () => {
 
           <div className="info_border">
             <div className="name">Name: </div>
-            <input type="text" className="name_input" />
+            <input
+              type="text"
+              className="name_input"
+              placeholder="Enter Name"
+            />
             <div className="age">Age: </div>
-            <input type="num" className="age_input" />
+            <input
+              type="number"
+              className="age_input"
+              min="1"
+              max="100"
+              placeholder="Enter Age"
+              onInput={(event) => {
+                if (event.target.value > 100) {
+                  event.target.value = 100;
+                } else if (event.target.value <= 1) {
+                  event.target.value = 1;
+                }
+              }}
+            />
+            {/* <input type="num" className="age_input" placeholder="Enter Age"/> */}
             <div className="gender">Gender: </div>
             <select className="gender_input">
               <option value="">Select Gender</option>
@@ -674,24 +680,26 @@ const O2Report = () => {
 
           <div className="std_border">
             <div className="start">
-              Start Time:{" "}
-              {startTime
-                ? startTime + "," + (firstDate ? firstDate : "-")
-                : "-"}
+              Start Time: {startTime ? startTime : "-"}
             </div>
-            <div className="end">
-              End Time:{" "}
-              {endTime ? endTime + "," + (lastDate ? lastDate : "-") : "-"}
-            </div>
-            {/*<div className="duration">Duration: {duration ? duration + "," + (mduration ? mduration: "-"): "-"}</div>*/}
+            {/* <div className="start">Start Time: {startTime ? startTime + "," + (firstDate ? firstDate : "-") : "-"}</div> */}
+            <div className="end">End Time: {endTime ? endTime : "-"}</div>
+            {/* <div className="end">End Time: {endTime ? endTime + "," + (lastDate ? lastDate : "-") : "-"}</div> */}
             <div className="duration">
               Duration: {duration ? duration : "-"}
             </div>
+            {/*<div className="duration">Duration: {duration ? duration + "," + (mduration ? mduration: "-"): "-"}</div>*/}
           </div>
 
           <div className="note_border">
             <div className="note">
-              <input type="text" className="note_input" placeholder="Note: " />
+              <textarea
+                type="text"
+                className="note_input"
+                placeholder="Note: "
+                rows="5"
+                maxlength="800"
+              />
             </div>
           </div>
 
@@ -780,7 +788,10 @@ const O2Report = () => {
               <td>O2 Score</td>
               <td colSpan="2">
                 <div className="colored-bar">
-                  <div className="arrow-indicator"></div>
+                  <div
+                    className="arrow-indicator"
+                    style={{ left: `${(o2Score / 10) * 100}%` }}
+                  ></div>
                 </div>
               </td>
               <td> {o2Score} </td>
@@ -794,39 +805,26 @@ const O2Report = () => {
               <th>%Total</th>
             </tr>
             <tr>
-              <td>96-100</td>
-              <td>{bt96100}</td>
-              <td>{olPercentage["96-100"]}%</td>
+              <td>95-100</td>
+              <td>{bt95100}</td>
+              <td>{olPercentage["95-100"]}%</td>
             </tr>
 
             <tr>
-              <td>91-95</td>
-              <td>{bt9195}</td>
-              <td>{olPercentage["91-95"]}%</td>
+              <td>90-94</td>
+              <td>{bt9094}</td>
+              <td>{olPercentage["90-94"]}%</td>
+            </tr>
+            <tr>
+              <td>80-89</td>
+              <td>{bt8089}</td>
+              <td>{olPercentage["80-89"]}%</td>
             </tr>
 
             <tr>
-              <td>86-90</td>
-              <td>{bt8690}</td>
-              <td>{olPercentage["86-90"]}%</td>
-            </tr>
-
-            <tr>
-              <td>81-85</td>
-              <td>{bt8185}</td>
-              <td>{olPercentage["81-85"]}%</td>
-            </tr>
-
-            <tr>
-              <td>76-80</td>
-              <td>{bt7680}</td>
-              <td>{olPercentage["76-80"]}%</td>
-            </tr>
-
-            <tr>
-              <td>70-75</td>
-              <td>{bt7075}</td>
-              <td>{olPercentage["70-75"]}%</td>
+              <td>70-79</td>
+              <td>{bt7079}</td>
+              <td>{olPercentage["70-79"]}%</td>
             </tr>
 
             <tr>
