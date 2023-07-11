@@ -625,18 +625,19 @@ const O2Report = () => {
   return (
     <div>
       <Navigation />
-      <button className="import_button_text" onClick={handleFileImport}>
-        Click to Import CSV File
-      </button>
-      {errorMessage && <div className="error-message">{errorMessage}</div>}
-
-      {fileUploaded && (
-        <div className="upload-status">File uploaded successfully!</div>
-      )}
-      <div className="export_label"> Export as: </div>
-      <button className="export_button_text" onClick={exportPDFWithComponent}>
-        PDF
-      </button>
+      <div className="page_control">
+        <button className="import_button_text" onClick={handleFileImport}>
+          Click to Import CSV File
+        </button>
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
+        {fileUploaded && (
+          <div className="upload-status">File uploaded successfully!</div>
+        )}
+        <div className="export_label"> Export as: </div>
+        <button className="export_button_text" onClick={exportPDFWithComponent}>
+          PDF
+        </button>
+      </div>
 
       <div className="page">
         <PDFExport
