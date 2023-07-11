@@ -2,13 +2,13 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Authentication from "./Authentication";
-
+import brandlogo from "./SleepeasyLOGOweb-1513748087.png";
 const Navigation = () => {
   return (
     <Navbar bg="#e3f2fd" expand="lg" variant="dark">
       <Container>
         <Navbar.Brand color="light" href="/">
-          SleepEasy
+          <img src={brandlogo} width="150" height="50" />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
