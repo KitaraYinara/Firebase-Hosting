@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore, collection, onSnapshot } from "@firebase/firestore";
 
-// Your web app's Firebase configuration
+// Main firebaseconfig
 const firebaseConfig = {
   apiKey: "AIzaSyD9eWHeLXxKO938_nwS6FdVvnUqN_NXVoQ",
   authDomain: "fir-authentication-96cd6.firebaseapp.com",
@@ -13,6 +13,21 @@ const firebaseConfig = {
   databaseURL:
     "https://fir-authentication-96cd6-default-rtdb.asia-southeast1.firebasedatabase.app/",
 };
+
+// MinHtet firebaseconfig
+// const firebaseConfig = {
+//   apiKey: "AIzaSyC7oEVDAsdZY28XLRFD_9xtGjCzk8h_eVk",
+
+//   authDomain: "sleepez-80891.firebaseapp.com",
+
+//   projectId: "sleepez-80891",
+
+//   storageBucket: "sleepez-80891.appspot.com",
+
+//   messagingSenderId: "806861523660",
+
+//   appId: "1:806861523660:web:3964efc88cb3693e7ed069",
+// };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

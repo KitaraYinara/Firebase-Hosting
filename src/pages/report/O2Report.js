@@ -13,6 +13,8 @@ import {
   getDocs,
   query,
   onSnapshot,
+  where,
+  orderBy,
 } from "firebase/firestore";
 import Papa from "papaparse";
 import "./O2Report.css";
@@ -21,6 +23,11 @@ const O2Report = () => {
   const { patientId, testId } = useParams();
   const [tests, setTests] = useState([]);
   const [patientName, setPatientName] = useState("");
+  const [patientAge, setPatientAge] = useState("");
+  const [patientGender, setPatientGender] = useState("");
+  const [pulseRate, setPulseRate] = useState([]); // for firestore
+  const [oxygenLevel, setOxygenLevel] = useState([]); // for firestore
+  const [motion, setMotion] = useState([]); // for firestore
   const [fileUploaded, setFileUploaded] = useState(false);
   const [pulseRateData, setPulseRateData] = useState({});
   const [oxygenLevelData, setOxygenLevelData] = useState({});
@@ -88,29 +95,57 @@ const O2Report = () => {
         unsubscribe();
       };
     };
-    const fetchPatientName = async () => {
+    const fetchPatientNameAge = async () => {
       const patientDocRef = doc(db, "patients", patientId);
       const patientDoc = await getDoc(patientDocRef);
 
       if (patientDoc.exists()) {
         const patientData = patientDoc.data();
         setPatientName(patientData.name);
+        setPatientAge(patientData.age);
+        setPatientGender(patientData.gender);
       }
     };
 
-    const fetchSensors = async () => {
-      const querySnapshot = await getDocs(
-        collection(db, "patients", patientId, "tests", testId, "sensors")
+    // const fetchSensors = async () => {
+    //   const querySnapshot = await getDocs(
+    //     collection(db, "patients", patientId, "tests", testId, "sensors")
+    //   );
+    //   querySnapshot.forEach((doc) => {
+    //     // doc.data() is never undefined for query doc snapshots
+    //     // console.log(doc.id, " => ", doc.data());
+    //     setSensors(doc.data());
+    //   });
+    // };
+    const loadFromFirebase = async () => {
+      const sensorQuery = query(
+        collection(db, "patients", patientId, "tests", testId, "sensors"),
+        orderBy("timestamp", "asc")
       );
-      querySnapshot.forEach((doc) => {
+
+      const spo2 = [];
+      const mot = [];
+      const pr = [];
+      const t = [];
+      const sensorSnapshot = await getDocs(sensorQuery);
+      sensorSnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
-        console.log(doc.id, " => ", doc.data());
+        // console.log(doc.id, " => ", doc.data());
+        spo2.push(Number(doc.data().spO2));
+        mot.push(Number(doc.data().motion));
+        pr.push(Number(doc.data().bpm));
+        t.push(doc.data().timestamp.toDate().toLocaleString());
       });
+      // setOxygenLevel(spo2);
+      // setMotion(mot);
+      // setPulseRate(pr);
+      manipulateData(pr, spo2, mot, t);
     };
+
     fetchTests();
-    fetchPatientName();
-    fetchSensors();
-  });
+    fetchPatientNameAge();
+    loadFromFirebase();
+  }, []);
 
   const exportPDFWithComponent = () => {
     if (pdfExportComponent.current) {
@@ -118,6 +153,438 @@ const O2Report = () => {
     }
   };
 
+  const manipulateData = (
+    pulseRateColumn,
+    oxygenLevelColumn,
+    motionColumn,
+    timestampColumn
+  ) => {
+    function calculateColumnStats(
+      pulseRateColumn,
+      oxygenLevelColumn,
+      motionColumn
+    ) {
+      const pulseRateMax = Math.max(...pulseRateColumn);
+      const pulseRateAverage =
+        pulseRateColumn.reduce((sum, value) => sum + value, 0) /
+        pulseRateColumn.length;
+      const pulseRateMin = Math.min(...pulseRateColumn);
+
+      const oxygenLevelMax = Math.max(...oxygenLevelColumn);
+      const oxygenLevelAverage =
+        oxygenLevelColumn.reduce((sum, value) => sum + value, 0) /
+        oxygenLevelColumn.length;
+      const oxygenLevelMin = Math.min(...oxygenLevelColumn);
+
+      const motionMax = Math.max(...motionColumn);
+      const motionAverage =
+        motionColumn.reduce((sum, value) => sum + value, 0) /
+        motionColumn.length;
+      const motionMin = Math.min(...motionColumn);
+
+      setPulseRateData({
+        highest: pulseRateMax.toFixed(2),
+        average: pulseRateAverage.toFixed(2),
+        lowest: pulseRateMin.toFixed(2),
+      });
+
+      setOxygenLevelData({
+        highest: oxygenLevelMax.toFixed(2),
+        average: oxygenLevelAverage.toFixed(2),
+        lowest: oxygenLevelMin.toFixed(2),
+      });
+
+      setMotionData({
+        highest: motionMax.toFixed(2),
+        average: motionAverage.toFixed(2),
+        lowest: motionMin.toFixed(2),
+      });
+    }
+    calculateColumnStats(pulseRateColumn, oxygenLevelColumn, motionColumn);
+
+    function calculateO2Score(oxygenLevelColumn) {
+      const o2valueCounts = {
+        "70-74": 0,
+        "75-79": 0,
+        "80-84": 0,
+        "85-89": 0,
+        "90-94": 0,
+        "95-100": 0,
+      };
+
+      oxygenLevelColumn.forEach((o2value) => {
+        if (o2value >= 70 && o2value <= 74) {
+          o2valueCounts["70-74"]++;
+        } else if (o2value >= 75 && o2value <= 79) {
+          o2valueCounts["75-79"]++;
+        } else if (o2value >= 80 && o2value <= 84) {
+          o2valueCounts["80-84"]++;
+        } else if (o2value >= 85 && o2value <= 89) {
+          o2valueCounts["85-89"]++;
+        } else if (o2value >= 90 && o2value <= 94) {
+          o2valueCounts["90-94"]++;
+        } else if (o2value >= 95 && o2value <= 100) {
+          o2valueCounts["95-100"]++;
+        }
+      });
+
+      const o2totalCount = oxygenLevelColumn.length;
+      const o2ratios = Object.values(o2valueCounts).map(
+        (o2count) => (o2count / o2totalCount) * 100
+      );
+      const o2Score =
+        o2ratios[0] * 0.2 +
+        o2ratios[1] * 0.4 +
+        o2ratios[2] * 0.6 +
+        o2ratios[3] * 0.8 +
+        o2ratios[4] * 1 +
+        o2ratios[5] * 1.2;
+      const scaledO2Score = (o2Score / 12) * 10;
+      return scaledO2Score;
+    }
+    const startDate = new Date(startTime);
+    const endDate = new Date(endTime);
+    const durationMs = endDate - startDate + 10000;
+    const hours = Math.floor(durationMs / 3600000);
+    let timeString = String(hours);
+    let Ihours = timeString.slice(0, 2);
+    let o2Score;
+    if (Ihours < 6) {
+      o2Score = "Time<6h";
+    } else {
+      o2Score = (calculateO2Score(oxygenLevelColumn, Ihours) / 10).toFixed(1);
+    }
+    //const o2Score = (calculateO2Score(oxygenLevelColumn) /10).toFixed(1);
+    //console.log("O2 Score:", o2Score);
+    seto2Score(o2Score);
+
+    // function calculateDateRange(dateColumn) {
+    //   const dateStart = dateColumn[0];
+    //   const dateEnd = dateColumn[dateColumn.length - 1];
+    //   setDateStart(dateStart);
+    //   setDateEnd(dateEnd);
+    //   console.log("start", dateStart);
+    //   console.log("end", dateEnd);
+    // }
+    // calculateDateRange(dateColumn);
+
+    function secondsToHMS(seconds) {
+      const hours = Math.floor(seconds / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      const remainingSeconds = seconds % 60;
+      return `${hours.toString().padStart(2, "0")}:${minutes
+        .toString()
+        .padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
+    }
+
+    function calculateTimeDuration(timestampColumn) {
+      const mstartTime = timestampColumn[0];
+      const mendTime = timestampColumn[timestampColumn.length - 1];
+
+      const startTime24 = new Date(
+        "2000-01-01 " + mstartTime
+      ).toLocaleTimeString("en-US", { hour12: false });
+      const endTime24 = new Date("2000-01-01 " + mendTime).toLocaleTimeString(
+        "en-US",
+        { hour12: false }
+      );
+
+      const mstartDate = new Date("2000-01-01 " + startTime24);
+      const mendDate = new Date("2000-01-01 " + endTime24);
+
+      const mdurationMs = mendDate - mstartDate;
+      const mhours = Math.floor(mdurationMs / 3600000);
+      const mminutes = Math.floor((mdurationMs % 3600000) / 60000);
+      const mseconds = Math.floor((mdurationMs % 60000) / 1000);
+      const mduration = `${mhours.toString().padStart(2, "0")}:${mminutes
+        .toString()
+        .padStart(2, "0")}:${mseconds.toString().padStart(2, "0")}`;
+
+      const startTime = timestampColumn[0];
+      const endTime = timestampColumn[timestampColumn.length - 2];
+      //console.log (startTime);
+      //console.log(endTime);
+
+      const startDate = new Date(startTime);
+      const endDate = new Date(endTime);
+      const durationMs = endDate - startDate + 10000;
+      const hours = Math.floor(durationMs / 3600000);
+      const minutes = Math.floor((durationMs % 3600000) / 60000);
+      const seconds = Math.floor((durationMs % 60000) / 1000);
+      const duration = `${hours.toString().padStart(2, "0")}:${minutes
+        .toString()
+        .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+
+      //const startDate = new Date('2000-01-01 ' + startTime24);
+      //const endDate = new Date('2000-01-01 ' + endTime24);
+      //console.log(duration);
+
+      //const Drop4 = ((Math.max(...oxygenLevelColumn)/100)*96)
+      const Drop4 = Math.max(...oxygenLevelColumn) - 4;
+      //console.log(Drop4);
+
+      //const Drop3 = ((Math.max(...oxygenLevelColumn)/100)*97)
+      const Drop3 = Math.max(...oxygenLevelColumn) - 3;
+      //console.log(Drop3);
+
+      const o2drop = {
+        ">3": 0,
+        ">4": 0,
+      };
+
+      oxygenLevelColumn.forEach((value) => {
+        if (value > Drop4) {
+          o2drop[">4"]++;
+        } else if (value > Drop3) {
+          o2drop[">3"]++;
+        }
+      });
+
+      let timeString = String(hours);
+      let Ihours = timeString.slice(0, 2);
+      //console.log(Ihours);
+
+      let Drop4ph = (o2drop[">4"] / Ihours).toFixed(2);
+      //console.log(Drop4ph)
+      let Drop3ph = (o2drop[">3"] / Ihours).toFixed(2);
+
+      if (Ihours < 6) {
+        Drop3ph = "Time<6h";
+        Drop4ph = "Time<6h";
+      }
+      //console.log(Drop3ph)
+      //console.log(Drop4ph)
+
+      setStartTime(startTime);
+      setEndTime(endTime);
+      setDuration(duration);
+      setMStartTime(mstartTime);
+      setMEndTime(mendTime);
+      setMDuration(mduration);
+      setO2drop(o2drop);
+      setDrop3ph(Drop3ph);
+      setDrop4ph(Drop4ph);
+    }
+    calculateTimeDuration(timestampColumn);
+
+    function prepareChartData(
+      timestampColumn,
+      oxygenLevelColumn,
+      pulseRateColumn,
+      motionColumn
+    ) {
+      const valueCounts = {
+        "95-100": 0,
+        "90-94": 0,
+        "85-89": 0,
+        "80-84": 0,
+        "75-79": 0,
+        "70-74": 0,
+      };
+      const totalCount = oxygenLevelColumn.length;
+      oxygenLevelColumn.forEach((value) => {
+        if (value >= 70 && value <= 74) {
+          valueCounts["70-74"]++;
+        } else if (value >= 75 && value <= 79) {
+          valueCounts["75-79"]++;
+        } else if (value >= 80 && value <= 84) {
+          valueCounts["80-84"]++;
+        } else if (value >= 85 && value <= 89) {
+          valueCounts["85-89"]++;
+        } else if (value >= 90 && value <= 94) {
+          valueCounts["90-94"]++;
+        } else if (value >= 95 && value <= 100) {
+          valueCounts["95-100"]++;
+        }
+      });
+      const ranges = Object.keys(valueCounts);
+      const counts = Object.values(valueCounts);
+      const ratios = counts.map((count) => (count / totalCount) * 100);
+
+      const OLRatioData = {
+        labels: ranges,
+        datasets: [
+          {
+            label: "Oxygen Level",
+            data: ratios,
+            borderColor: "blue",
+            backgroundColor: "rgba(0, 0, 255, 0.3)",
+          },
+        ],
+      };
+
+      const OLchartData = {
+        labels: timestampColumn,
+        datasets: [
+          {
+            label: "Oxygen Level",
+            data: oxygenLevelColumn,
+            borderColor: "blue",
+            backgroundColor: "rgba(0, 0, 255, 0.3)",
+          },
+        ],
+      };
+
+      const PRchartData = {
+        labels: timestampColumn,
+        datasets: [
+          {
+            label: "Pulse Rate",
+            data: pulseRateColumn,
+            borderColor: "red",
+            backgroundColor: "rgba(255, 0, 0, 0.3)",
+          },
+        ],
+      };
+
+      const MotionChartData = {
+        labels: timestampColumn,
+        datasets: [
+          {
+            label: "Motion",
+            data: motionColumn,
+            borderColor: "green",
+            backgroundColor: "rgba(0, 255, 0, 0.3)",
+          },
+        ],
+      };
+
+      setOLRatioData(OLRatioData);
+      setOxygenLevelChartData(OLchartData);
+      setPulseRateChartData(PRchartData);
+      setMotionChartData(MotionChartData);
+    }
+    prepareChartData(
+      timestampColumn,
+      oxygenLevelColumn,
+      pulseRateColumn,
+      motionColumn
+    );
+
+    function calculateOxygenLevelThreshold(oxygenLevelColumn) {
+      const o2t = {
+        "≥95": 0,
+        "90-94": 0,
+        "≤90": 0,
+      };
+      const totalCount = oxygenLevelColumn.length;
+
+      oxygenLevelColumn.forEach((o2tvalue) => {
+        if (o2tvalue >= 95) {
+          o2t["≥95"]++;
+        } else if (o2tvalue >= 90 && o2tvalue <= 94) {
+          o2t["90-94"]++;
+        } else {
+          o2t["≤90"]++;
+        }
+      });
+
+      const o2tPercentage = {
+        "≥95": ((o2t["≥95"] / totalCount) * 100).toFixed(2),
+        "90-94": ((o2t["90-94"] / totalCount) * 100).toFixed(2),
+        "≤90": ((o2t["≤90"] / totalCount) * 100).toFixed(2),
+      };
+
+      const gt95 = secondsToHMS(o2t["≥95"] * 4);
+      const el9094 = secondsToHMS(o2t["90-94"] * 4);
+      const lt90 = secondsToHMS(o2t["≤90"] * 4);
+
+      //console.log("Variable '≥95' duration:", gt95);
+      //console.log("Variable '90-94' duration:", el9094);
+      //console.log("Variable '≤90' duration:", lt90);
+
+      setGt95(gt95);
+      setEl9094(el9094);
+      setLt90(lt90);
+      setO2t(o2t);
+      setO2TPercentage(o2tPercentage);
+    }
+    calculateOxygenLevelThreshold(oxygenLevelColumn);
+
+    function calculatePulseRateThreshold(pulseRateColumn) {
+      const pr = {
+        "≥120": 0,
+        "50-120": 0,
+        "≤50": 0,
+      };
+      const totalCount = pulseRateColumn.length;
+
+      pulseRateColumn.forEach((prvalue) => {
+        if (prvalue >= 120) {
+          pr["≥120"]++;
+        } else if (prvalue >= 50 && prvalue <= 120) {
+          pr["50-120"]++;
+        } else if (prvalue <= 50) {
+          pr["≤50"]++;
+        }
+      });
+
+      const prPercentage = {
+        "≥120": ((pr["≥120"] / totalCount) * 100).toFixed(2),
+        "50-120": ((pr["50-120"] / totalCount) * 100).toFixed(2),
+        "≤50": ((pr["≤50"] / totalCount) * 100).toFixed(2),
+      };
+
+      const gt120 = secondsToHMS(pr["≥120"] * 4);
+      const bt50120 = secondsToHMS(pr["50-120"] * 4);
+      const lt50 = secondsToHMS(pr["≤50"] * 4);
+
+      setGt120(gt120);
+      setBt50120(bt50120);
+      setLt50(lt50);
+      setPR(pr);
+      setPRPercentage(prPercentage);
+    }
+    calculatePulseRateThreshold(pulseRateColumn);
+
+    function calculateOxygenLevelDuration(oxygenLevelColumn) {
+      const ol = {
+        "95-100": 0,
+        "90-94": 0,
+        "80-89": 0,
+        "70-79": 0,
+        "≤70": 0,
+      };
+      const totalCount = oxygenLevelColumn.length;
+
+      oxygenLevelColumn.forEach((value) => {
+        if (value <= 70) {
+          ol["≤70"]++;
+        } else if (value >= 70 && value <= 79) {
+          ol["70-79"]++;
+        } else if (value >= 80 && value <= 89) {
+          ol["80-89"]++;
+        } else if (value >= 90 && value <= 94) {
+          ol["90-94"]++;
+        } else if (value >= 95 && value <= 100) {
+          ol["95-100"]++;
+        }
+      });
+
+      const olPercentage = {
+        "95-100": ((ol["95-100"] / totalCount) * 100).toFixed(2),
+        "90-94": ((ol["90-94"] / totalCount) * 100).toFixed(2),
+        "80-89": ((ol["80-89"] / totalCount) * 100).toFixed(2),
+        "70-79": ((ol["70-79"] / totalCount) * 100).toFixed(2),
+        "≤70": ((ol["≤70"] / totalCount) * 100).toFixed(2),
+      };
+
+      const bt95100 = secondsToHMS(ol["95-100"] * 4);
+      const bt9094 = secondsToHMS(ol["90-94"] * 4);
+      const bt8089 = secondsToHMS(ol["80-89"] * 4);
+      const bt7079 = secondsToHMS(ol["70-79"] * 4);
+      const lt70 = secondsToHMS(ol["≤70"] * 4);
+
+      setbt95100(bt95100);
+      setbt9094(bt9094);
+      setbt8089(bt8089);
+      setbt7079(bt7079);
+      setLt70(lt70);
+      setOL(ol);
+      setOLPercentage(olPercentage);
+    }
+    calculateOxygenLevelDuration(oxygenLevelColumn);
+  };
   const handleFileImport = () => {
     const input = document.createElement("input");
     input.type = "file";
@@ -146,8 +613,7 @@ const O2Report = () => {
             const oxygenLevelIndex = headerRow.indexOf("Oxygen Level");
             const motionIndex = headerRow.indexOf("Motion");
             const timestampIndex = headerRow.indexOf("Time");
-            const dateIndex = headerRow.indexOf("Date");
-
+            // const dateIndex = headerRow.indexOf("Date");
             // Extracting the columns
             const pulseRateColumn = data
               .slice(1, -1)
@@ -161,446 +627,21 @@ const O2Report = () => {
             const timestampColumn = data
               .slice(1, -1)
               .map((row) => row[timestampIndex]);
-            const dateColumn = data.slice(1).map((row) => row[dateIndex]);
+            // const dateColumn = data.slice(1).map((row) => row[dateIndex]);
 
+            console.log(timestampColumn);
+            // console.log(dateColumn);
             function handleNaN(value) {
               return Number.isNaN(value) ? "-" : value;
             }
-
-            function calculateColumnStats(
+            console.log(typeof timestampColumn);
+            manipulateData(
               pulseRateColumn,
               oxygenLevelColumn,
-              motionColumn
-            ) {
-              const pulseRateMax = Math.max(...pulseRateColumn);
-              const pulseRateAverage =
-                pulseRateColumn.reduce((sum, value) => sum + value, 0) /
-                pulseRateColumn.length;
-              const pulseRateMin = Math.min(...pulseRateColumn);
-
-              const oxygenLevelMax = Math.max(...oxygenLevelColumn);
-              const oxygenLevelAverage =
-                oxygenLevelColumn.reduce((sum, value) => sum + value, 0) /
-                oxygenLevelColumn.length;
-              const oxygenLevelMin = Math.min(...oxygenLevelColumn);
-
-              const motionMax = Math.max(...motionColumn);
-              const motionAverage =
-                motionColumn.reduce((sum, value) => sum + value, 0) /
-                motionColumn.length;
-              const motionMin = Math.min(...motionColumn);
-
-              setPulseRateData({
-                highest: pulseRateMax.toFixed(2),
-                average: pulseRateAverage.toFixed(2),
-                lowest: pulseRateMin.toFixed(2),
-              });
-
-              setOxygenLevelData({
-                highest: oxygenLevelMax.toFixed(2),
-                average: oxygenLevelAverage.toFixed(2),
-                lowest: oxygenLevelMin.toFixed(2),
-              });
-
-              setMotionData({
-                highest: motionMax.toFixed(2),
-                average: motionAverage.toFixed(2),
-                lowest: motionMin.toFixed(2),
-              });
-            }
-            calculateColumnStats(
-              pulseRateColumn,
-              oxygenLevelColumn,
-              motionColumn
+              motionColumn,
+              timestampColumn
+              // dateColumn
             );
-
-            function calculateO2Score(oxygenLevelColumn) {
-              const o2valueCounts = {
-                "70-74": 0,
-                "75-79": 0,
-                "80-84": 0,
-                "85-89": 0,
-                "90-94": 0,
-                "95-100": 0,
-              };
-
-              oxygenLevelColumn.forEach((o2value) => {
-                if (o2value >= 70 && o2value <= 74) {
-                  o2valueCounts["70-74"]++;
-                } else if (o2value >= 75 && o2value <= 79) {
-                  o2valueCounts["75-79"]++;
-                } else if (o2value >= 80 && o2value <= 84) {
-                  o2valueCounts["80-84"]++;
-                } else if (o2value >= 85 && o2value <= 89) {
-                  o2valueCounts["85-89"]++;
-                } else if (o2value >= 90 && o2value <= 94) {
-                  o2valueCounts["90-94"]++;
-                } else if (o2value >= 95 && o2value <= 100) {
-                  o2valueCounts["95-100"]++;
-                }
-              });
-
-              const o2totalCount = oxygenLevelColumn.length;
-              const o2ratios = Object.values(o2valueCounts).map(
-                (o2count) => (o2count / o2totalCount) * 100
-              );
-              const o2Score =
-                o2ratios[0] * 0.2 +
-                o2ratios[1] * 0.4 +
-                o2ratios[2] * 0.6 +
-                o2ratios[3] * 0.8 +
-                o2ratios[4] * 1 +
-                o2ratios[5] * 1.2;
-              const scaledO2Score = (o2Score / 12) * 10;
-              return scaledO2Score;
-            }
-            const startDate = new Date(startTime);
-            const endDate = new Date(endTime);
-            const durationMs = endDate - startDate + 10000;
-            const hours = Math.floor(durationMs / 3600000);
-            let timeString = String(hours);
-            let Ihours = timeString.slice(0, 2);
-            let o2Score;
-            if (Ihours < 6) {
-              o2Score = "Time<6h";
-            } else {
-              o2Score = (
-                calculateO2Score(oxygenLevelColumn, Ihours) / 10
-              ).toFixed(1);
-            }
-            //const o2Score = (calculateO2Score(oxygenLevelColumn) /10).toFixed(1);
-            //console.log("O2 Score:", o2Score);
-            seto2Score(o2Score);
-
-            function calculateDateRange(dateColumn) {
-              const dateStart = dateColumn[0];
-              const dateEnd = dateColumn[dateColumn.length - 1];
-              setDateStart(dateStart);
-              setDateEnd(dateEnd);
-              //console.log("start", dateStart);
-              //console.log("end", dateEnd);
-            }
-            calculateDateRange(dateColumn);
-
-            function secondsToHMS(seconds) {
-              const hours = Math.floor(seconds / 3600);
-              const minutes = Math.floor((seconds % 3600) / 60);
-              const remainingSeconds = seconds % 60;
-              return `${hours.toString().padStart(2, "0")}:${minutes
-                .toString()
-                .padStart(2, "0")}:${remainingSeconds
-                .toString()
-                .padStart(2, "0")}`;
-            }
-
-            function calculateTimeDuration(timestampColumn) {
-              const mstartTime = timestampColumn[0];
-              const mendTime = timestampColumn[timestampColumn.length - 1];
-
-              const startTime24 = new Date(
-                "2000-01-01 " + mstartTime
-              ).toLocaleTimeString("en-US", { hour12: false });
-              const endTime24 = new Date(
-                "2000-01-01 " + mendTime
-              ).toLocaleTimeString("en-US", { hour12: false });
-
-              const mstartDate = new Date("2000-01-01 " + startTime24);
-              const mendDate = new Date("2000-01-01 " + endTime24);
-
-              const mdurationMs = mendDate - mstartDate;
-              const mhours = Math.floor(mdurationMs / 3600000);
-              const mminutes = Math.floor((mdurationMs % 3600000) / 60000);
-              const mseconds = Math.floor((mdurationMs % 60000) / 1000);
-              const mduration = `${mhours
-                .toString()
-                .padStart(2, "0")}:${mminutes
-                .toString()
-                .padStart(2, "0")}:${mseconds.toString().padStart(2, "0")}`;
-
-              const startTime = timestampColumn[0];
-              const endTime = timestampColumn[timestampColumn.length - 2];
-              //console.log (startTime);
-              //console.log(endTime);
-
-              const startDate = new Date(startTime);
-              const endDate = new Date(endTime);
-              const durationMs = endDate - startDate + 10000;
-              const hours = Math.floor(durationMs / 3600000);
-              const minutes = Math.floor((durationMs % 3600000) / 60000);
-              const seconds = Math.floor((durationMs % 60000) / 1000);
-              const duration = `${hours.toString().padStart(2, "0")}:${minutes
-                .toString()
-                .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-
-              //const startDate = new Date('2000-01-01 ' + startTime24);
-              //const endDate = new Date('2000-01-01 ' + endTime24);
-              //console.log(duration);
-
-              //const Drop4 = ((Math.max(...oxygenLevelColumn)/100)*96)
-              const Drop4 = Math.max(...oxygenLevelColumn) - 4;
-              //console.log(Drop4);
-
-              //const Drop3 = ((Math.max(...oxygenLevelColumn)/100)*97)
-              const Drop3 = Math.max(...oxygenLevelColumn) - 3;
-              //console.log(Drop3);
-
-              const o2drop = {
-                ">3": 0,
-                ">4": 0,
-              };
-
-              oxygenLevelColumn.forEach((value) => {
-                if (value > Drop4) {
-                  o2drop[">4"]++;
-                } else if (value > Drop3) {
-                  o2drop[">3"]++;
-                }
-              });
-
-              let timeString = String(hours);
-              let Ihours = timeString.slice(0, 2);
-              //console.log(Ihours);
-
-              let Drop4ph = (o2drop[">4"] / Ihours).toFixed(2);
-              //console.log(Drop4ph)
-              let Drop3ph = (o2drop[">3"] / Ihours).toFixed(2);
-
-              if (Ihours < 6) {
-                Drop3ph = "Time<6h";
-                Drop4ph = "Time<6h";
-              }
-              //console.log(Drop3ph)
-              //console.log(Drop4ph)
-
-              setStartTime(startTime);
-              setEndTime(endTime);
-              setDuration(duration);
-              setMStartTime(mstartTime);
-              setMEndTime(mendTime);
-              setMDuration(mduration);
-              setO2drop(o2drop);
-              setDrop3ph(Drop3ph);
-              setDrop4ph(Drop4ph);
-            }
-            calculateTimeDuration(timestampColumn);
-
-            function prepareChartData(
-              timestampColumn,
-              oxygenLevelColumn,
-              pulseRateColumn,
-              motionColumn
-            ) {
-              const valueCounts = {
-                "95-100": 0,
-                "90-94": 0,
-                "85-89": 0,
-                "80-84": 0,
-                "75-79": 0,
-                "70-74": 0,
-              };
-              const totalCount = oxygenLevelColumn.length;
-              oxygenLevelColumn.forEach((value) => {
-                if (value >= 70 && value <= 74) {
-                  valueCounts["70-74"]++;
-                } else if (value >= 75 && value <= 79) {
-                  valueCounts["75-79"]++;
-                } else if (value >= 80 && value <= 84) {
-                  valueCounts["80-84"]++;
-                } else if (value >= 85 && value <= 89) {
-                  valueCounts["85-89"]++;
-                } else if (value >= 90 && value <= 94) {
-                  valueCounts["90-94"]++;
-                } else if (value >= 95 && value <= 100) {
-                  valueCounts["95-100"]++;
-                }
-              });
-              const ranges = Object.keys(valueCounts);
-              const counts = Object.values(valueCounts);
-              const ratios = counts.map((count) => (count / totalCount) * 100);
-
-              const OLRatioData = {
-                labels: ranges,
-                datasets: [
-                  {
-                    label: "Oxygen Level",
-                    data: ratios,
-                    borderColor: "blue",
-                    backgroundColor: "rgba(0, 0, 255, 0.3)",
-                  },
-                ],
-              };
-
-              const OLchartData = {
-                labels: timestampColumn,
-                datasets: [
-                  {
-                    label: "Oxygen Level",
-                    data: oxygenLevelColumn,
-                    borderColor: "blue",
-                    backgroundColor: "rgba(0, 0, 255, 0.3)",
-                  },
-                ],
-              };
-
-              const PRchartData = {
-                labels: timestampColumn,
-                datasets: [
-                  {
-                    label: "Pulse Rate",
-                    data: pulseRateColumn,
-                    borderColor: "red",
-                    backgroundColor: "rgba(255, 0, 0, 0.3)",
-                  },
-                ],
-              };
-
-              const MotionChartData = {
-                labels: timestampColumn,
-                datasets: [
-                  {
-                    label: "Motion",
-                    data: motionColumn,
-                    borderColor: "green",
-                    backgroundColor: "rgba(0, 255, 0, 0.3)",
-                  },
-                ],
-              };
-
-              setOLRatioData(OLRatioData);
-              setOxygenLevelChartData(OLchartData);
-              setPulseRateChartData(PRchartData);
-              setMotionChartData(MotionChartData);
-            }
-            prepareChartData(
-              timestampColumn,
-              oxygenLevelColumn,
-              pulseRateColumn,
-              motionColumn
-            );
-
-            function calculateOxygenLevelThreshold(oxygenLevelColumn) {
-              const o2t = {
-                "≥95": 0,
-                "90-94": 0,
-                "≤90": 0,
-              };
-              const totalCount = oxygenLevelColumn.length;
-
-              oxygenLevelColumn.forEach((o2tvalue) => {
-                if (o2tvalue >= 95) {
-                  o2t["≥95"]++;
-                } else if (o2tvalue >= 90 && o2tvalue <= 94) {
-                  o2t["90-94"]++;
-                } else {
-                  o2t["≤90"]++;
-                }
-              });
-
-              const o2tPercentage = {
-                "≥95": ((o2t["≥95"] / totalCount) * 100).toFixed(2),
-                "90-94": ((o2t["90-94"] / totalCount) * 100).toFixed(2),
-                "≤90": ((o2t["≤90"] / totalCount) * 100).toFixed(2),
-              };
-
-              const gt95 = secondsToHMS(o2t["≥95"] * 4);
-              const el9094 = secondsToHMS(o2t["90-94"] * 4);
-              const lt90 = secondsToHMS(o2t["≤90"] * 4);
-
-              //console.log("Variable '≥95' duration:", gt95);
-              //console.log("Variable '90-94' duration:", el9094);
-              //console.log("Variable '≤90' duration:", lt90);
-
-              setGt95(gt95);
-              setEl9094(el9094);
-              setLt90(lt90);
-              setO2t(o2t);
-              setO2TPercentage(o2tPercentage);
-            }
-            calculateOxygenLevelThreshold(oxygenLevelColumn);
-
-            function calculatePulseRateThreshold(pulseRateColumn) {
-              const pr = {
-                "≥120": 0,
-                "50-120": 0,
-                "≤50": 0,
-              };
-              const totalCount = pulseRateColumn.length;
-
-              pulseRateColumn.forEach((prvalue) => {
-                if (prvalue >= 120) {
-                  pr["≥120"]++;
-                } else if (prvalue >= 50 && prvalue <= 120) {
-                  pr["50-120"]++;
-                } else if (prvalue <= 50) {
-                  pr["≤50"]++;
-                }
-              });
-
-              const prPercentage = {
-                "≥120": ((pr["≥120"] / totalCount) * 100).toFixed(2),
-                "50-120": ((pr["50-120"] / totalCount) * 100).toFixed(2),
-                "≤50": ((pr["≤50"] / totalCount) * 100).toFixed(2),
-              };
-
-              const gt120 = secondsToHMS(pr["≥120"] * 4);
-              const bt50120 = secondsToHMS(pr["50-120"] * 4);
-              const lt50 = secondsToHMS(pr["≤50"] * 4);
-
-              setGt120(gt120);
-              setBt50120(bt50120);
-              setLt50(lt50);
-              setPR(pr);
-              setPRPercentage(prPercentage);
-            }
-            calculatePulseRateThreshold(pulseRateColumn);
-
-            function calculateOxygenLevelDuration(oxygenLevelColumn) {
-              const ol = {
-                "95-100": 0,
-                "90-94": 0,
-                "80-89": 0,
-                "70-79": 0,
-                "≤70": 0,
-              };
-              const totalCount = oxygenLevelColumn.length;
-
-              oxygenLevelColumn.forEach((value) => {
-                if (value <= 70) {
-                  ol["≤70"]++;
-                } else if (value >= 70 && value <= 79) {
-                  ol["70-79"]++;
-                } else if (value >= 80 && value <= 89) {
-                  ol["80-89"]++;
-                } else if (value >= 90 && value <= 94) {
-                  ol["90-94"]++;
-                } else if (value >= 95 && value <= 100) {
-                  ol["95-100"]++;
-                }
-              });
-
-              const olPercentage = {
-                "95-100": ((ol["95-100"] / totalCount) * 100).toFixed(2),
-                "90-94": ((ol["90-94"] / totalCount) * 100).toFixed(2),
-                "80-89": ((ol["80-89"] / totalCount) * 100).toFixed(2),
-                "70-79": ((ol["70-79"] / totalCount) * 100).toFixed(2),
-                "≤70": ((ol["≤70"] / totalCount) * 100).toFixed(2),
-              };
-
-              const bt95100 = secondsToHMS(ol["95-100"] * 4);
-              const bt9094 = secondsToHMS(ol["90-94"] * 4);
-              const bt8089 = secondsToHMS(ol["80-89"] * 4);
-              const bt7079 = secondsToHMS(ol["70-79"] * 4);
-              const lt70 = secondsToHMS(ol["≤70"] * 4);
-
-              setbt95100(bt95100);
-              setbt9094(bt9094);
-              setbt8089(bt8089);
-              setbt7079(bt7079);
-              setLt70(lt70);
-              setOL(ol);
-              setOLPercentage(olPercentage);
-            }
-            calculateOxygenLevelDuration(oxygenLevelColumn);
           },
         });
         setFileUploaded(true);
@@ -614,9 +655,12 @@ const O2Report = () => {
     <div>
       <Navigation />
       <div className="page_control">
-        <button className="import_button_text_o2" onClick={handleFileImport}>
-          Click to Import CSV File
-        </button>
+        {patientId == null && (
+          <button className="import_button_text_o2" onClick={handleFileImport}>
+            Click to Import CSV File
+          </button>
+        )}
+        {/* {patientId != null && loadFromFirebase()} */}
         {errorMessage && <div className="error-message_o2">{errorMessage}</div>}
         {fileUploaded && (
           <div className="upload-status_o2">File uploaded successfully!</div>
@@ -649,33 +693,44 @@ const O2Report = () => {
 
           <div className="info_border">
             <div className="name">Name: </div>
-            <input
-              type="text"
-              className="name_input"
-              placeholder="Enter Name"
-            />
+            {patientId == null && (
+              <input
+                type="text"
+                className="name_input"
+                placeholder="Enter Name"
+              />
+            )}
+            {patientId != null && <p className="patientname">{patientName}</p>}
             <div className="age">Age: </div>
-            <input
-              type="number"
-              className="age_input"
-              min="1"
-              max="100"
-              placeholder="Enter Age"
-              onInput={(event) => {
-                if (event.target.value > 100) {
-                  event.target.value = 100;
-                } else if (event.target.value <= 1) {
-                  event.target.value = 1;
-                }
-              }}
-            />
+            {patientId == null && (
+              <input
+                type="number"
+                className="age_input"
+                min="1"
+                max="100"
+                placeholder="Enter Age"
+                onInput={(event) => {
+                  if (event.target.value > 100) {
+                    event.target.value = 100;
+                  } else if (event.target.value <= 1) {
+                    event.target.value = 1;
+                  }
+                }}
+              />
+            )}
+            {patientId != null && <p className="patientage">{patientAge}</p>}
             {/* <input type="num" className="age_input" placeholder="Enter Age"/> */}
             <div className="gender">Gender: </div>
-            <select className="gender_input">
-              <option value="">Select Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
+            {patientId == null && (
+              <select className="gender_input">
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            )}
+            {patientId != null && (
+              <p className="patientgender">{patientGender}</p>
+            )}
           </div>
 
           <div className="std_border">

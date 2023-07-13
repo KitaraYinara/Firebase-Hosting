@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Navigation from "../../components/Navigation/Navigation";
 import { useParams } from "react-router-dom";
 import { db } from "../../firebase";
 import { collection, doc, getDoc, query, onSnapshot } from "firebase/firestore";
@@ -159,6 +160,7 @@ function GraphPage() {
   };
   return (
     <div>
+      <Navigation />
       <h1 className="pageheader">
         Patient: {patientName}, Test ID: {testId}
       </h1>

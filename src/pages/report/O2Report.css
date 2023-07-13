@@ -470,3 +470,21 @@
   height: 800px;
   width: 1350px;
 }
+
+.patientname {
+  position: absolute;
+  left: 7em;
+  top: 0.7em;
+}
+
+.patientage {
+  position: absolute;
+  left: 36.3em;
+  top: 0.7em;
+}
+
+.patientgender {
+  position: absolute;
+  left: 66em;
+  top: 0.7em;
+}
