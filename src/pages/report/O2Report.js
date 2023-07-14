@@ -684,12 +684,16 @@ const O2Report = () => {
           <div className="header">
             <h1>Oxygen Level Report</h1>
           </div>
-          <div className="current-datetime">
-            File Imported Datetime: {currentDate}, {currentTime}
-          </div>
-          <div className="current-filename">
-            File Imported Name: {IfileName}
-          </div>
+          {patientId == null && (
+            <>
+              <div className="current-datetime">
+                File Imported Datetime: {currentDate}, {currentTime}
+              </div>
+              <div className="current-filename">
+                File Imported Name: {IfileName}
+              </div>
+            </>
+          )}
 
           <div className="info_border">
             <div className="name">Name: </div>
