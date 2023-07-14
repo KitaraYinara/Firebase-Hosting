@@ -144,3 +144,53 @@
 .abnormal-spO2 {
   color: white;
 }
+
+.view-o2report-btn {
+  overflow: hidden;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-bottom: 10px;
+  border-color: #c05780;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 5px;
+  background-color: #c05780;
+  color: rgb(255, 255, 255);
+  padding: 15px 40px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.5s, color 0.5s;
+}
+
+.view-o2report-btn:hover {
+  background-color: #ffffff;
+  color: #c05780;
+  transition: background-color 0.5s, color 0.5s;
+}
+
+.view-sleepreport-btn {
+  overflow: hidden;
+
+  margin-right: 5px;
+  margin-bottom: 10px;
+  border-color: #97c1a9;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 5px;
+  background-color: #97c1a9;
+  color: rgb(255, 255, 255);
+  padding: 15px 40px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.5s, color 0.5s;
+}
+
+.view-sleepreport-btn:hover {
+  background-color: #ffffff;
+  color: #97c1a9;
+  transition: background-color 0.5s, color 0.5s;
+}
