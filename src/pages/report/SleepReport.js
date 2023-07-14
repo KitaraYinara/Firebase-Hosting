@@ -921,9 +921,11 @@ const SleepReport = () => {
     <div>
       <Navigation />
       <div className="page_control">
-        <button className="import_button_text" onClick={handleFileImport}>
-          Click to Import CSV File
-        </button>
+        {patientId == null && (
+          <button className="import_button_text" onClick={handleFileImport}>
+            Click to Import CSV File
+          </button>
+        )}
         {errorMessage && <div className="error-message">{errorMessage}</div>}
         {fileUploaded && (
           <div className="upload-status">File uploaded successfully!</div>
@@ -944,12 +946,16 @@ const SleepReport = () => {
           <div className="SRheader">
             <h1>Sleep Quality Report</h1>
           </div>
-          <div className="current-datetime">
-            File Imported Datetime: {currentDate}, {currentTime}
-          </div>
-          <div className="current-filename">
-            File Imported Name: {IfileName}
-          </div>
+          {patientId == null && (
+            <>
+              <div className="current-datetime">
+                File Imported Datetime: {currentDate}, {currentTime}
+              </div>
+              <div className="current-filename">
+                File Imported Name: {IfileName}
+              </div>
+            </>
+          )}
 
           <div className="SQ_section">
             <div className="SQ_label">Sleep Quality</div>
