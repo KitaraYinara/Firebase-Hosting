@@ -13,7 +13,6 @@ import {
   getDocs,
   query,
   onSnapshot,
-  where,
   orderBy,
 } from "firebase/firestore";
 import Papa from "papaparse";
@@ -25,9 +24,6 @@ const O2Report = () => {
   const [patientName, setPatientName] = useState("");
   const [patientAge, setPatientAge] = useState("");
   const [patientGender, setPatientGender] = useState("");
-  const [pulseRate, setPulseRate] = useState([]); // for firestore
-  const [oxygenLevel, setOxygenLevel] = useState([]); // for firestore
-  const [motion, setMotion] = useState([]); // for firestore
   const [fileUploaded, setFileUploaded] = useState(false);
   const [pulseRateData, setPulseRateData] = useState({});
   const [oxygenLevelData, setOxygenLevelData] = useState({});
@@ -107,16 +103,6 @@ const O2Report = () => {
       }
     };
 
-    // const fetchSensors = async () => {
-    //   const querySnapshot = await getDocs(
-    //     collection(db, "patients", patientId, "tests", testId, "sensors")
-    //   );
-    //   querySnapshot.forEach((doc) => {
-    //     // doc.data() is never undefined for query doc snapshots
-    //     // console.log(doc.id, " => ", doc.data());
-    //     setSensors(doc.data());
-    //   });
-    // };
     const loadFromFirebase = async () => {
       const sensorQuery = query(
         collection(db, "patients", patientId, "tests", testId, "sensors"),
@@ -629,12 +615,12 @@ const O2Report = () => {
               .map((row) => row[timestampIndex]);
             // const dateColumn = data.slice(1).map((row) => row[dateIndex]);
 
-            console.log(timestampColumn);
+            // console.log(timestampColumn);
             // console.log(dateColumn);
             function handleNaN(value) {
               return Number.isNaN(value) ? "-" : value;
             }
-            console.log(typeof timestampColumn);
+            // console.log(typeof timestampColumn);
             manipulateData(
               pulseRateColumn,
               oxygenLevelColumn,

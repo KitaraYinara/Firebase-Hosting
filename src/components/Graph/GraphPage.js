@@ -155,8 +155,11 @@ function GraphPage() {
   const routeToTests = () => {
     window.location.href = `/patients/${patientId}/tests`;
   };
-  const routeToMainReport = () => {
+  const routeToO2Report = () => {
     window.location.href = `/mainreport/${patientId}/${testId}`;
+  };
+  const routeToSleepReport = () => {
+    window.location.href = `/sleepreport/${patientId}/${testId}`;
   };
   return (
     <div>
@@ -355,7 +358,7 @@ function GraphPage() {
           <button
             variant="primary"
             className="view"
-            onClick={(e) => routeToMainReport()}
+            onClick={(e) => routeToO2Report()}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -368,6 +371,23 @@ function GraphPage() {
               <path d="M3 4.5h10a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1H3zM1 2a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 2zm0 12a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 14z" />
             </svg>
             O2 Report
+          </button>
+          <button
+            variant="primary"
+            className="view"
+            onClick={(e) => routeToSleepReport()}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="30"
+              height="30"
+              fill="currentColor"
+              class="bi bi-view-list"
+              viewBox="0 0 20 18"
+            >
+              <path d="M3 4.5h10a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1H3zM1 2a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 2zm0 12a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 14z" />
+            </svg>
+            Sleep Report
           </button>
         </div>
       )}

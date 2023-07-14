@@ -69,6 +69,10 @@ const App = () => {
         element={<PrivateRoute element={<MainReport />} />}
       />
       <Route
+        path="/sleepreport/:patientId/:testId"
+        element={<PrivateRoute element={<SleepReport />} />}
+      />
+      <Route
         path="/sleepreport"
         element={<PrivateRoute element={<SleepReport />} />}
       />

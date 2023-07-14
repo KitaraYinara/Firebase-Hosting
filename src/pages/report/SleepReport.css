@@ -1,4 +1,4 @@
-.page_control{
+.page_control {
   position: relative;
   top: 0px;
   left: 145px;
@@ -40,7 +40,7 @@
   position: absolute;
   width: 250px;
   left: 500px;
-  top :5px;
+  top: 5px;
   padding: 10px 20px;
   background-color: #f0f0f0;
   border-radius: 4px;
@@ -70,7 +70,7 @@
   font-size: 14px;
 }
 
-.export_label{
+.export_label {
   position: absolute;
   top: 5px;
   left: 1000px;
@@ -94,72 +94,69 @@
   background-color: #e0e0e0;
 }
 
-.current-datetime{
-  position : absolute;
+.current-datetime {
+  position: absolute;
   left: 800px;
 }
-.current-filename{
-  position : absolute;
-  top:50px;
+.current-filename {
+  position: absolute;
+  top: 50px;
   left: 800px;
 }
 
-
-
-  .SQ_label {
-  position: absolute  ;
-  top:100px;
+.SQ_label {
+  position: absolute;
+  top: 100px;
   left: 275px;
   font-weight: bold;
   line-height: 1;
   margin-top: -2px;
   font-size: 30px;
-  }
+}
 
-  .SQ_SQI {
+.SQ_SQI {
   position: absolute;
   font-weight: bold;
   font-size: 20px;
-  border-Radius: 10px;
+  border-radius: 10px;
   top: 140px;
   left: 18px;
   width: 300px;
   height: 70px;
   text-align: center;
-  color:white ;
-  background-color:#808080;
+  color: white;
+  background-color: #808080;
   flex-direction: column;
   align-items: left;
   font-weight: normal;
-
-  }
-  .SQ_EFF {
+}
+.SQ_EFF {
   position: absolute;
   top: 140px;
   left: 360px;
   width: 300px;
   height: 70px;
   text-align: center;
-  background-color:#808080;
+  background-color: #808080;
   flex-direction: column;
   align-items: left;
   font-weight: bold;
   font-size: 20px;
   font-weight: normal;
-  color:white;
-  border-Radius: 10px;
-  }
+  color: white;
+  border-radius: 10px;
+}
 
-  .SO_label { 
-  position: absolute  ;
+.SO_label {
+  position: absolute;
   top: 100px;
   left: 950px;
   font-weight: bold;
   line-height: 1;
   margin-top: -2px;
   font-size: 30px;
-  }
-  .SO_Latency {
+}
+.SO_Latency {
   position: absolute;
   font-weight: bold;
   font-size: 20px;
@@ -168,14 +165,14 @@
   left: 710px;
   width: 300px;
   height: 70px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
-  align-items: left; 
-  color:white; 
-  border-Radius: 10px;
-  }
-  .SO_Duration {
+  align-items: left;
+  color: white;
+  border-radius: 10px;
+}
+.SO_Duration {
   position: absolute;
   font-weight: bold;
   font-size: 20px;
@@ -184,41 +181,40 @@
   font-weight: normal;
   width: 300px;
   height: 70px;
-  background-color:#808080;
-  color:white;
+  background-color: #808080;
+  color: white;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 10px;
-  }
+  border-radius: 10px;
+}
 
-  .SA_label {
-  position: absolute  ;
-  top:270px;
+.SA_label {
+  position: absolute;
+  top: 270px;
   left: 275px;
   font-weight: bold;
   line-height: 1;
   margin-top: -2px;
   font-size: 30px;
-
-  }
-  .SA_SAI {
+}
+.SA_SAI {
   position: absolute;
   font-weight: bold;
   font-size: 20px;
   top: 310px;
   left: 18px;
   width: 300px;
-  color:white;
+  color: white;
   height: 70px;
   font-weight: normal;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 10px;
-  }
-  .SA_sAHI {
+  border-radius: 10px;
+}
+.SA_sAHI {
   position: absolute;
   font-weight: bold;
   font-size: 20px;
@@ -226,16 +222,16 @@
   left: 360px;
   width: 300px;
   font-weight: normal;
-  color:white;
+  color: white;
   height: 70px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 10px;
-  }
+  border-radius: 10px;
+}
 
-  .SP_label {
+.SP_label {
   position: absolute;
   top: 270px;
   left: 955px;
@@ -243,894 +239,873 @@
   line-height: 1;
   margin-top: -2px;
   font-size: 30px;
-  }
-  .SP_fragmentation {
+}
+.SP_fragmentation {
   position: absolute;
   top: 310px;
   left: 710px;
   width: 300px;
-  color:white;
+  color: white;
   height: 70px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
   font-weight: normal;
-  font-size: 20px;  
-  border-Radius: 10px;
-  }
-  .SP_periodicity {
+  font-size: 20px;
+  border-radius: 10px;
+}
+.SP_periodicity {
   position: absolute;
   top: 310px;
   left: 1050px;
   width: 300px;
   font-weight: normal;
   height: 70px;
-  color:white;
-  background-color:#808080;
+  color: white;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
   font-size: 20px;
-  border-Radius: 10px;
-  } 
-  /*for the bottom portion*/
+  border-radius: 10px;
+}
+/*for the bottom portion*/
 
-  .D_label { 
-  position: absolute  ;
-  top:  472px;
+.D_label {
+  position: absolute;
+  top: 472px;
   left: 1185px;
   font-size: 20px;
-  }
+}
 
-  .D3_label { 
-  position: absolute  ;
-  top:  502px;
+.D3_label {
+  position: absolute;
+  top: 502px;
   left: 1185px;
   font-size: 17px;
-  }
-  .D4_label { 
-  position: absolute  ;
-  top:  502px;
+}
+.D4_label {
+  position: absolute;
+  top: 502px;
   left: 1285px;
   font-size: 17px;
-  }
+}
 
-  .SLPO_title {
+.SLPO_title {
   position: absolute;
-  top:  500px;
+  top: 500px;
   left: 20px;
   width: 215px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;
-  color:white;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
-  .SLPO_input {
+}
+.SLPO_input {
   position: absolute;
-  top:  500px;
+  top: 500px;
   left: 240px;
   width: 160px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;
-  color:white;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
+}
 
-  .SLPC_title {
+.SLPC_title {
   position: absolute;
-  top:  535px;
+  top: 535px;
   left: 20px;
   width: 215px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;
-  color:white;
-  font-weight: bold;;
-  } 
-  .SLPC_input {
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+}
+.SLPC_input {
   position: absolute;
-  top:  535px;
+  top: 535px;
   left: 240px;
   width: 160px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
-  align-items: left;      
-  border-Radius: 4px;
-  color:white;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
+}
 
-  .TST_title {
+.TST_title {
   position: absolute;
-  top:  570px;
+  top: 570px;
   left: 20px;
   width: 215px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;
-  color:white;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
-  .TST_input {
+}
+.TST_input {
   position: absolute;
-  top:  570px;
+  top: 570px;
   left: 240px;
   width: 160px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;
-  color:white;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
+}
 
-  .WASO_title {
+.WASO_title {
   position: absolute;
-  top:  605px;
+  top: 605px;
   left: 20px;
   width: 215px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;
-  color:white;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
-  .WASO_input {
+}
+.WASO_input {
   position: absolute;
-  top:  605px;
+  top: 605px;
   left: 240px;
   width: 160px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;
-  color:white;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
-  .SAI_title {
-    position: absolute;
-    top:  640px;
-    left: 20px;
-    width: 215px;
-    height: 30px;
-    background-color:#808080;
-    text-align: center;
-    flex-direction: column;
-    align-items: left;
-    border-Radius: 4px;
-    color:white;
-  font-weight: bold;
-    } 
-    .SAI_input {
-    position: absolute;
-    top:  640px;
-    left: 240px;
-    width: 160px;
-    height: 30px;
-    background-color:#808080;
-    text-align: center;
-    flex-direction: column;
-    align-items: left;
-    border-Radius: 4px;
-    color:white;
-  font-weight: bold;
-    } 
-
-  .WT_title {
+}
+.SAI_title {
   position: absolute;
-  top:  640px;
+  top: 640px;
   left: 20px;
   width: 215px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;
-  color:white;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
-  .WT_input {
+}
+.SAI_input {
   position: absolute;
-  top:  640px;
+  top: 640px;
   left: 240px;
   width: 160px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;
-  color:white;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
+}
 
-  .SAI_title {
+.WT_title {
   position: absolute;
-  top:  675px;
+  top: 640px;
   left: 20px;
   width: 215px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;
-  color:white;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
-  .SAI_input {
+}
+.WT_input {
   position: absolute;
-  top:  675px;
+  top: 640px;
   left: 240px;
   width: 160px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;
-  color:white;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
+}
 
+.SAI_title {
+  position: absolute;
+  top: 675px;
+  left: 20px;
+  width: 215px;
+  height: 30px;
+  background-color: #808080;
+  text-align: center;
+  flex-direction: column;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+}
+.SAI_input {
+  position: absolute;
+  top: 675px;
+  left: 240px;
+  width: 160px;
+  height: 30px;
+  background-color: #808080;
+  text-align: center;
+  flex-direction: column;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+}
 
 .Snore_title {
   position: absolute;
-  top:  535px;
+  top: 535px;
   left: 460px;
   width: 215px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;
-  color:white;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
-  .Snore_input {
+}
+.Snore_input {
   position: absolute;
-  top:  535px;
+  top: 535px;
   left: 680px;
   width: 170px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;
-  color:white;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
+}
 
-  .BP_title {
-    position: absolute;
-    top:  570px;
-    left: 460px;
-    width: 215px;
-    height: 30px;
-    background-color:#808080;
-    text-align: center;
-    flex-direction: column;
-    align-items: left;
-    border-Radius: 4px;      
-    color:white;
-    font-weight: bold;
-    } 
-    .BP_input {
-    position: absolute;
-    top:  570px;
-    left: 680px;
-    width: 170px;
-    height: 30px;
-    background-color:#808080;
-    text-align: center;
-    flex-direction: column;
-    align-items: left;
-    border-Radius: 4px;
-    color:white;
-    font-weight: bold;
-    } 
-
-  .SPH_title {
+.BP_title {
   position: absolute;
-  top:  750px;
+  top: 570px;
   left: 460px;
   width: 215px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;
-  color:white;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
-  .SPH_input {
+}
+.BP_input {
   position: absolute;
-  top:  750px;
+  top: 570px;
   left: 680px;
-  width: 180px;
+  width: 170px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;
-  color:white;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
+}
 
-  .SPM_title {
+.SPH_title {
   position: absolute;
-  top:  785px;
+  top: 750px;
   left: 460px;
   width: 215px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;      
-  color:white;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
-  .SPM_input {
+}
+.SPH_input {
   position: absolute;
-  top:  785px;
+  top: 750px;
   left: 680px;
   width: 180px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;
-  color:white;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
+}
 
-  .SPL_title {
+.SPM_title {
   position: absolute;
-  top:  820px;
+  top: 785px;
   left: 460px;
   width: 215px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;
-  color:white;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
-  .SPL_input {
+}
+.SPM_input {
   position: absolute;
-  top:  820px;
+  top: 785px;
   left: 680px;
   width: 180px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;
-  color:white;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
+}
 
-  .MMM_title {
+.SPL_title {
   position: absolute;
-  top:  855px;
+  top: 820px;
   left: 460px;
   width: 215px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;
-  color:white;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
-  .MMM_input {
+}
+.SPL_input {
   position: absolute;
-  top:  855px;
+  top: 820px;
   left: 680px;
   width: 180px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;
-  color:white;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
+}
 
-
-
-
-
-
-  /* bottom 2nd column */
-
-  .SAHIT_title {
+.MMM_title {
   position: absolute;
-  top:  535px;
+  top: 855px;
+  left: 460px;
+  width: 215px;
+  height: 30px;
+  background-color: #808080;
+  text-align: center;
+  flex-direction: column;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+}
+.MMM_input {
+  position: absolute;
+  top: 855px;
+  left: 680px;
+  width: 180px;
+  height: 30px;
+  background-color: #808080;
+  text-align: center;
+  flex-direction: column;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+}
+
+/* bottom 2nd column */
+
+.SAHIT_title {
+  position: absolute;
+  top: 535px;
   left: 930px;
   width: 215px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;
-  color:white;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
-  .SAHIT_input {
+}
+.SAHIT_input {
   position: absolute;
-  top:  535px;
+  top: 535px;
   left: 1150px;
   width: 92px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
-  align-items: left;      
-  border-Radius: 4px;
-  color:white;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
-  .SAHIT_input1 {
+}
+.SAHIT_input1 {
   position: absolute;
-  top:  535px;
-  left: 1245px; 
+  top: 535px;
+  left: 1245px;
   width: 92px;
   height: 30px;
-  background-color:#808080;
-  text-align: center;
-  flex-direction: column;
-  align-items: left;      
-  border-Radius: 4px;
-  color:white;
-  font-weight: bold;
-  } 
-
-  .SAHIO_title {
-  position: absolute;
-  top:  570px;
-  left: 930px;
-  width: 215px;
-  height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;
-  color:white;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
-  .SAHIO_input {
-  position: absolute;
-  top:  570px;
-  left: 1150px;
-  width: 90px;
-  height: 30px;
-  background-color:#808080;
-  text-align: center;
-  flex-direction: column;
-  align-items: left;      
-  border-Radius: 4px;
-  color:white;
-  font-weight: bold;
-  } 
-  .SAHIO_input1 {
-  position: absolute;
-  top:  570px;
-  left: 1245px;
-  width: 90px;
-  height: 30px;
-  background-color:#808080;
-  text-align: center;
-  flex-direction: column;
-  align-items: left;      
-  border-Radius: 4px;
-  color:white;
-  font-weight: bold;
-  } 
+}
 
-  .SAHIC_title {
+.SAHIO_title {
   position: absolute;
-  top:  605px;
+  top: 570px;
   left: 930px;
   width: 215px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;
-  color:white;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
-  .SAHIC_input {
+}
+.SAHIO_input {
   position: absolute;
-  top:  605px;
+  top: 570px;
   left: 1150px;
   width: 90px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
-  align-items: left;      
-  border-Radius: 4px;
-  color:white;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
-  .SAHIC_input1 {
+}
+.SAHIO_input1 {
   position: absolute;
-  top:  605px;
+  top: 570px;
   left: 1245px;
   width: 90px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
-  align-items: left;      
-  border-Radius: 4px;
-  color:white;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
+}
 
-  .SRDI_title {
+.SAHIC_title {
   position: absolute;
-  top:  640px;
+  top: 605px;
   left: 930px;
   width: 215px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;
-  color:white;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
-  .SRDI_input {
+}
+.SAHIC_input {
   position: absolute;
-  top:  640px;
+  top: 605px;
   left: 1150px;
   width: 90px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
-  align-items: left;      
-  border-Radius: 4px;
-  color:white;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
-  .SRDI_input1 {
+}
+.SAHIC_input1 {
   position: absolute;
-  top:  640px;
+  top: 605px;
   left: 1245px;
   width: 90px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
-  align-items: left;      
-  border-Radius: 4px;
-  color:white;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
+}
 
-  .ODI_title {
+.SRDI_title {
   position: absolute;
-  top:  675px;
+  top: 640px;
   left: 930px;
   width: 215px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;
-  color:white;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
-  .ODI_input {
+}
+.SRDI_input {
   position: absolute;
-  top:  675px;
+  top: 640px;
   left: 1150px;
   width: 90px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
-  align-items: left;      
-  border-Radius: 4px;
-  color:white;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
-  .ODI_input1 {
+}
+.SRDI_input1 {
   position: absolute;
-  top:  675px;
+  top: 640px;
   left: 1245px;
   width: 90px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
-  align-items: left;      
-  border-Radius: 4px;
-  color:white;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
+}
 
-  .Min_label { 
-  position: absolute  ;
-  top:  785px;
+.ODI_title {
+  position: absolute;
+  top: 675px;
+  left: 930px;
+  width: 215px;
+  height: 30px;
+  background-color: #808080;
+  text-align: center;
+  flex-direction: column;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+}
+.ODI_input {
+  position: absolute;
+  top: 675px;
+  left: 1150px;
+  width: 90px;
+  height: 30px;
+  background-color: #808080;
+  text-align: center;
+  flex-direction: column;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+}
+.ODI_input1 {
+  position: absolute;
+  top: 675px;
+  left: 1245px;
+  width: 90px;
+  height: 30px;
+  background-color: #808080;
+  text-align: center;
+  flex-direction: column;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+}
+
+.Min_label {
+  position: absolute;
+  top: 785px;
   left: 1165px;
   font-size: 16px;
-  }
+}
 
-  .Max_label { 
-  position: absolute  ;
-  top:  785px;
+.Max_label {
+  position: absolute;
+  top: 785px;
   left: 1230px;
   font-size: 16px;
-  }
-  .Mean_label { 
-  position: absolute  ;
-  top:  785px;
+}
+.Mean_label {
+  position: absolute;
+  top: 785px;
   left: 1290px;
   font-size: 16px;
-  }
+}
 
-  .AD_title {
+.AD_title {
   position: absolute;
-  top:  820px;
+  top: 820px;
   left: 930px;
   width: 215px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;
-  color:white;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
-  .AD_input {
+}
+.AD_input {
   position: absolute;
-  top:  820px;
+  top: 820px;
   left: 1150px;
   width: 60px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
-  align-items: left;      
-  border-Radius: 4px;
-  color:white;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
-  .AD_input1 {
+}
+.AD_input1 {
   position: absolute;
-  top:  820px;
+  top: 820px;
   left: 1215px;
   width: 60px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
-  align-items: left;      
-  border-Radius: 4px;
-  color:white;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
-  .AD_input2 {
+}
+.AD_input2 {
   position: absolute;
-  top:  820px;
+  top: 820px;
   left: 1280px;
   width: 60px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
-  align-items: left;      
-  border-Radius: 4px;
-  color:white;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
+}
 
-  .HR_title {
+.HR_title {
   position: absolute;
-  top:  855px;
+  top: 855px;
   left: 930px;
-  width:215px;
+  width: 215px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
   align-items: left;
-  border-Radius: 4px;
-  color:white;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
-  .HR_input {
+}
+.HR_input {
   position: absolute;
-  top:  855px;
+  top: 855px;
   left: 1150px;
   width: 60px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
-  align-items: left;      
-  border-Radius: 4px;
-  color:white;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
-  .HR_input1 {
+}
+.HR_input1 {
   position: absolute;
-  top:  855px;
+  top: 855px;
   left: 1215px;
   width: 60px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
-  align-items: left;      
-  border-Radius: 4px;
-  color:white;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
-  .HR_input2 {
+}
+.HR_input2 {
   position: absolute;
-  top:  855px;
+  top: 855px;
   left: 1280px;
   width: 60px;
   height: 30px;
-  background-color:#808080;
+  background-color: #808080;
   text-align: center;
   flex-direction: column;
-  align-items: left;      
-  border-Radius: 4px;
-  color:white;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
   font-weight: bold;
-  } 
+}
 
-  .small-number {
-    font-size: 0.8em; 
-  }
+.small-number {
+  font-size: 0.8em;
+}
 
-  .smaller-font {
-    font-size: 19px; 
-  }
+.smaller-font {
+  font-size: 19px;
+}
 
-  .smaller-font1 {
-    font-size: 18px; 
-  }
+.smaller-font1 {
+  font-size: 18px;
+}
 
-  .Report_Label {
-    position: absolute;
-    font-weight: 500;
-    font-size: 20px;
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
-    border-Radius: 10px;
-    top: 1000px;
-    left: 20px;
-    width: 1360px;
-    height: 300px;
-    text-align:left;
-    color:rgb(39, 37, 37) ;
-    background-image: linear-gradient(to bottom right, #FDFCFB, #E2D1C3);
-    flex-direction: column;
-    align-items: left;
-    border:2px solid #e6e600;
-    padding: 30px;
-  }
+.Report_Label {
+  position: absolute;
+  font-weight: 500;
+  font-size: 20px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  border-radius: 10px;
+  top: 1000px;
+  left: 20px;
+  width: 1360px;
+  height: 300px;
+  text-align: left;
+  color: rgb(39, 37, 37);
+  background-image: linear-gradient(to bottom right, #fdfcfb, #e2d1c3);
+  flex-direction: column;
+  align-items: left;
+  border: 2px solid #e6e600;
+  padding: 30px;
+}
 
-  .larger_font {
-    padding:40px;
-    font-weight: bold;
-    font-size: 24px;
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
-  }
+.larger_font {
+  padding: 40px;
+  font-weight: bold;
+  font-size: 24px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
 
-  .Feedback_point1 {
-    padding:40px;
-    font-weight:200;
-    font-size: 16px;
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
-  }
+.Feedback_point1 {
+  padding: 40px;
+  font-weight: 200;
+  font-size: 16px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
 
-  .Feedback_point2 {
-    font-weight:200;
-    font-size: 16px;
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
-  }
+.Feedback_point2 {
+  font-weight: 200;
+  font-size: 16px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
 
-  .bold{
-    font-weight: bold;
-  }
+.bold {
+  font-weight: bold;
+}
 
-  .age_input_sr{
-    position: relative;
-    top: 0px;
-    width:65px;
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
-    left: 4px;
-    font-size: 20px;
-    font-weight:bold;
-    border: none; 
-    background-color: transparent; 
-  }
-  .gender_input_sr {
-    position: relative;
-    appearance: none;
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
-    padding: 3px 0px;
-    font-weight:bold;
-    border-radius: 5px;
-    font-size: 21px;
-    width: 165px;
-    top: -1px; 
-    left: 12px;
-    border: none; 
-    background-color: transparent; 
-  }
+.age_input_sr {
+  position: relative;
+  top: 0px;
+  width: 65px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  left: 4px;
+  font-size: 20px;
+  font-weight: bold;
+  border: none;
+  background-color: transparent;
+}
+.gender_input_sr {
+  position: relative;
+  appearance: none;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  padding: 3px 0px;
+  font-weight: bold;
+  border-radius: 5px;
+  font-size: 21px;
+  width: 165px;
+  top: -1px;
+  left: 12px;
+  border: none;
+  background-color: transparent;
+}
 
-  
+.patientage1 {
+  position: absolute;
+}
 
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.patientgender1 {
+  position: absolute;
+  left: 30em;
+  top: 3.6em;
+}
