@@ -22,7 +22,7 @@
   font-size: 100px;
   font-weight: bold;
   font-style: italic;
-  color: white;
+  color: rgb(0, 0, 0);
   left: 27.25%;
   top: 40%;
   margin: 0;
@@ -37,7 +37,7 @@
   width: 50%;
   text-align: center;
   font-family: Georgia, serif;
-  color: #f0f7d4;
+  color: #000000;
 }
 
 .container {
