@@ -5,7 +5,7 @@ import Authentication from "./Authentication";
 import brandlogo from "./SleepeasyLOGOweb-1513748087.png";
 const Navigation = () => {
   return (
-    <Navbar bg="#e3f2fd" expand="lg" variant="dark">
+    <Navbar expand="lg" variant="light">
       <Container>
         <Navbar.Brand color="light" href="/">
           <img src={brandlogo} width="150" height="50" />

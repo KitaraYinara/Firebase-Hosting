@@ -57,7 +57,7 @@
   width: 120px;
   height: 0px;
   top: 5px;
-  color: aquamarine;
+  color: rgb(0, 0, 0);
   font-size: 14px;
 }
 .error-message {
@@ -75,7 +75,7 @@
   top: 5px;
   left: 1000px;
   font-size: 25px;
-  color: aquamarine;
+  color: rgb(0, 0, 0);
 }
 
 .export_button_text {

@@ -4,7 +4,7 @@
   text-align: center;
   font-weight: bold;
   line-height: 1em;
-  color: goldenrod;
+  color: rgb(25, 169, 0);
   font-size: 3em;
 }
 
@@ -51,9 +51,10 @@ table.testtable {
 }
 
 thead th {
-  background-color: goldenrod;
+  background-color: rgb(25, 169, 0);
   text-align: center;
   font-weight: bold;
+  color: rgb(255, 255, 255);
 }
 
 th,
@@ -65,18 +66,18 @@ td {
   font-size: 20px;
 }
 tbody td {
-  color: aliceblue;
+  color: rgb(0, 0, 0);
 }
 tbody tr:nth-of-type(odd) {
-  background-color: #4e5e7d;
+  background-color: #ffffff;
 }
 
 tbody tr:nth-of-type(even) {
-  background-color: #39445c;
+  background-color: #d3ffee;
 }
 
 table.testtable td:first-child {
-  color: goldenrod;
+  color: rgb(25, 169, 0);
 }
 h2.loading {
   text-align: center;
@@ -87,7 +88,7 @@ h2.loading {
   padding: 5px;
   margin-top: 30px;
   margin-left: 20px;
-  background-color: magenta;
+  background-color: darkmagenta;
   color: rgb(255, 255, 255);
   border-color: darkmagenta;
   border-style: solid;

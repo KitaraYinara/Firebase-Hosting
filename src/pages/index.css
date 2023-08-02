@@ -43,7 +43,7 @@ h1 {
   outline: none;
   border-radius: 2rem;
   color: black;
-  background: rgb(238, 235, 235);
+  background: rgb(255, 255, 255);
   text-transform: unset;
   text-rendering: optimizeLegibility;
 }

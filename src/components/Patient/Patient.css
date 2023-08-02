@@ -1,5 +1,5 @@
 label {
-  color: goldenrod;
+  color: rgb(10, 10, 10);
 }
 
 table.patienttable {
@@ -16,7 +16,7 @@ table.patienttable {
 }
 
 table.patienttable td:first-child {
-  color: goldenrod;
+  color: rgb(25, 169, 0);
 }
 .form {
   height: 50px;

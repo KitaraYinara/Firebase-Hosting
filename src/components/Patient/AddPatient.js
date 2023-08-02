@@ -54,6 +54,7 @@ const AddPatient = ({ id, setPatientId }) => {
   };
 
   useEffect(() => {
+    
     console.log("The id here is : ", id);
     if (id !== undefined && id !== "") {
       editHandler();

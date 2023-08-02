@@ -24,7 +24,6 @@ function GraphPage() {
   const [abnormalBPM, setAbnormalBPM] = useState([]);
   const [abnormalSpO2, setAbnormalSpO2] = useState([]);
   const [showAbnormalValues, setShowAbnormalValues] = useState(false);
-  const [file, setFile] = useState();
   const fileReader = new FileReader();
 
   const handleShowAbnormalValues = () => {
