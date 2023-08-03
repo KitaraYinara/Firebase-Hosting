@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@progress/kendo-react-pdf": "^5.16.1",
     "@tensorflow/tfjs": "^4.7.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -12,7 +13,7 @@
     "chart.js": "^4.3.0",
     "csv-parser": "^3.0.0",
     "exceljs": "^4.3.0",
-    "firebase": "^9.20.0",
+    "firebase": "^9.23.0",
     "papaparse": "^5.4.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.4",

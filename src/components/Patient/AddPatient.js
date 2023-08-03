@@ -11,7 +11,7 @@ const AddPatient = ({ id, setPatientId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
-    if (name === "" || age === "") {
+    if (name === "" || age === "" || gender === "") {
       setMessage({ error: true, msg: "All fields are mandatory!" });
       return;
     }
@@ -54,7 +54,6 @@ const AddPatient = ({ id, setPatientId }) => {
   };
 
   useEffect(() => {
-    
     console.log("The id here is : ", id);
     if (id !== undefined && id !== "") {
       editHandler();

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Navigation from "../../components/Navigation/Navigation";
 import "../index.css";
+import { Alert } from "react-bootstrap";
 import { auth } from "../../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
@@ -9,9 +10,14 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate("");
+  const [message, setMessage] = useState({ error: false, msg: "" });
 
   const signIn = (e) => {
     e.preventDefault();
+    if (email === "" || password === "") {
+      setMessage({ error: true, msg: "All fields are mandatory!" });
+      return;
+    }
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         navigate("/");
@@ -19,7 +25,7 @@ const Login = () => {
         // ...
       })
       .catch((error) => {
-        //console.log(error)
+        console.log(error);
       });
   };
 
@@ -60,7 +66,15 @@ const Login = () => {
                 class="input-field"
               ></input>
             </div>
-
+            {message?.msg && (
+              <Alert
+                variant={message?.error ? "danger" : "success"}
+                dismissible
+                onClose={() => setMessage("")}
+              >
+                {message?.msg}
+              </Alert>
+            )}
             <button
               type="submit"
               name="submit"

@@ -53,7 +53,7 @@ table.patienttable td:first-child {
   margin-left: 20px;
   background-color: magenta;
   color: rgb(255, 255, 255);
-  border-color: darkmagenta;
+  border-color: magenta;
   border-style: solid;
   border-width: 2px;
   border-radius: 5px;
@@ -118,7 +118,7 @@ table.patienttable td:first-child {
 
 .refresh:hover {
   background-color: #ffffff;
-  color: darkmagenta;
+  color: magenta;
   transition: background-color 0.5s, color 0.5s;
 }
 .delete:hover {

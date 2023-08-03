@@ -10,6 +10,8 @@ import {
   doc,
   addDoc,
   getDoc,
+  updateDoc,
+  getDocs,
   setDoc,
   deleteDoc,
   query,
@@ -21,6 +23,10 @@ function PatientTestPage() {
   const [tests, setTests] = useState([]);
   const [patientName, setPatientName] = useState("");
   const [model, setModel] = useState();
+
+  const [testsWithoutPredictions, setTestsWithoutPredictions] = useState([]);
+  const classes = ["BadOSA", "Healthy", "HeartFailure", "Parkinson"];
+
   useEffect(() => {
     const fetchTests = async () => {
       const testsCollectionRef = collection(db, "patients", patientId, "tests");
@@ -33,6 +39,11 @@ function PatientTestPage() {
           prediction: doc.data().prediction,
         }));
         setTests(testList);
+
+        const testsWithoutPred = testList
+          .filter((test) => !test.prediction)
+          .map((test) => test.id);
+        setTestsWithoutPredictions(testsWithoutPred);
       });
 
       return () => {
@@ -70,7 +81,7 @@ function PatientTestPage() {
     loadModel();
   }, [patientId]);
 
-  const makePrediction = (data, alldata) => {
+  const makePredictionCSV = (data, alldata) => {
     console.log("Making prediction:", data);
     var predictedLabels = [];
     var classes = ["BadOSA", "Healthy", "HeartFailure", "Parkinson"];
@@ -112,6 +123,73 @@ function PatientTestPage() {
     console.log("Predicted class is: " + predictedClass);
     addTest(alldata, predictedClass);
   };
+
+  const makePrediction = async (testId) => {
+    try {
+      // Fetch the sensor data for the specific test ID from Firestore
+      const sensorsCollectionRef = collection(
+        db,
+        "patients",
+        patientId,
+        "tests",
+        testId,
+        "sensors"
+      );
+      const sensorsQuery = query(sensorsCollectionRef);
+      const sensorsSnapshot = await getDocs(sensorsQuery);
+      const sensorData = sensorsSnapshot.docs.map((doc) => doc.data());
+
+      // Prepare the input data for prediction
+      const selectedData = sensorData.map((element) => [
+        parseFloat(element.bpm || 0),
+        parseFloat(element.spO2 || 0),
+        parseFloat(element.motion || 0),
+      ]);
+
+      // Convert the input data to a tensor
+      const inputTensor = tf.tensor2d(selectedData, [sensorData.length, 3]);
+
+      // Make predictions using the loaded model
+      const predictions = model.predict(inputTensor);
+      const predictedProbabilities = await predictions.array();
+
+      // Determine the predicted class for each row of data
+      const predictedClasses = predictedProbabilities.map((probs) => {
+        const predictedClass = tf.argMax(probs).dataSync()[0];
+        return classes[predictedClass];
+      });
+
+      // Determine the most common predicted class
+      const predictedClass = mode(predictedClasses);
+
+      // Update Firestore with the predicted class
+      const testDocRef = doc(db, "patients", patientId, "tests", testId);
+      await updateDoc(testDocRef, { prediction: predictedClass });
+
+      // Remove the test ID from the state
+      setTestsWithoutPredictions((prevTests) =>
+        prevTests.filter((test) => test !== testId)
+      );
+    } catch (error) {
+      console.error("Error making prediction:", error);
+    }
+  };
+  function mode(array) {
+    const frequency = {};
+    let maxCount = 0;
+    let modeValue = null;
+
+    for (const item of array) {
+      frequency[item] = (frequency[item] || 0) + 1;
+
+      if (frequency[item] > maxCount) {
+        maxCount = frequency[item];
+        modeValue = item;
+      }
+    }
+
+    return modeValue;
+  }
 
   const deleteTest = (id) => {
     const testDoc = doc(db, "patients", patientId, "tests", id);
@@ -195,7 +273,7 @@ function PatientTestPage() {
                 parseFloat(row["Oxygen Level"] || 0),
                 parseFloat(row["Motion"] || 0),
               ]);
-              makePrediction(selectedData, data);
+              makePredictionCSV(selectedData, data);
             }
           },
           error: (err) => console.log("ERROR", err),
@@ -238,7 +316,18 @@ function PatientTestPage() {
                 <tr key={test.id}>
                   <td>{test.id}</td>
                   <td>{test.datetime}</td>
-                  <td>{test.prediction}</td>
+                  <td>
+                    {test.prediction ? (
+                      test.prediction
+                    ) : (
+                      <button
+                        onClick={(e) => makePrediction(test.id)}
+                        className="predict"
+                      >
+                        Predict
+                      </button>
+                    )}
+                  </td>
                   <td>
                     <button
                       variant="primary"
