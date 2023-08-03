@@ -26,7 +26,19 @@ const Login = () => {
   return (
     <>
       <Navigation />
-      <div className="container-signin">
+      <div className="container-signin"
+       style={{
+            backgroundImage: `url("https://img.freepik.com/free-vector/clean-medical-background_53876-97927.jpg")`, // Use the filename directly as the URL
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "100vh",
+            width: "100%",
+            padding: "0 2rem",
+            margin: "0 auto",
+          }}>
         <section class="wrapper">
           <div class="heading">
             <h1 class="text text-large">
