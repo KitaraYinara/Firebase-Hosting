@@ -7,7 +7,28 @@
   color: rgb(25, 169, 0);
   font-size: 3em;
 }
+.predict {
+  overflow: hidden;
+  padding: 5px;
+  background-color: rgb(255, 166, 0);
+  color: rgb(255, 255, 255);
+  border-color: rgb(255, 166, 0);
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 5px;
+  padding: 15px 40px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.5s, color 0.5s;
+}
 
+.predict:hover {
+  background-color: #ffffff;
+  color: rgb(255, 166, 0);
+  transition: background-color 0.5s, color 0.5s;
+}
 input[type="file"] {
   display: none;
 }
