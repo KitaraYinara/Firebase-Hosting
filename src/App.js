@@ -3,7 +3,6 @@ import Home from "./pages/Home";
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
 import Patient from "./pages/patients/Patient";
-import Chart from "./chart";
 import PatientTestPage from "./components/Test/PatientTestPage";
 import GraphPage from "./components/Graph/GraphPage";
 import MainReport from "./pages/report/O2Report";
@@ -51,7 +50,6 @@ const App = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/patient" element={<PrivateRoute element={<Patient />} />} />
-      <Route path="/chart" element={<PrivateRoute element={<Chart />} />} />
       <Route
         path="/patients/:patientId/tests"
         element={<PrivateRoute element={<PatientTestPage />} />}
