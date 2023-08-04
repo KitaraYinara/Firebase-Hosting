@@ -13,7 +13,7 @@
   border-width: 2px;
   border-radius: 5px;
   background-color: rgb(15, 220, 87);
-  color: rgb(255, 255, 255);
+  color: white;
   padding: 15px 40px;
   text-align: center;
   text-decoration: none;
@@ -138,11 +138,11 @@
 }
 
 .abnormal-bpm {
-  color: white;
+  color: black;
 }
 
 .abnormal-spO2 {
-  color: white;
+  color: black;
 }
 
 .view-o2report-btn {
