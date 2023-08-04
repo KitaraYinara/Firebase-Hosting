@@ -5,6 +5,7 @@ import { Alert } from "react-bootstrap";
 import { auth } from "../../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import "./authentication.css"
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -34,7 +35,7 @@ const Login = () => {
       <Navigation />
       <div className="container-signin"
        style={{
-            backgroundImage: `url("https://img.freepik.com/free-vector/clean-medical-background_53876-97927.jpg")`, // Use the filename directly as the URL
+            backgroundImage: `url("https://s1.1zoom.me/b5050/357/Eyes_medicine_Glance_547947_1920x1080.jpg ")`, // Use the filename directly as the URL
             backgroundSize: "cover",
             backgroundPosition: "center",
             display: "flex",
@@ -97,6 +98,9 @@ const Login = () => {
             </button>
           </form>
         </section>
+      </div>
+      <div className="bottom-page">
+        <p>&copy; 2023 SleepEasy Centre. All rights reserved.</p>
       </div>
     </>
   );
