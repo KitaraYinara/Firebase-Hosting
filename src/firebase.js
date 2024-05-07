@@ -2,32 +2,17 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore, collection, onSnapshot } from "@firebase/firestore";
 
-// Main firebaseconfig
+// Enter the firebaseconfig below
 const firebaseConfig = {
-  apiKey: "AIzaSyD9eWHeLXxKO938_nwS6FdVvnUqN_NXVoQ",
-  authDomain: "fir-authentication-96cd6.firebaseapp.com",
-  projectId: "fir-authentication-96cd6",
-  storageBucket: "fir-authentication-96cd6.appspot.com",
-  messagingSenderId: "140073163102",
-  appId: "1:140073163102:web:0a9b1ad84ab1d0308497cf",
-  databaseURL:
-    "https://fir-authentication-96cd6-default-rtdb.asia-southeast1.firebasedatabase.app/",
+  apiKey: "AIzaSyCxEnGFEEs68ZE8Wd1aOJ5VyZ8EXMrWSek",
+  authDomain: "test-8dbce.firebaseapp.com",
+  projectId: "test-8dbce",
+  storageBucket: "test-8dbce.appspot.com",
+  messagingSenderId: "592602578836",
+  appId: "1:592602578836:web:1f5990ac3b41fbaab01981",
+  measurementId: "G-0T44QLJDTC"
 };
 
-// MinHtet firebaseconfig
-// const firebaseConfig = {
-//   apiKey: "AIzaSyC7oEVDAsdZY28XLRFD_9xtGjCzk8h_eVk",
-
-//   authDomain: "sleepez-80891.firebaseapp.com",
-
-//   projectId: "sleepez-80891",
-
-//   storageBucket: "sleepez-80891.appspot.com",
-
-//   messagingSenderId: "806861523660",
-
-//   appId: "1:806861523660:web:3964efc88cb3693e7ed069",
-// };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
