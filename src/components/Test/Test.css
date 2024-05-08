@@ -128,3 +128,7 @@ h2.loading {
   color: darkmagenta;
   transition: background-color 0.5s, color 0.5s;
 }
+
+.loading {
+  color: black;
+}

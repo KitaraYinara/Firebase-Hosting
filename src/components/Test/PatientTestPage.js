@@ -312,7 +312,7 @@ function PatientTestPage() {
       />
 
       {tests.length === 0 ? (
-        <h2 className="loading">Loading tests...</h2>
+        <h2 className="loading"style={{ color: 'black' }}>Loading Tests...</h2> 
       ) : (
         <div>
           <table className="testtable">

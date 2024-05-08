@@ -1133,7 +1133,7 @@ const SleepReport = () => {
                     onInput={(event) => {
                       if (event.target.value > 100) {
                         event.target.value = 100;
-                      } else if (event.target.value <= 1) {
+                      } else if (event.target.value < 1) {
                         event.target.value = 1;
                       }
                     }}

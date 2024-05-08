@@ -94,20 +94,24 @@ const AddPatient = ({ id, setPatientId }) => {
                   type="number"
                   placeholder="Patient Age"
                   value={age}
-                  onChange={(e) => setAge(e.target.value)}
+                  onChange={(e) => {if ((e.target.value) < 0) {setAge(0)} else {setAge(e.target.value)}}}
                 />
               </fieldset>
             </div>
             <div className="mb-3" controlId="formPatientGender">
               <fieldset>
                 <label id="formPatientGender">Gender: </label>
-                <input
+                <select
                   className="input-field"
-                  type="text"
-                  placeholder="Patient Gender"
+                  //type="text"
+                  //placeholder="Patient Gender"
                   value={gender}
                   onChange={(e) => setGender(e.target.value)}
-                />
+                >
+                  <option value="">Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
               </fieldset>
             </div>
             <div className="d-grid gap-2">
