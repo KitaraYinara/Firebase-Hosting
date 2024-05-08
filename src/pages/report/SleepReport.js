@@ -1116,6 +1116,19 @@ const SleepReport = () => {
           <div className="HR_input1">{pulseRateData.highest}</div>
           <div className="HR_input2">{pulseRateData.average}</div>
 
+          <div className="RR_title">RESPIRATORY RATE (RR)</div>
+          <div className="RR_input">{pulseRateData.average/4}</div>
+          <div className="RR_Status">Acceptable</div>
+
+          <div className="HRV_title">HEART RATE VARIABILITY (HRV)</div>
+          <div className="HRV_input">NIL</div>
+          <div className="HRV_Status">Low</div>
+
+          <div className="PPG_title">PHOTOPLETHYSMOGRAPHY (PPG)</div>
+          <div className="PPG_input">NIL</div>
+          <div className="PPG_Status">Highest</div>
+
+
           <div className="Feedback">
             <div className="Report_Label">
               Test Summary:

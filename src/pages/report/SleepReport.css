@@ -1029,6 +1029,144 @@
   font-weight: bold;
 }
 
+.RR_title {
+  position: absolute;
+  top: 785px;
+  left: 20px;
+  width: 215px;
+  height: 30px;
+  font-size: 13px;
+  background-color: #808080;
+  text-align: center;
+  flex-direction: column;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+}
+
+.RR_input {
+  position: absolute;
+  top: 785px;
+  left: 240px;
+  width: 92px;
+  height: 30px;
+  background-color: #808080;
+  text-align: center;
+  flex-direction: column;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+}
+
+.RR_Status {
+  position: absolute;
+  top: 785px;
+  left: 335px;
+  width: 92px;
+  height: 30px;
+  background-color: #808080;
+  text-align: center;
+  flex-direction: column;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+}
+
+.HRV_title {
+  position: absolute;
+  top: 820px;
+  left: 20px;
+  width: 215px;
+  height: 30px;
+  font-size: 13px;
+  background-color: #808080;
+  text-align: center;
+  flex-direction: column;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+}
+
+.HRV_input {
+  position: absolute;
+  top: 820px;
+  left: 240px;
+  width: 92px;
+  height: 30px;
+  background-color: #808080;
+  text-align: center;
+  flex-direction: column;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+}
+
+.HRV_Status {
+  position: absolute;
+  top: 820px;
+  left: 335px;
+  width: 92px;
+  height: 30px;
+  background-color: #808080;
+  text-align: center;
+  flex-direction: column;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+}
+
+.PPG_title {
+  position: absolute;
+  top: 855px;
+  left: 20px;
+  width: 215px;
+  height: 30px;
+  font-size: 13px;
+  background-color: #808080;
+  text-align: center;
+  flex-direction: column;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+}
+
+.PPG_input {
+  position: absolute;
+  top: 855px;
+  left: 240px;
+  width: 92px;
+  height: 30px;
+  background-color: #808080;
+  text-align: center;
+  flex-direction: column;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+}
+
+.PPG_Status {
+  position: absolute;
+  top: 855px;
+  left: 335px;
+  width: 92px;
+  height: 30px;
+  background-color: #808080;
+  text-align: center;
+  flex-direction: column;
+  align-items: left;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+}
+
 .small-number {
   font-size: 0.8em;
 }
