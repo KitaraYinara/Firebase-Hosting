@@ -13,7 +13,7 @@
   background-color: #ffffff;
   top: 0px;
   width: 1400px;
-  height: 2850px;
+  height: 3525px;
   margin: 0 auto;
   padding: 20px;
   box-sizing: border-box;
@@ -374,12 +374,12 @@
 
 .hal_table {
   position: absolute;
-  top: 130px;
+  top: 128px;
   border-collapse: collapse;
   max-width: 500px;
   max-height: 1000px;
-  height: 200px;
-  width: 400px;
+  height: 150px;
+  width: 400px; 
   left: 990px;
   border: 1px solid black;
 }
@@ -432,11 +432,11 @@
 
 .ODT_table {
   position: absolute;
-  top: 335px;
+  top: 460px;
   border-collapse: collapse;
   max-width: 500px;
-  max-height: 6000px;
-  height: 446px;
+  max-height: 3000px;
+  height: 326px;
   width: 400px;
   left: 990px;
   border: 1px solid black;
@@ -467,7 +467,7 @@
   position: absolute;
   background-color: #ffffff;
   width: 1365px;
-  height: 2050px;
+  height: 2725px;
   left: 25px;
   top: 790px;
   padding: 20px;

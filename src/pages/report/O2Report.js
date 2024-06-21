@@ -25,6 +25,8 @@ const O2Report = () => {
   const [patientAge, setPatientAge] = useState("");
   const [patientGender, setPatientGender] = useState("");
   const [fileUploaded, setFileUploaded] = useState(false);
+  const [respiratoryRateData, setRespiratoryRateData] = useState({});
+  const [heartratevariabilityData, setHeartratevariabilityData] = useState({});
   const [pulseRateData, setPulseRateData] = useState({});
   const [oxygenLevelData, setOxygenLevelData] = useState({});
   const [motionData, setMotionData] = useState({});
@@ -32,6 +34,7 @@ const O2Report = () => {
   const [oxygenLevelChartData, setOxygenLevelChartData] = useState({});
   const [motionChartData, setMotionChartData] = useState({});
   const [OLRatioData, setOLRatioData] = useState({});
+  const [respiratoryRateChartData, setRespiratoryRateChartData] = useState({});
   const [firstDate, setDateStart] = useState("");
   const [lastDate, setDateEnd] = useState("");
   const [startTime, setStartTime] = useState("");
@@ -72,6 +75,7 @@ const O2Report = () => {
     minute: "2-digit",
     second: "2-digit",
   });
+
 
   useEffect(() => {
     const fetchTests = async () => {
@@ -167,11 +171,17 @@ const O2Report = () => {
         motionColumn.reduce((sum, value) => sum + value, 0) /
         motionColumn.length;
       const motionMin = Math.min(...motionColumn);
-
+      
       setPulseRateData({
         highest: pulseRateMax.toFixed(2),
         average: pulseRateAverage.toFixed(2),
         lowest: pulseRateMin.toFixed(2),
+      });
+
+      setRespiratoryRateData({
+        highest: (pulseRateMax/4).toFixed(2),
+        average: (pulseRateAverage/4).toFixed(2),
+        lowest: (pulseRateMin/4).toFixed(2),
       });
 
       setOxygenLevelData({
@@ -185,8 +195,45 @@ const O2Report = () => {
         average: motionAverage.toFixed(2),
         lowest: motionMin.toFixed(2),
       });
+
+      function calculateRMSSD(pulseRateColumn) {
+        var RMSSD = 0;
+        for(let i = 0 ; i < pulseRateColumn.length-1; i++){
+          //console.log(pulseRateColumn[i]/4);
+          //console.log(pulseRateColumn[i+1]/4);
+          RMSSD = Math.sqrt((RMSSD + (Math.pow((pulseRateColumn[i+1]/4) - (pulseRateColumn[i]/4), 2)))/(pulseRateColumn.length -1));
+          /*if (isNaN(RMSSD)){
+            console.log("NAN");
+          }
+          else{
+            console.log(RMSSD);
+          }*/
+        }
+        console.log(RMSSD);
+        return RMSSD;
+      }
+      function calculateSDNN(pulseRateColumn, pulseRateAverage){
+        var SDNN = 0;
+        for(let i = 0; i < pulseRateColumn.length; i++){
+          SDNN =  Math.sqrt((SDNN + (Math.pow((pulseRateColumn[i]/4) - (pulseRateAverage/4), 2)))/(pulseRateColumn.length-1));
+          /*if (isNaN(SDNN)){
+            console.log("NAN");
+          }
+          else{
+            console.log(SDNN);
+          }*/
+        }
+        console.log(SDNN);
+        return SDNN;
+      }
+        
+      var RMSSD = calculateRMSSD(pulseRateColumn);
+      var SDNN = calculateSDNN(pulseRateColumn, pulseRateAverage);
+      console.log(RMSSD/SDNN.toFixed(2)/Math.pow(10, -3));
+      setHeartratevariabilityData({value: (RMSSD/SDNN).toFixed(2)/Math.pow(10, -3),});
     }
     calculateColumnStats(pulseRateColumn, oxygenLevelColumn, motionColumn);
+
 
     function calculateO2Score(oxygenLevelColumn) {
       const o2valueCounts = {
@@ -353,11 +400,23 @@ const O2Report = () => {
     }
     calculateTimeDuration(timestampColumn);
 
+    function prepareRRChart(pulseRateColumn)
+    {
+      var respiratoryRateColumn = [];
+      for(let i = 0; i < pulseRateColumn.length; i++){
+        respiratoryRateColumn.push(pulseRateColumn[i]/4);
+      }
+      return respiratoryRateColumn;
+    }
+
+    const respiratoryRateColumn = prepareRRChart(pulseRateColumn);
+
     function prepareChartData(
       timestampColumn,
       oxygenLevelColumn,
       pulseRateColumn,
-      motionColumn
+      motionColumn,
+      respiratoryRateColumn,
     ) {
       const valueCounts = {
         "95-100": 0,
@@ -422,7 +481,18 @@ const O2Report = () => {
           },
         ],
       };
-
+      
+      const RRchartData = {
+        labels: timestampColumn,
+        datasets: [
+          {
+            label: "Respiratory Rate",
+            data: respiratoryRateColumn,
+            borderColor: "purple",
+            backgroundColor: "rgba(255, 0, 255, 0.3)",
+          },
+        ],
+      };
       const MotionChartData = {
         labels: timestampColumn,
         datasets: [
@@ -439,12 +509,14 @@ const O2Report = () => {
       setOxygenLevelChartData(OLchartData);
       setPulseRateChartData(PRchartData);
       setMotionChartData(MotionChartData);
+      setRespiratoryRateChartData(RRchartData);
     }
     prepareChartData(
       timestampColumn,
       oxygenLevelColumn,
       pulseRateColumn,
-      motionColumn
+      motionColumn,
+      respiratoryRateColumn
     );
 
     function calculateOxygenLevelThreshold(oxygenLevelColumn) {
@@ -866,6 +938,24 @@ const O2Report = () => {
               </td>
               <td> {o2Score} </td>
             </tr>
+            <tr>
+              <td>HRV</td>
+              <td></td>
+              <td>{heartratevariabilityData.value}</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>RR</td>
+              <td>{respiratoryRateData.highest}</td>
+              <td>{respiratoryRateData.average}</td>
+              <td>{respiratoryRateData.lowest}</td>
+            </tr>
+            <tr>
+              <td>PPG</td>
+              <td>{pulseRateData.highest}</td>
+              <td>{pulseRateData.average}</td>
+              <td>{pulseRateData.lowest}</td>
+            </tr>
           </table>
 
           <table className="ODT_table">
@@ -909,6 +999,7 @@ const O2Report = () => {
               <LineChart chartData={oxygenLevelChartData} />
               <LineChart chartData={pulseRateChartData} />
               <LineChart chartData={motionChartData} />
+              <LineChart chartData={respiratoryRateChartData} />
             </div>
           </div>
         </PDFExport>
@@ -916,5 +1007,4 @@ const O2Report = () => {
     </div>
   );
 };
-
 export default O2Report;

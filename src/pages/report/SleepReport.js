@@ -24,6 +24,8 @@ const SleepReport = () => {
   const [patientGender, setPatientGender] = useState("");
   const [fileUploaded, setFileUploaded] = useState(false);
   const [pulseRateData, setPulseRateData] = useState({});
+  const [respiratoryRateData, setRespiratoryRateData] = useState({});
+  const [heartratevariabilityData, setHeartratevariabilityData] = useState({});
   const [oxygenLevelData, setOxygenLevelData] = useState({});
 
   const [apneaDuration, setApneaDuration] = useState(null);
@@ -184,11 +186,52 @@ const SleepReport = () => {
         lowest: oxygenLevelMin.toFixed(2),
       });
 
+      setRespiratoryRateData({
+        highest: (pulseRateMax/4).toFixed(2),
+        average: (pulseRateAverage/4).toFixed(2),
+        lowest: (pulseRateMin/4).toFixed(2),
+      });
+
       setMotionData({
         highest: motionMax.toFixed(2),
         average: motionAverage.toFixed(2),
         lowest: motionMin.toFixed(2),
       });
+      function calculateRMSSD(pulseRateColumn) {
+        var RMSSD = 0;
+        for(let i = 0 ; i < pulseRateColumn.length-1; i++){
+          //console.log(pulseRateColumn[i]/4);
+          //console.log(pulseRateColumn[i+1]/4);
+          RMSSD = Math.sqrt((RMSSD + (Math.pow((pulseRateColumn[i+1]/4) - (pulseRateColumn[i]/4), 2)))/(pulseRateColumn.length -1));
+          /*if (isNaN(RMSSD)){
+            console.log("NAN");
+          }
+          else{
+            console.log(RMSSD);
+          }*/
+        }
+        console.log(RMSSD);
+        return RMSSD;
+      }
+      function calculateSDNN(pulseRateColumn, pulseRateAverage){
+        var SDNN = 0;
+        for(let i = 0; i < pulseRateColumn.length; i++){
+          SDNN =  Math.sqrt((SDNN + (Math.pow((pulseRateColumn[i]/4) - (pulseRateAverage/4), 2)))/(pulseRateColumn.length-1));
+          /*if (isNaN(SDNN)){
+            console.log("NAN");
+          }
+          else{
+            console.log(SDNN);
+          }*/
+        }
+        console.log(SDNN);
+        return SDNN;
+      }
+        
+      var RMSSD = calculateRMSSD(pulseRateColumn);
+      var SDNN = calculateSDNN(pulseRateColumn, pulseRateAverage);
+      console.log(RMSSD/SDNN.toFixed(2)/Math.pow(10, -3));
+      setHeartratevariabilityData({value: (RMSSD/SDNN).toFixed(2)/Math.pow(10,-3),});
     }
     calculateColumnStats(pulseRateColumn, oxygenLevelColumn, motionColumn);
 
@@ -806,6 +849,49 @@ const SleepReport = () => {
     }
     calculateSahiTotal();
 
+    function generateStatus(){
+      var RR_inputValue = document.querySelector(".RR_input").textContent;
+      console.log(RR_inputValue);
+      var RR_Status = document.querySelector(".RR_Status");
+      var status = "";
+      if(RR_inputValue > 20.0){
+        status = "High";
+        console.log(status);
+        RR_Status.innerHTML = `<div className="RR_Status">${status}</div>`; //high
+      }
+      else if(RR_inputValue < 20.0){
+        status = "Low";
+        console.log(status);
+        RR_Status.innerHTML = `<div className="RR_Status">${status}</div>`; //low
+      }
+      else{
+        status = "Normal";
+        console.log(status);
+        RR_Status.innerHTML = `<div className="RR_Status">${status}</div>`; //normal
+      }
+  
+      var HRV_inputValue = document.querySelector(".HRV_input").textContent;
+      console.log(HRV_inputValue);
+      var HRV_Status = document.querySelector(".HRV_Status");
+  
+      if(HRV_inputValue > 1000.0){ 
+        status = "High";
+        console.log(status);
+        HRV_Status.innerHTML = `<div className="HRV_Status">${status}</div>`; // high
+      }
+      else if(HRV_inputValue < 60.0){
+        status = "Low";
+        console.log(status);
+        HRV_Status.innerHTML = `<div className="HRV_Status">${status}</div>`; //low
+      }
+      else{
+        status = "Normal";
+        console.log(status);
+        HRV_Status.innerHTML = `<div className="HRV_Status">${status}</div>`; //normal
+      }
+    }
+    generateStatus();
+
     function displaySahiTotal() {
       const SAHIT_inputValue = parseInt(
         document.querySelector(".SAHIT_input").textContent
@@ -1028,7 +1114,7 @@ const SleepReport = () => {
               <span class="smaller-font1">Expected &le;2% </span>
             </div>
           </div>
-
+          
           <div className="SLPO_title">Sleep Onset </div>
           <div className="SLPO_input">{sleepOnset}</div>
 
@@ -1117,16 +1203,16 @@ const SleepReport = () => {
           <div className="HR_input2">{pulseRateData.average}</div>
 
           <div className="RR_title">RESPIRATORY RATE (RR)</div>
-          <div className="RR_input">{pulseRateData.average/4}</div>
-          <div className="RR_Status">Acceptable</div>
+          <div className="RR_input">{respiratoryRateData.average}</div>
+          <div className="RR_Status" placeholder="NIL"></div>
 
           <div className="HRV_title">HEART RATE VARIABILITY (HRV)</div>
-          <div className="HRV_input">NIL</div>
-          <div className="HRV_Status">Low</div>
+          <div className="HRV_input">{heartratevariabilityData.value}</div>
+          <div className="HRV_Status" placeholder="NIL"></div>
 
           <div className="PPG_title">PHOTOPLETHYSMOGRAPHY (PPG)</div>
-          <div className="PPG_input">NIL</div>
-          <div className="PPG_Status">Highest</div>
+          <div className="PPG_input">not yet</div>
+          <div className="PPG_Status" placeholder="NIL">Highest</div>
 
 
           <div className="Feedback">
