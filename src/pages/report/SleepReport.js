@@ -859,7 +859,7 @@ const SleepReport = () => {
         console.log(status);
         RR_Status.innerHTML = `<div className="RR_Status">${status}</div>`; //high
       }
-      else if(RR_inputValue < 20.0){
+      else if(RR_inputValue < 12.0){
         status = "Low";
         console.log(status);
         RR_Status.innerHTML = `<div className="RR_Status">${status}</div>`; //low
@@ -1209,11 +1209,6 @@ const SleepReport = () => {
           <div className="HRV_title">HEART RATE VARIABILITY (HRV)</div>
           <div className="HRV_input">{heartratevariabilityData.value}</div>
           <div className="HRV_Status" placeholder="NIL"></div>
-
-          <div className="PPG_title">PHOTOPLETHYSMOGRAPHY (PPG)</div>
-          <div className="PPG_input">not yet</div>
-          <div className="PPG_Status" placeholder="NIL">Highest</div>
-
 
           <div className="Feedback">
             <div className="Report_Label">

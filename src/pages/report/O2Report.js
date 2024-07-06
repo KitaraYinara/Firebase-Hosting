@@ -950,12 +950,6 @@ const O2Report = () => {
               <td>{respiratoryRateData.average}</td>
               <td>{respiratoryRateData.lowest}</td>
             </tr>
-            <tr>
-              <td>PPG</td>
-              <td>{pulseRateData.highest}</td>
-              <td>{pulseRateData.average}</td>
-              <td>{pulseRateData.lowest}</td>
-            </tr>
           </table>
 
           <table className="ODT_table">

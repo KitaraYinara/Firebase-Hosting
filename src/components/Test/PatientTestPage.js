@@ -23,6 +23,7 @@ function PatientTestPage() {
   const [tests, setTests] = useState([]);
   const [patientName, setPatientName] = useState("");
   const [model, setModel] = useState();
+  const [newmodel, setNewModel] = useState();
 
   const [testsWithoutPredictions, setTestsWithoutPredictions] = useState([]);
   const classes = ["BadOSA", "Healthy", "HeartFailure", "Parkinson"];
@@ -56,6 +57,7 @@ function PatientTestPage() {
         const model = await tf.loadLayersModel(
           "https://raw.githubusercontent.com/Abhi4201790/JSON-hosting/main/model.json"
         );
+        
         setModel(model);
         console.log("Model loaded:", model);
         console.log("Model summary:");
@@ -66,6 +68,24 @@ function PatientTestPage() {
         console.error("Error loading model:", error);
       }
     };
+
+    const loadModelTest = async () => {
+      try {
+        const model = await tf.loadLayersModel(
+          "https://raw.githubusercontent.com/KitaraYinara/JSON_Hosting/main/model.json"
+        );
+        
+        setModel(model);
+        console.log("Model lnoaded:", model);
+        console.log("Model summary:");
+        model.summary();
+
+        console.log("Model weights loaded");
+      } catch (error) {
+        console.error("Error loading model:", error);
+      }
+    };
+
 
     const fetchPatientName = async () => {
       const patientDocRef = doc(db, "patients", patientId);
@@ -78,9 +98,11 @@ function PatientTestPage() {
     };
     fetchTests();
     fetchPatientName();
-    loadModel();
+    //loadModel();
+    loadModelTest();
   }, [patientId]);
 
+  
   const makePredictionCSV = (data, alldata) => {
     console.log("Making prediction:", data);
     var predictedLabels = [];
@@ -90,10 +112,10 @@ function PatientTestPage() {
       var predictions = model.predict(input);
       var predictedProbabilities = predictions.array();
       console.log("Predictions for row", i + 1, ":", predictedProbabilities);
-
+      
       // Get the predicted class for the row
       var predictedClass = tf.argMax(predictions, 1).dataSync()[0];
-
+      
       // Map the predicted class index to the actual class label
       var predictedLabel = classes[predictedClass];
       predictedLabels.push(predictedLabel);
@@ -123,6 +145,50 @@ function PatientTestPage() {
     console.log("Predicted class is: " + predictedClass);
     addTest(alldata, predictedClass);
   };
+
+  const makenewPredictionCSV = (data, alldata) => {
+    console.log("Making prediction:", data);
+    var predictedLabels = [];
+    var classes = ["BadOSA", "Healthy", "HeartFailure", "Parkinson"];
+    for (var i = 0; i < data.length; i++) {
+      var input = tf.tensor2d(data[i], [1, 4]);
+      var predictions = model.predict(input);
+      var predictedProbabilities = predictions.array();
+      console.log("Predictions for row", i + 1, ":", predictedProbabilities);
+      
+      // Get the predicted class for the row
+      var predictedClass = tf.argMax(predictions, 1).dataSync()[0];
+      
+      // Map the predicted class index to the actual class label
+      var predictedLabel = classes[predictedClass];
+      predictedLabels.push(predictedLabel);
+
+      console.log("Predicted label for row", i + 1, ":", predictedLabel);
+
+      // Dispose the tensors to free up memory
+      input.dispose();
+      predictions.dispose();
+    }
+    // Determine the class with the highest occurrence
+    var counts = {};
+    var maxCount = 0;
+    var predictedClass;
+
+    for (var j = 0; j < predictedLabels.length; j++) {
+      var label = predictedLabels[j];
+      counts[label] = counts[label] ? counts[label] + 1 : 1;
+
+      if (counts[label] > maxCount) {
+        maxCount = counts[label];
+        predictedClass = label;
+      }
+    }
+
+    // Display the predicted class on the website
+    console.log("Predicted class is: " + predictedClass);
+    addTest(alldata, predictedClass);
+  };
+  
 
   const makePrediction = async (testId) => {
     try {
@@ -273,7 +339,14 @@ function PatientTestPage() {
                 parseFloat(row["Oxygen Level"] || 0),
                 parseFloat(row["Motion"] || 0),
               ]);
-              makePredictionCSV(selectedData, data);
+              const newselectedData = data.map((row) => [
+                parseFloat(row["Pulse Rate"] || 0),
+                parseFloat(row["Oxygen Level"] || 0),
+                parseFloat(row["Motion"] || 0),
+                parseFloat(parseFloat(row["Pulse Rate"] || 0)/4),
+              ]);
+              //makePredictionCSV(selectedData, data);
+              makenewPredictionCSV(newselectedData, data);
             }
           },
           error: (err) => console.log("ERROR", err),
@@ -284,7 +357,7 @@ function PatientTestPage() {
     input.click();
   };
 
-  return (
+    return (
     <div>
       <Navigation />
       <h1 className="pageheader">Patient: {patientName}</h1>
