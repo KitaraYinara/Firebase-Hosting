@@ -503,21 +503,32 @@ const SleepReport = () => {
     }
     generateRandomSleepQualityIndex();
 
-    function generateRandomEfficiency() {
-      const randomNumber = Math.floor(Math.random() * 21) + 75;
+    function generateRandomEfficiency(motionColumn) {
+      let totalTimeinbed = 0;
+      for (let i = 0; i < motionColumn.length; i++) {
+        const motionValue = motionColumn[i];
+        if (motionValue < 10) {
+          totalTimeinbed += 4;
+        }
+      }
+      const efficiencynumber = Math.floor((((motionColumn.length -1)  * 4) / totalTimeinbed) * 100);
+      console.log("bed number: " + totalTimeinbed);
+      console.log("total number: " + ((motionColumn.length -1)  * 4));
+      console.log("efficiency number: " + efficiencynumber);
+      //const randomNumber = Math.floor(Math.random() * 21) + 75;
       const efficiencyElement = document.querySelector(".SQ_EFF");
-      efficiencyElement.innerHTML = `EFFICIENCY&nbsp;&nbsp;&nbsp;<span class="smaller-font">${randomNumber}%</span><br/><span class="expected smaller-font1">Expected &gt;85%</span`;
+      efficiencyElement.innerHTML = `EFFICIENCY&nbsp;&nbsp;&nbsp;<span class="smaller-font">${efficiencynumber}%</span><br/><span class="expected smaller-font1">Expected &gt;85%</span`;
 
       const sleepEfficiencyElements =
         document.querySelectorAll(".Feedback_point1");
       const sleepEfficiencyElement = sleepEfficiencyElements[2];
       let sleepEfficiencyText = "";
 
-      if (randomNumber > 85) {
+      if (/*randomNumber*/ efficiencynumber > 85) {
         efficiencyElement.style.backgroundColor = "green";
         sleepEfficiencyText =
           'Sleep Efficiency is <span class="bold">above</span> expected value.';
-      } else if (randomNumber >= 80 && randomNumber <= 85) {
+      } else if (/*randomNumber*/ efficiencynumber >= 80 && /*randomNumber*/ efficiencynumber <= 85) {
         efficiencyElement.style.backgroundColor = "rgb(255, 204, 0)";
         sleepEfficiencyText =
           'Sleep Efficiency is <span class="bold">below</span> expected value.';
@@ -529,23 +540,38 @@ const SleepReport = () => {
 
       sleepEfficiencyElement.innerHTML = sleepEfficiencyText;
     }
-    generateRandomEfficiency();
+    generateRandomEfficiency(motionColumn);
 
-    function generateRandomFragmentation() {
-      const randomNumber = Math.floor(Math.random() * 24) + 7;
+    function generateRandomFragmentation(motionColumn) {
+      
+      let remtostage = 0;
+      for (let i = 0; i < motionColumn.length; i++){
+        if(motionColumn[i] > 10){
+          if(motionColumn[i+1] == 0){
+            remtostage += 1;
+          }
+        }
+      }
+      
+      const SFI = Math.floor(remtostage / ((motionColumn.length - 1) * 4 / 3600))
+      console.log(SFI);
+      console.log(remtostage);
+      console.log((motionColumn.length - 1)/3600);
+      
+      //const randomNumber = Math.floor(Math.random() * 24) + 7;
       const fragmentElement = document.querySelector(".SP_fragmentation");
-      fragmentElement.innerHTML = `FRAGMENTATION&nbsp;&nbsp;&nbsp;<span class="smaller-font">${randomNumber}%</span><br/><span class="expected smaller-font1">Expected &lt;15%</span`;
+      fragmentElement.innerHTML = `FRAGMENTATION&nbsp;&nbsp;&nbsp;<span class="smaller-font">${/*randomNumber*/SFI}%</span><br/><span class="expected smaller-font1">Expected &lt;15%</span`;
 
       const sleepFragmentElements =
         document.querySelectorAll(".Feedback_point2");
       const sleepFragmentElement = sleepFragmentElements[2];
       let sleepFragmentText = "";
 
-      if (randomNumber < 15) {
+      if (/*randomNumber*/SFI < 15) {
         fragmentElement.style.backgroundColor = "green";
         sleepFragmentText =
           'Sleep Fragmentation is <span class="bold">below</span> expected value.';
-      } else if (randomNumber >= 15 && randomNumber <= 20) {
+      } else if (/*randomNumber*/SFI >= 15 && /*randomNumber*/SFI <= 20) {
         fragmentElement.style.backgroundColor = "rgb(255, 204, 0)";
         sleepFragmentText =
           'Sleep Fragmentation is <span class="bold">above</span> expected value.';
@@ -556,7 +582,7 @@ const SleepReport = () => {
       }
       sleepFragmentElement.innerHTML = sleepFragmentText;
     }
-    generateRandomFragmentation();
+    generateRandomFragmentation(motionColumn);
 
     function generateRandomPeriodicity() {
       const randomNumber = Math.floor(Math.random() * 31);
@@ -586,11 +612,14 @@ const SleepReport = () => {
 
     function generateRandomDuration(timestampColumn) {
       const startTime = timestampColumn[0];
-      const endTime = timestampColumn[timestampColumn.length - 2];
+      const endTime = timestampColumn[timestampColumn.length - 1];
 
       const startDate = new Date(startTime);
       const endDate = new Date(endTime);
-      const durationMs = endDate - startDate + 10000;
+      console.log(startDate);
+      console.log(endDate);
+      const durationMs = endDate - startDate /*+ 10000*/;
+      console.log(endDate - startDate);
       const hours = Math.floor(durationMs / 3600000);
       const minutes = Math.floor((durationMs % 3600000) / 60000);
       const seconds = Math.floor((durationMs % 60000) / 1000);
@@ -632,6 +661,7 @@ const SleepReport = () => {
     function generateRandomLatency() {
       const hours = 0;
       const minutes = Math.floor(Math.random() * 21) + 30;
+      
       const formattedTime = `${hours.toString().padStart(1, "0")}h:${minutes
         .toString()
         .padStart(2, "0")}`;

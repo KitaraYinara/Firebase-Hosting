@@ -345,8 +345,8 @@ function PatientTestPage() {
                 parseFloat(row["Motion"] || 0),
                 parseFloat(parseFloat(row["Pulse Rate"] || 0)/4),
               ]);
-              //makePredictionCSV(selectedData, data);
-              makenewPredictionCSV(newselectedData, data);
+              makePredictionCSV(selectedData, data);
+              //makenewPredictionCSV(newselectedData, data);
             }
           },
           error: (err) => console.log("ERROR", err),
