@@ -23,8 +23,6 @@ function PatientTestPage() {
   const [tests, setTests] = useState([]);
   const [patientName, setPatientName] = useState("");
   const [model, setModel] = useState();
-  const [newmodel, setNewModel] = useState();
-
   const [testsWithoutPredictions, setTestsWithoutPredictions] = useState([]);
   const classes = ["BadOSA", "Healthy", "HeartFailure", "Parkinson"];
 
@@ -152,12 +150,14 @@ function PatientTestPage() {
     var classes = ["BadOSA", "Healthy", "HeartFailure", "Parkinson"];
     for (var i = 0; i < data.length; i++) {
       var input = tf.tensor2d(data[i], [1, 4]);
+      input.print();
       var predictions = model.predict(input);
       var predictedProbabilities = predictions.array();
       console.log("Predictions for row", i + 1, ":", predictedProbabilities);
       
       // Get the predicted class for the row
-      var predictedClass = tf.argMax(predictions, 1).dataSync()[0];
+      var predictedClass = tf.argMax(predictions, 1).dataSync()[0];//tf.argMax(predictions, 1).dataSync()[0];
+      console.log(predictedClass);
       
       // Map the predicted class index to the actual class label
       var predictedLabel = classes[predictedClass];
@@ -207,13 +207,14 @@ function PatientTestPage() {
 
       // Prepare the input data for prediction
       const selectedData = sensorData.map((element) => [
-        parseFloat(element.bpm || 0),
         parseFloat(element.spO2 || 0),
+        parseFloat(element.bpm || 0),
         parseFloat(element.motion || 0),
+        parseFloat(parseFloat(element.bpm || 0)/4),
       ]);
 
       // Convert the input data to a tensor
-      const inputTensor = tf.tensor2d(selectedData, [sensorData.length, 3]);
+      const inputTensor = tf.tensor2d(selectedData, [sensorData.length, 4]);
 
       // Make predictions using the loaded model
       const predictions = model.predict(inputTensor);
@@ -340,13 +341,13 @@ function PatientTestPage() {
                 parseFloat(row["Motion"] || 0),
               ]);
               const newselectedData = data.map((row) => [
-                parseFloat(row["Pulse Rate"] || 0),
                 parseFloat(row["Oxygen Level"] || 0),
+                parseFloat(row["Pulse Rate"] || 0),
                 parseFloat(row["Motion"] || 0),
                 parseFloat(parseFloat(row["Pulse Rate"] || 0)/4),
               ]);
-              makePredictionCSV(selectedData, data);
-              //makenewPredictionCSV(newselectedData, data);
+              //makePredictionCSV(selectedData, data);
+              makenewPredictionCSV(newselectedData, data);
             }
           },
           error: (err) => console.log("ERROR", err),

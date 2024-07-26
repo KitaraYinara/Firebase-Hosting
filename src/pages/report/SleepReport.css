@@ -9,6 +9,7 @@
   padding: 20px;
 }
 
+
 .SRpage {
   position: relative;
   background-color: #ffffff;
@@ -284,20 +285,20 @@
 
 .D_label {
   position: absolute;
-  top: 472px;
+  top: 442px /*472 661*/;
   left: 1185px;
   font-size: 20px;
 }
 
 .D3_label {
   position: absolute;
-  top: 502px;
+  top: 472px /*502 682*/;
   left: 1185px;
   font-size: 17px;
 }
 .D4_label {
   position: absolute;
-  top: 502px;
+  top: 472px /*502 682*/;
   left: 1285px;
   font-size: 17px;
 }
@@ -811,7 +812,7 @@
 
 .SRDI_title {
   position: absolute;
-  top: 640px;
+  top: 535px/*620px*/;
   left: 930px;
   width: 215px;
   height: 30px;
@@ -825,9 +826,9 @@
 }
 .SRDI_input {
   position: absolute;
-  top: 640px;
+  top: 535px/*620px*/;
   left: 1150px;
-  width: 90px;
+  width: 184px;
   height: 30px;
   background-color: #808080;
   text-align: center;
@@ -839,7 +840,7 @@
 }
 .SRDI_input1 {
   position: absolute;
-  top: 640px;
+  top: 535px/*620px*/;
   left: 1245px;
   width: 90px;
   height: 30px;
@@ -854,7 +855,7 @@
 
 .ODI_title {
   position: absolute;
-  top: 675px;
+  top: 500px/*705px*/;
   left: 930px;
   width: 215px;
   height: 30px;
@@ -868,7 +869,7 @@
 }
 .ODI_input {
   position: absolute;
-  top: 675px;
+  top: 500px/*705px*/;
   left: 1150px;
   width: 90px;
   height: 30px;
@@ -882,7 +883,7 @@
 }
 .ODI_input1 {
   position: absolute;
-  top: 675px;
+  top: 500px/*705px*/;
   left: 1245px;
   width: 90px;
   height: 30px;

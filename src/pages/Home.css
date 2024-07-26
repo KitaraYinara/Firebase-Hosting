@@ -24,13 +24,16 @@
   font-style: italic;
   color: rgb(0, 0, 0);
   left: 27.25%;
-  top: 40%;
+  top: 45%;
   margin: 0;
   padding: 0;
 }
 
 .bottom-brand {
-  margin-top: 75%;
+  position: absolute;
+  top: 90%;
+  left: 27.25%;
+  margin-top: 100%;
   margin-bottom: 0%;
   margin-left: auto;
   margin-right: auto;

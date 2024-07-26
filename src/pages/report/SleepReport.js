@@ -415,7 +415,7 @@ const SleepReport = () => {
       //console.log('Total time: ' + hours + ' hours ' + minutes + ' minutes');
     }
     calculateWakeAfterSleepOnset(motionColumn);
-
+    /*
     function generateRandomSleepApneaIndicator() {
       const randomSleepApneaIndicator = Math.floor(Math.random() * 11) + 5;
       const saiInputElement = document.querySelector(".SAI_input");
@@ -436,17 +436,30 @@ const SleepReport = () => {
 
       sleepApneaElement.innerHTML = sleepApneaText;
     }
-
     generateRandomSleepApneaIndicator();
-
-    function generateRandomRdiNumbers() {
-      let randomNumber1 = Math.floor(Math.random() * 10) + 1;
-      let randomNumber2 = Math.floor(Math.random() * 10) + 1;
-
+    */
+    function generateRandomRdiNumbers(motionColumn, oxygenLevelColumn) {
+      //let randomNumber1 = Math.floor(Math.random() * 10) + 1;
+      //let randomNumber2 = Math.floor(Math.random() * 10) + 1;
+      var ahcount = 0;
+      var tst = 0;
+      for (let t = 0; t < motionColumn.length; t++) {
+        if (motionColumn[t] < 10) {
+          tst += 4;
+        }
+      }
+      const TSTminutes = ((tst % 3600) / 60) + ((tst / 3600) * 60);
+      for (let i = 0; i < oxygenLevelColumn.length; i++) {
+        if (oxygenLevelColumn[i] <= 90) {
+          ahcount += 1;
+        }
+      }
+      const RDI = Math.floor(ahcount * 60 / TSTminutes);
       // Assign the generated numbers to the respective HTML elements
-      document.querySelector(".SRDI_input").textContent = randomNumber1;
-      document.querySelector(".SRDI_input1").textContent = randomNumber2;
+      document.querySelector(".SRDI_input").textContent = RDI;
+      //document.querySelector(".SRDI_input1").textContent = randomNumber2;
 
+      /*
       if (randomNumber1 <= randomNumber2) {
         // Swap the numbers if needed
         [randomNumber1, randomNumber2] = [randomNumber2, randomNumber1];
@@ -454,9 +467,10 @@ const SleepReport = () => {
         document.querySelector(".SRDI_input").textContent = randomNumber1;
         document.querySelector(".SRDI_input1").textContent = randomNumber2;
       }
+      */
     }
-    generateRandomRdiNumbers();
-
+    generateRandomRdiNumbers(motionColumn, oxygenLevelColumn);
+    /*
     function generateRandomObstructiveNumbers() {
       let randomNumber1 = Math.floor(Math.random() * 40) + 1;
       let randomNumber2 = Math.floor(Math.random() * 40) + 1;
@@ -474,22 +488,46 @@ const SleepReport = () => {
       document.querySelector(".SAHIO_input1").textContent = randomNumber2;
     }
     generateRandomObstructiveNumbers();
+    */
 
-    function generateRandomSleepQualityIndex() {
-      const randomNumber = Math.floor(Math.random() * 36) + 30;
+    function generateRandomSleepQualityIndex(motionColumn) {
+      //const randomNumber = Math.floor(Math.random() * 36) + 30;
+      let totalTime = 0;
+      let count = 0;
+      for (let i = 0; i < motionColumn.length; i++) {
+        const motionValue = motionColumn[i];
+
+        if (motionValue >= 10) {
+          totalTime += 4;
+          count += 1;
+        }
+      }
+      const Awake = count;
+      const Waso = totalTime;
+      let totalTimeinbed = 0;
+      for (let i = 0; i < motionColumn.length; i++) {
+        const motionValue = motionColumn[i];
+        if (motionValue < 10) {
+          totalTimeinbed += 4;
+        }
+      }
+      const Efficiency = Math.floor((((motionColumn.length -1)  * 4) / totalTimeinbed) * 100);
+      const SQI = ((Awake * 0.3) + (Waso * 0.3) + (Efficiency * 0.4));
+      console.log(SQI);
+
       const sqiElement = document.querySelector(".SQ_SQI");
-      sqiElement.innerHTML = `SQI&nbsp;&nbsp;&nbsp;<span class="smaller-font">${randomNumber}</span><br/><span class="expected smaller-font1">Expected &gt;55</span>`;
+      sqiElement.innerHTML = `SQI&nbsp;&nbsp;&nbsp;<span class="smaller-font">${/*randomNumber*/SQI}</span><br/><span class="expected smaller-font1">Expected &gt;55</span>`;
 
       const sleepQualityElements =
         document.querySelectorAll(".Feedback_point1");
       const sleepQualityElement = sleepQualityElements[1];
       let sleepQualityText = "";
 
-      if (randomNumber > 55) {
+      if (/*randomNumber*/SQI > 55) {
         sqiElement.style.backgroundColor = "green";
         sleepQualityText =
           'Sleep Quality is <span class="bold">above</span> expected value.';
-      } else if (randomNumber >= 45 && randomNumber <= 55) {
+      } else if (/*randomNumber*/SQI >= 45 && /*randomNumber*/SQI <= 55) {
         sqiElement.style.backgroundColor = "rgb(255, 204, 0)";
         sleepQualityText =
           'Sleep Quality is <span class="bold">below</span> expected value.';
@@ -501,7 +539,7 @@ const SleepReport = () => {
 
       sleepQualityElement.innerHTML = sleepQualityText;
     }
-    generateRandomSleepQualityIndex();
+    generateRandomSleepQualityIndex(motionColumn);
 
     function generateRandomEfficiency(motionColumn) {
       let totalTimeinbed = 0;
@@ -616,10 +654,10 @@ const SleepReport = () => {
 
       const startDate = new Date(startTime);
       const endDate = new Date(endTime);
-      console.log(startDate);
-      console.log(endDate);
+      //console.log(startDate);
+      //console.log(endDate);
       const durationMs = endDate - startDate /*+ 10000*/;
-      console.log(endDate - startDate);
+      //console.log(endDate - startDate);
       const hours = Math.floor(durationMs / 3600000);
       const minutes = Math.floor((durationMs % 3600000) / 60000);
       const seconds = Math.floor((durationMs % 60000) / 1000);
@@ -668,9 +706,9 @@ const SleepReport = () => {
       const latencyElement = document.querySelector(".SO_Latency");
       latencyElement.innerHTML = `LATENCY&nbsp;&nbsp;&nbsp;<span class="smaller-font">${formattedTime}m</span><br/><span class="expected smaller-font1">Expected &lt;30 min</span`;
 
-      if (formattedTime < "00:30") {
+      if (formattedTime <= "00:20") {
         latencyElement.style.backgroundColor = "green";
-      } else if (formattedTime >= "00:30" && formattedTime <= "00:45") {
+      } else if (formattedTime > "00:20" && formattedTime <= "00:45") {
         latencyElement.style.backgroundColor = "rgb(255, 204, 0)";
       } else {
         latencyElement.style.backgroundColor = "red";
@@ -678,16 +716,65 @@ const SleepReport = () => {
     }
     generateRandomLatency();
 
-    function generateRandomAverageSignalQuality() {
-      const randomNumber = Math.floor(Math.random() * 11) + 85;
+    function generateRandomAverageSignalQuality(motionColumn, timestampColumn,pulseRateColumn) {
+      //const randomNumber = Math.floor(Math.random() * 11) + 85;
+      const pulseRateAverage =
+      pulseRateColumn.reduce((sum, value) => sum + value, 0) /
+      pulseRateColumn.length;
+
+      var RMSSD = 0;
+      for(let i = 0 ; i < pulseRateColumn.length-1; i++){
+        RMSSD = Math.sqrt((RMSSD + (Math.pow((pulseRateColumn[i+1]/4) - (pulseRateColumn[i]/4), 2)))/(pulseRateColumn.length -1));
+      }
+      var SDNN = 0;
+      for(let i = 0; i < pulseRateColumn.length; i++){
+        SDNN =  Math.sqrt((SDNN + (Math.pow((pulseRateColumn[i]/4) - (pulseRateAverage/4), 2)))/(pulseRateColumn.length-1));
+      }
+
+      console.log(RMSSD);
+      console.log(SDNN);
+
+      const HRV_inputValue = (RMSSD/SDNN).toFixed(2)/Math.pow(10,-3);
+      console.log(HRV_inputValue);
+          
+      const RR_inputValue = pulseRateAverage/4;
+
+      let totalTimeinbed = 0;
+      let moved = 0;
+      for (let i = 0; i < motionColumn.length; i++) {
+        const motionValue = motionColumn[i];
+        if (motionValue < 10) {
+          totalTimeinbed += 4;
+        }
+        if(motionValue > 2){
+          moved += 1;
+        }
+      }
+      const Efficiency = Math.floor((((motionColumn.length -1)  * 4) / totalTimeinbed) * 100);
+      const hasmoved = moved;
+
+      const startTime = timestampColumn[0];
+      const endTime = timestampColumn[timestampColumn.length - 1];
+
+      const startDate = new Date(startTime);
+      const endDate = new Date(endTime);
+
+      const durationMs = endDate - startDate /*+ 10000*/;
+      const duration = durationMs * Math.pow(10,-3);
+      
+      console.log(Efficiency);
+      console.log(duration);
+      console.log(hasmoved);
+      const ASQ = ((HRV_inputValue * 0.2) + (RR_inputValue * 0.25)  + (Efficiency * 0.2) + (duration * 0.15) + (hasmoved * 0.2)) / 5; 
+      
       const averageSignalElements =
         document.querySelectorAll(".Feedback_point1");
       const averageSignalElement = averageSignalElements[0];
-      const updatedText = `Average Signal Quality is <span class="bold">${randomNumber}</span> %.`;
+      const updatedText = `Average Signal Quality is <span class="bold">${/*randomNumber*/ASQ.toFixed(2)}</span> %.`;
       averageSignalElement.innerHTML = updatedText;
     }
-    generateRandomAverageSignalQuality();
-
+    generateRandomAverageSignalQuality(motionColumn, timestampColumn, pulseRateColumn);
+    /*
     function generateRandomCentral() {
       const randomCentralNumber = Math.floor(Math.random() * 6);
 
@@ -695,6 +782,7 @@ const SleepReport = () => {
       document.querySelector(".SAHIC_input1").textContent = randomCentralNumber;
     }
     generateRandomCentral();
+    */
 
     function secondsToHMS(seconds) {
       const hours = Math.floor(seconds / 3600);
@@ -858,7 +946,36 @@ const SleepReport = () => {
     }
     calculateOxygenLevelDuration(oxygenLevelColumn);
 
-    function calculateSahiTotal() {
+    /*
+    function calculateSahiTotal(oxygenLevelColumn) {
+      let threecount = 0;
+      let fourcount = 0;
+      for(let i = 0 ; i < oxygenLevelColumn.length - 2 ; i ++){
+        if((oxygenLevelColumn[i] - 3) >= oxygenLevelColumn[i+1] &&
+        (oxygenLevelColumn[i] - 3) >= oxygenLevelColumn[i+2] &&
+        (oxygenLevelColumn[i] - 3) >= oxygenLevelColumn[i+3]){
+          threecount+=1;
+        }
+      }
+      console.log(threecount);
+      console.log((oxygenLevelColumn.length * 4)/3600);
+      const AHI = threecount / ((oxygenLevelColumn.length * 4)/3600)
+      console.log(AHI);
+      document.querySelector(".SAHIT_input").textContent = AHI.toFixed(2);
+
+      for(let i = 0 ; i < oxygenLevelColumn.length - 2 ; i ++){
+        if((oxygenLevelColumn[i] - 4) >= oxygenLevelColumn[i+1] &&
+        (oxygenLevelColumn[i] - 4) >= oxygenLevelColumn[i+2] &&
+        (oxygenLevelColumn[i] - 4) >= oxygenLevelColumn[i+3]){
+          fourcount+=1;
+        }
+      }
+      console.log(fourcount);
+      console.log((oxygenLevelColumn.length * 4)/3600);
+      const fourahi = fourcount / ((oxygenLevelColumn.length * 4)/3600)
+      console.log(fourahi);
+      document.querySelector(".SAHIT_input1").textContent = fourahi.toFixed(2);
+      /*
       const SAHIO_inputValue = parseInt(
         document.querySelector(".SAHIO_input").textContent
       );
@@ -872,16 +989,35 @@ const SleepReport = () => {
         document.querySelector(".SAHIC_input1").textContent
       );
       const total = SAHIO_inputValue + SAHIC_inputValue;
+      
 
-      document.querySelector(".SAHIT_input").textContent = total;
+      document.querySelector(".SAHIT_input").textContent = AHI.toFixed(2);
       document.querySelector(".SAHIT_input1").textContent =
         SAHIO_input1Value + SAHIC_input1Value;
+      
     }
-    calculateSahiTotal();
+    calculateSahiTotal(oxygenLevelColumn);
+    */
+    
 
-    function generateStatus(){
-      var RR_inputValue = document.querySelector(".RR_input").textContent;
-      console.log(RR_inputValue);
+    function generateStatus(pulseRateColumn){
+      const pulseRateAverage =
+      pulseRateColumn.reduce((sum, value) => sum + value, 0) /
+      pulseRateColumn.length;
+
+      var RMSSD = 0;
+      for(let i = 0 ; i < pulseRateColumn.length-1; i++){
+        RMSSD = Math.sqrt((RMSSD + (Math.pow((pulseRateColumn[i+1]/4) - (pulseRateColumn[i]/4), 2)))/(pulseRateColumn.length -1));
+      }
+      var SDNN = 0;
+      for(let i = 0; i < pulseRateColumn.length; i++){
+        SDNN =  Math.sqrt((SDNN + (Math.pow((pulseRateColumn[i]/4) - (pulseRateAverage/4), 2)))/(pulseRateColumn.length-1));
+      }
+
+      console.log(RMSSD);
+      console.log(SDNN);
+          
+      const RR_inputValue = pulseRateAverage/4;
       var RR_Status = document.querySelector(".RR_Status");
       var status = "";
       if(RR_inputValue > 20.0){
@@ -900,7 +1036,7 @@ const SleepReport = () => {
         RR_Status.innerHTML = `<div className="RR_Status">${status}</div>`; //normal
       }
   
-      var HRV_inputValue = document.querySelector(".HRV_input").textContent;
+      const HRV_inputValue = (RMSSD/SDNN).toFixed(2)/Math.pow(10,-3);
       console.log(HRV_inputValue);
       var HRV_Status = document.querySelector(".HRV_Status");
   
@@ -920,25 +1056,38 @@ const SleepReport = () => {
         HRV_Status.innerHTML = `<div className="HRV_Status">${status}</div>`; //normal
       }
     }
-    generateStatus();
+    generateStatus(pulseRateColumn);
 
-    function displaySahiTotal() {
-      const SAHIT_inputValue = parseInt(
+    function displaySahiTotal(oxygenLevelColumn) {
+      /*const SAHIT_inputValue = parseInt(
         document.querySelector(".SAHIT_input").textContent
-      );
+      );*/
+      let threecount = 0;
+      for(let i = 0 ; i < oxygenLevelColumn.length - 2 ; i ++){
+        if((oxygenLevelColumn[i] - 3) >= oxygenLevelColumn[i+1] &&
+        (oxygenLevelColumn[i] - 3) >= oxygenLevelColumn[i+2] &&
+        (oxygenLevelColumn[i] - 3) >= oxygenLevelColumn[i+3]){
+          threecount+=1;
+        }
+      }
+      console.log(threecount);
+      console.log((oxygenLevelColumn.length * 4)/3600);
+      const AHI = threecount / ((oxygenLevelColumn.length * 4)/3600)
+      console.log(AHI);
+      //document.querySelector(".SAHIT_input").textContent = AHI.toFixed(2);
       const SA_SAI = document.querySelector(".SA_SAI");
 
-      SA_SAI.innerHTML = `sAHI<span class="small-number">3%</span> ${SAHIT_inputValue}`;
+      SA_SAI.innerHTML = `sAHI<span class="small-number">3%</span> ${AHI.toFixed(2)}`;
 
       const saiElements = document.querySelectorAll(".Feedback_point2");
       const saiElement = saiElements[1];
       let saiText = "";
 
-      if (SAHIT_inputValue >= 1 && SAHIT_inputValue <= 4) {
+      if (AHI.toFixed(2) >= 1 && AHI.toFixed(2) <= 4) {
         SA_SAI.style.backgroundColor = "green";
         SA_SAI.innerHTML += "<br>Normal";
         saiText = 'Apnea Hypopnea Index is <span class="bold">Normal</span>.';
-      } else if (SAHIT_inputValue >= 5 && SAHIT_inputValue <= 15) {
+      } else if (AHI.toFixed(2) >= 5 && AHI.toFixed(2) <= 15) {
         SA_SAI.style.backgroundColor = "rgb(255, 204, 0)";
         SA_SAI.innerHTML += "<br>Mild";
         saiText = 'Apnea Hypopnea Index is <span class="bold">Mild</span>.';
@@ -949,18 +1098,32 @@ const SleepReport = () => {
       }
       saiElement.innerHTML = saiText;
 
-      function displaySahiTotal1() {
-        const SAHIT_inputValue = parseInt(
+
+      function displaySahiTotal1(oxygenLevelColumn) {
+        let fourcount = 0;
+        for(let i = 0 ; i < oxygenLevelColumn.length - 2 ; i ++){
+          if((oxygenLevelColumn[i] - 4) >= oxygenLevelColumn[i+1] &&
+          (oxygenLevelColumn[i] - 4) >= oxygenLevelColumn[i+2] &&
+          (oxygenLevelColumn[i] - 4) >= oxygenLevelColumn[i+3]){
+            fourcount+=1;
+          }
+        }
+        console.log(fourcount);
+        console.log((oxygenLevelColumn.length * 4)/3600);
+        const fourahi = fourcount / ((oxygenLevelColumn.length * 4)/3600)
+        console.log(fourahi);
+        //document.querySelector(".SAHIT_input1").textContent = fourahi.toFixed(2);
+        /*const SAHIT_inputValue = parseInt(
           document.querySelector(".SAHIT_input1").textContent
-        );
+        );*/
         const SA_sAHI = document.querySelector(".SA_sAHI");
 
-        SA_sAHI.innerHTML = `sAHI<span class="small-number">4%</span> ${SAHIT_inputValue}`;
+        SA_sAHI.innerHTML = `sAHI<span class="small-number">4%</span> ${fourahi.toFixed(2)}`;
 
-        if (SAHIT_inputValue >= 1 && SAHIT_inputValue <= 4) {
+        if (fourahi.toFixed(2) >= 1 && fourahi.toFixed(2) <= 4) {
           SA_sAHI.style.backgroundColor = "green";
           SA_sAHI.innerHTML += "<br>Normal";
-        } else if (SAHIT_inputValue >= 5 && SAHIT_inputValue <= 15) {
+        } else if (fourahi.toFixed(2) >= 5 && fourahi.toFixed(2) <= 15) {
           SA_sAHI.style.backgroundColor = "rgb(255, 204, 0)";
           SA_sAHI.innerHTML += "<br>Mild";
         } else {
@@ -968,9 +1131,9 @@ const SleepReport = () => {
           SA_sAHI.innerHTML += "<br>Severe";
         }
       }
-      displaySahiTotal1();
+      displaySahiTotal1(oxygenLevelColumn);
     }
-    displaySahiTotal();
+    displaySahiTotal(oxygenLevelColumn);
   };
 
   const handleFileImport = () => {
@@ -1164,9 +1327,6 @@ const SleepReport = () => {
           <div className="WT_title">Wake Transistion</div>
           <div className="WT_input"> #{wakeTransition}</div>
 
-          <div className="SAI_title">SAI </div>
-          <div className="SAI_input"></div>
-
           <div className="Snore_title">Snore </div>
           <div className="Snore_input">N/A</div>
 
@@ -1198,21 +1358,8 @@ const SleepReport = () => {
           <div className="D3_label">3%</div>
           <div className="D4_label">4%</div>
 
-          <div className="SAHIT_title">sAHItotal</div>
-          <div className="SAHIT_input"></div>
-          <div className="SAHIT_input1"></div>
-
-          <div className="SAHIO_title">sAHIobstructive</div>
-          <div className="SAHIO_input"></div>
-          <div className="SAHIO_input1"></div>
-
-          <div className="SAHIC_title">sAHIcentral</div>
-          <div className="SAHIC_input"></div>
-          <div className="SAHIC_input1"></div>
-
           <div className="SRDI_title">sRDI</div>
           <div className="SRDI_input"></div>
-          <div className="SRDI_input1"></div>
 
           <div className="ODI_title">ODI</div>
           <div className="ODI_input">{Drop3ph}</div>
@@ -1233,11 +1380,11 @@ const SleepReport = () => {
           <div className="HR_input2">{pulseRateData.average}</div>
 
           <div className="RR_title">RESPIRATORY RATE (RR)</div>
-          <div className="RR_input">{respiratoryRateData.average}</div>
+          <div className="RR_input" >{respiratoryRateData.average} </div> 
           <div className="RR_Status" placeholder="NIL"></div>
 
           <div className="HRV_title">HEART RATE VARIABILITY (HRV)</div>
-          <div className="HRV_input">{heartratevariabilityData.value}</div>
+          <div className="HRV_input" >{heartratevariabilityData.value}</div>
           <div className="HRV_Status" placeholder="NIL"></div>
 
           <div className="Feedback">

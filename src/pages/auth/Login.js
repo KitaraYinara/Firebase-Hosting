@@ -26,6 +26,7 @@ const Login = () => {
         // ...
       })
       .catch((error) => {
+        document.querySelector(".heading").innerHTML = '<div class="heading"><h1 class="text text-large"><strong>Sign In</strong></h1><h4 class="text text-large" style="color:Red;"><strong>Wrong Username or Password</strong></h4><p class="text text-normal">New User? <span><a href="/signup" class="text text-links">Create an account</a></span></p></div>';
         console.log(error);
       });
   };
